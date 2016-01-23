@@ -9,10 +9,23 @@ import com.parse.ParseUser;
  */
 public class Person extends ParseUser
 {
-    public String name;
-    public String ;
-    public ParseRelation apartmentRelation;
+    public Person()
+    {
 
+    }
+
+    public ParseObject getApartment()
+    {
+        ParseUser.getCurrentUser().getParseObject("apartment");
+    }
+
+    public void setApartment(Apartment apartment)
+    {
+        if(ParseUser.getCurrentUser().getParseObject("apartment") == null)
+        {
+            ParseUser.getCurrentUser().add("apartment",apartment);
+        }
+    }
 
     public String getFirstName{
         ParseUser.getCurrentUser().getString("firstName");
@@ -23,16 +36,19 @@ public class Person extends ParseUser
     }
 
 
-    public Person()
-    {
-
-    }
-
     public void createUser(String userName, String password)
     {
-
-        this.signUpInBackground();
-
+        ParseUser.getCurrentUser().logOut();
+        ParseUser newUser = new ParseUser();
+        newUser.setUsername(userName);
+        newUser.setPassword(password);
+        newUser.signUpInBackground();
     }
+
+    public void loginUser(String username, String password)
+    {
+        ParseUser.logInInBackground(username,password);
+    }
+
 
 }
