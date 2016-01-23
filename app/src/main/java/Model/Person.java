@@ -16,23 +16,23 @@ public class Person extends ParseUser
 
     public ParseObject getApartment()
     {
-        ParseUser.getCurrentUser().getParseObject("apartment");
+        return ParseUser.getCurrentUser().getParseObject("apartment");
     }
 
     public void setApartment(Apartment apartment)
     {
         if(ParseUser.getCurrentUser().getParseObject("apartment") == null)
         {
-            ParseUser.getCurrentUser().add("apartment",apartment);
+            ParseUser.getCurrentUser().put("apartment",apartment);
         }
     }
 
-    public String getFirstName{
-        ParseUser.getCurrentUser().getString("firstName");
+    public String getFirstName () {
+        return ParseUser.getCurrentUser().getString("firstName");
     }
 
-    public String getLastName{
-    ParseUser.getCurrentUser().getString("lastName");
+    public String getLastName() {
+        return ParseUser.getCurrentUser().getString("lastName");
     }
 
 
