@@ -1,5 +1,6 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -17,10 +20,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.*;
 
 import Model.Apartment;
+import Model.Person;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String APPLICATION_ID = "uymjS3lXDmOqNv0IPYhLS2HFhkzoVhLaCyVAyM6o";
-    private static final String CLIENT_KEY = "2CTlHXNSyVRYSRJ0l9OUuXNgQUX5MTwZyNvYCgzX";
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -43,9 +46,34 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ParseUser user = ParseUser.getCurrentUser();
+
+        TextView welcome = (TextView) findViewById(R.id.textview_welcome);
+
+        if (user == null) {
+            welcome.setText("Welcome, user! Please log in.");
+        } else {
+            welcome.setText(
+                    "Welcome, "+ user.getString("name") + "!\n" +
+                            "Your session token is: " + user.getSessionToken()
+            );
+
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Welcome, " + user.getString("name") + "!",
+                    Snackbar.LENGTH_LONG
+            ).show();
+        }
     }
 
     @Override
@@ -68,23 +96,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    //--------------------------------------------
-
-    /**
-     * Parse Setup function, place all setup code here.
-     *
-     * @return
-     */
-    private void setupParse() {
-        //Register class of model
-        ParseObject.registerSubclass(Apartment.class);
-
-        Parse.enableLocalDatastore(this);
-
-        Parse.initialize(this, MainActivity.APPLICATION_ID, MainActivity.CLIENT_KEY);
-
     }
 
     @Override
@@ -126,4 +137,30 @@ public class MainActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
+
+    /**
+     * Logs out
+     */
+    public void logout(View view) {
+        ParseUser user = ParseUser.getCurrentUser();
+
+        if (user != null) {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Goodbye, " + user.getString("name") + ".",
+                    Snackbar.LENGTH_LONG
+            ).show();
+
+            Person.logoutUser();
+        }
+    }
+
+    /**
+     * Starts RegisterActivity
+     */
+    public void goToLogin(View view) {
+        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+        startActivity(intent);
+    }
+
 }
