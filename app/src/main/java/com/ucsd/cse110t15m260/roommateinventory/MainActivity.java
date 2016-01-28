@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -55,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
         if (user == null) {
             goToLogin(findViewById(android.R.id.content));
         } else {
+            TextView welcome = (TextView) findViewById(R.id.textview_welcome);
+
+            welcome.setText(
+                    "Welcome, "+ user.getString("name") + "!\n" +
+                    "Your session token is: " + user.getSessionToken()
+            );
 
             Snackbar.make(
                     findViewById(android.R.id.content),
@@ -63,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
             ).show();
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

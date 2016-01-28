@@ -87,7 +87,7 @@ public class Person extends ParseUser
         ParseUser user = ParseUser.getCurrentUser();
 
         if (user != null) {
-            user.logOut();
+            user.logOutInBackground();
         }
     }
 
