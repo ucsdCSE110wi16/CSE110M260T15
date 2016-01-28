@@ -19,10 +19,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.*;
 
 import Model.Apartment;
+import Model.Person;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String APPLICATION_ID = "uymjS3lXDmOqNv0IPYhLS2HFhkzoVhLaCyVAyM6o";
-    private static final String CLIENT_KEY = "2CTlHXNSyVRYSRJ0l9OUuXNgQUX5MTwZyNvYCgzX";
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -50,11 +50,18 @@ public class MainActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        // [Optional] Power your app with Local Datastore. For more info, go to
-        // https://parse.com/docs/android/guide#local-datastore
-        Parse.enableLocalDatastore(this);
+        ParseUser user = ParseUser.getCurrentUser();
 
-        Parse.initialize(this);
+        if (user == null) {
+            goToLogin(findViewById(android.R.id.content));
+        } else {
+
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Welcome, " + user.getString("name") + "!",
+                    Snackbar.LENGTH_LONG
+            ).show();
+        }
     }
 
     @Override
@@ -77,23 +84,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    //--------------------------------------------
-
-    /**
-     * Parse Setup function, place all setup code here.
-     *
-     * @return
-     */
-    private void setupParse() {
-        //Register class of model
-        ParseObject.registerSubclass(Apartment.class);
-
-        Parse.enableLocalDatastore(this);
-
-        Parse.initialize(this, MainActivity.APPLICATION_ID, MainActivity.CLIENT_KEY);
-
     }
 
     @Override
@@ -137,18 +127,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts RegisterActivity
+     * Logs out
      */
-    public void goToLogin(View view) {
-        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-        startActivity(intent);
+    public void logout(View view) {
+        ParseUser user = ParseUser.getCurrentUser();
+
+        if (user != null) {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Goodbye, " + user.getString("name") + ".",
+                    Snackbar.LENGTH_LONG
+            ).show();
+
+            Person.logoutUser();
+        }
     }
 
     /**
      * Starts RegisterActivity
      */
-    public void goToRegistration(View view) {
-        Intent intent = new Intent(getBaseContext(), RegisterActivity.class);
+    public void goToLogin(View view) {
+        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
         startActivity(intent);
     }
 

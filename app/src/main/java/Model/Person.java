@@ -58,7 +58,7 @@ public class Person extends ParseUser
      */
     public static void createUser(String name, String email, String password, SignUpCallback callback)
     {
-        ParseUser.getCurrentUser().logOut();
+        Person.logoutUser();
 
         ParseUser newUser = new ParseUser();
         newUser.setUsername(email);
@@ -77,6 +77,18 @@ public class Person extends ParseUser
     public static void loginUser(String username, String password, LogInCallback callback)
     {
         ParseUser.logInInBackground(username,password, callback);
+    }
+
+    /**
+     * Convenience method to logout a person
+     */
+    public static void logoutUser()
+    {
+        ParseUser user = ParseUser.getCurrentUser();
+
+        if (user != null) {
+            user.logOut();
+        }
     }
 
 
