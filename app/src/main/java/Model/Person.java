@@ -1,8 +1,10 @@
 package Model;
 
+import com.parse.LogInCallback;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 /**
  * Created by saiteja64 on 1/23/16.
@@ -53,26 +55,40 @@ public class Person extends ParseUser
 
     /**
      * Convenience method to sign up a new user.
-     * @param userName
-     * @param password
      */
-    public static void createUser(String userName, String password)
+    public static void createUser(String name, String email, String password, SignUpCallback callback)
     {
-        ParseUser.getCurrentUser().logOut();
+        Person.logoutUser();
+
         ParseUser newUser = new ParseUser();
-        newUser.setUsername(userName);
+        newUser.setUsername(email);
+        newUser.setEmail(email);
         newUser.setPassword(password);
-        newUser.signUpInBackground();
+        newUser.put("name", name);
+
+        newUser.signUpInBackground(callback);
     }
 
     /**
-     * Convenience method to login a perosn with the given username and password.
+     * Convenience method to login a person with the given username and password.
      * @param username
      * @param password
      */
-    public static void loginUser(String username, String password)
+    public static void loginUser(String username, String password, LogInCallback callback)
     {
-        ParseUser.logInInBackground(username,password);
+        ParseUser.logInInBackground(username,password, callback);
+    }
+
+    /**
+     * Convenience method to logout a person
+     */
+    public static void logoutUser()
+    {
+        ParseUser user = ParseUser.getCurrentUser();
+
+        if (user != null) {
+            user.logOutInBackground();
+        }
     }
 
 
