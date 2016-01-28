@@ -50,17 +50,22 @@ public class MainActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         ParseUser user = ParseUser.getCurrentUser();
 
-        if (user == null) {
-            goToLogin(findViewById(android.R.id.content));
-        } else {
-            TextView welcome = (TextView) findViewById(R.id.textview_welcome);
+        TextView welcome = (TextView) findViewById(R.id.textview_welcome);
 
+        if (user == null) {
+            welcome.setText("Welcome, user! Please log in.");
+        } else {
             welcome.setText(
                     "Welcome, "+ user.getString("name") + "!\n" +
-                    "Your session token is: " + user.getSessionToken()
+                            "Your session token is: " + user.getSessionToken()
             );
 
             Snackbar.make(
@@ -70,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
             ).show();
         }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

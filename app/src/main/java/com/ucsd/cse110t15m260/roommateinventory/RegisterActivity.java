@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -196,29 +197,20 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // perform the user login attempt.
             showProgress(true);
 
-
             Person.createUser(name, email, password, new SignUpCallback() {
                 public void done(ParseException e) {
+                    showProgress(false);
+
                     if (e == null) {
                         // Hooray! Let them use the app now.
-                        finishRegister(true);
+                        finish();
                     } else {
+                        Log.e("LOGIN", e.toString());
                         // Sign up didn't succeed. Look at the ParseException
                         // to figure out what went wrong
-                        finishRegister(false);
                     }
                 }
             });
-        }
-    }
-
-    private void finishRegister(boolean success) {
-        showProgress(false);
-
-        if (success) {
-            finish();
-        } else {
-            // TODO: Notify user that something went wrong
         }
     }
 

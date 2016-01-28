@@ -192,37 +192,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             Person.loginUser(email, password, new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
+                    showProgress(false);
+
                     if (user != null) {
                         // Hooray! The user is logged in.
-                        finishLogin(true);
+                        finish();
                     } else {
-                        // Signup failed. Look at the ParseException to see what happened.
-                        finishLogin(false);
-
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
                     }
                 }
             });
-        }
-    }
-
-    private void finishLogin(boolean success) {
-        showProgress(false);
-
-        if (success) {
-            ParseUser user = ParseUser.getCurrentUser();
-
-            if (user != null) {
-                Snackbar.make(
-                        findViewById(android.R.id.content),
-                        "Welcome, "+ user.getString("name") + ".",
-                        Snackbar.LENGTH_LONG
-                ).show();
-            }
-
-            finish();
-        } else {
-            mPasswordView.setError(getString(R.string.error_incorrect_password));
-            mPasswordView.requestFocus();
         }
     }
 
@@ -233,9 +213,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Intent intent = new Intent(getBaseContext(), RegisterActivity.class);
         startActivity(intent);
 
-        if (ParseUser.getCurrentUser() != null) {
-            finish();
-        }
+        finish();
     }
 
     private boolean isEmailValid(String email) {
