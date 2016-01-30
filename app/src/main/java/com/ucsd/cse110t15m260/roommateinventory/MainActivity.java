@@ -7,19 +7,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.parse.*;
 
-import Model.Apartment;
 import Model.Person;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,23 +52,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        ParseUser user = ParseUser.getCurrentUser();
-        String welcomeMessage;
+        Person person = Person.getCurrentPerson();
 
         TextView welcome = (TextView) findViewById(R.id.textview_welcome);
 
-        /* Set up a string for welcome because Android Studio was complaining. */
-        if (user == null) {
-            welcomeMessage = "Welcome, user! Please log in.";
-            welcome.setText(welcomeMessage);
+        if (person == null) {
+            welcome.setText("Welcome, user! Please log in.");
         } else {
-
-            welcomeMessage = "Welcome, "+ user.getRelation("name").toString() + "!\n";
-            welcome.setText(welcomeMessage);
+            welcome.setText(
+                    "Welcome, "+ person.getString("name") + "!\n" +
+                    "Your User ID is: " + person.getObjectId() + "\n" +
+                    "Your Session Token is: " + person.getSessionToken() + "\n" +
+                    "Your Apartment is: " + (person.getApartment() == null ? null : person.getApartment().toString())
+            );
 
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    "Welcome, " + user.getUsername() + "!",
+                    "Welcome, " + person.getString("name") + "!",
                     Snackbar.LENGTH_LONG
             ).show();
         }
@@ -144,16 +140,16 @@ public class MainActivity extends AppCompatActivity {
      * Logs out
      */
     public void logout(View view) {
-        ParseUser user = ParseUser.getCurrentUser();
+        Person person = Person.getCurrentPerson();
 
-        if (user != null) {
+        if (person != null) {
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    "Goodbye, " + user.getString("name") + ".",
+                    "Goodbye, " + person.getString("name") + ".",
                     Snackbar.LENGTH_LONG
             ).show();
 
-            Person.logoutUser();
+            Person.logoutPerson();
         }
     }
 

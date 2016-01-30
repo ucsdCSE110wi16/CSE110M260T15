@@ -1,8 +1,14 @@
 package Model;
 
+<<<<<<< HEAD
 import android.util.Log;
 
 import com.parse.*;
+=======
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+import com.parse.ParseRelation;
+>>>>>>> develop
 
 /**
  * Created by satre on 1/23/16.
