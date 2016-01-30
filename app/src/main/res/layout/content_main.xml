@@ -15,16 +15,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
-        android:text="@string/button_new_apartment"
-        android:onClick="createNewApartment"
-        android:id="@+id/button"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
-=======
         android:text="Hello World!"
         android:id="@+id/textview_welcome" />
+
+
 
     <Button
         android:layout_width="wrap_content"
@@ -45,5 +39,17 @@
         android:layout_toRightOf="@+id/login"
         android:layout_toEndOf="@+id/login"
         android:onClick="logout" />
->>>>>>> origin/develop
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_new_apartment"
+        android:id="@+id/create_apartment"
+        android:layout_marginBottom="112dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="showCreateApartment"/>
+
+
 </RelativeLayout>

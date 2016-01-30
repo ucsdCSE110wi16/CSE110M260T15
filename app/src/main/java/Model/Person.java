@@ -11,6 +11,8 @@ import com.parse.SignUpCallback;
  */
 public class Person extends ParseUser
 {
+    private boolean hasApartment = false;
+
     public Person()
     {
         super();
@@ -35,6 +37,11 @@ public class Person extends ParseUser
         {
             ParseUser.getCurrentUser().put("apartment",apartment);
         }
+        hasApartment = true;
+    }
+
+    public boolean hasApartment() {
+        return hasApartment;
     }
 
     /**

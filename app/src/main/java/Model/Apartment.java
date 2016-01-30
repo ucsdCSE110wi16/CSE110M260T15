@@ -14,7 +14,18 @@ public class Apartment extends ParseObject {
      */
     public Apartment() {
         super();
+    }
 
+
+    public static void createApartment(String s1, String s2, String st, String ct, String zc) {
+        Apartment apartment = new Apartment();
+        apartment.add("street_1", s1);
+        apartment.add("street_2", s2);
+        apartment.add("state", st);
+        apartment.add("city", ct);
+        apartment.add("zip_code", zc);
+
+        apartment.saveInBackground();
     }
 
     /***********************
@@ -102,4 +113,8 @@ public class Apartment extends ParseObject {
 
         return getNumberOfResidents();
     }
+
+    /**
+     * Sets address fields for the apartment
+     */
 }

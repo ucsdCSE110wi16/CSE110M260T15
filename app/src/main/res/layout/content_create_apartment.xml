@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ucsd.cse110t15m260.roommateinventory.CreateApartmentActivity"
+    tools:context=".CreateApartmentActivity"
     tools:showIn="@layout/activity_create_apartment">
 
     <LinearLayout
@@ -67,7 +67,9 @@
             android:layout_height="wrap_content"
             android:text="@string/button_create_apartment"
             android:id="@+id/button_create_create_apartment"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:onClick="createNewApartment"/>
 
     </LinearLayout>
+
 </RelativeLayout>
