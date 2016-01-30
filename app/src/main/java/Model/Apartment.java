@@ -1,5 +1,7 @@
 package Model;
 
+import android.util.Log;
+
 import com.parse.*;
 
 /**
@@ -17,13 +19,18 @@ public class Apartment extends ParseObject {
     }
 
 
-    public static void createApartment(String s1, String s2, String st, String ct, String zc) {
+    public Apartment(String apartment_id, String apartment_name, String street_1, String street_2, String state, String city, String zip_code) {
+
+        Log.d("Apartment", "creating apartment");
         Apartment apartment = new Apartment();
-        apartment.add("street_1", s1);
-        apartment.add("street_2", s2);
-        apartment.add("state", st);
-        apartment.add("city", ct);
-        apartment.add("zip_code", zc);
+
+        apartment.add("id", apartment_id);
+        apartment.add("name", apartment_name);
+        apartment.add("street_1", street_1);
+        apartment.add("street_2", street_2);
+        apartment.add("state", state);
+        apartment.add("city", city);
+        apartment.add("zip_code", zip_code);
 
         apartment.saveInBackground();
     }

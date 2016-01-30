@@ -46,10 +46,21 @@
         android:layout_height="wrap_content"
         android:text="@string/button_new_apartment"
         android:id="@+id/create_apartment"
-        android:layout_marginBottom="112dp"
+        android:layout_marginBottom="169dp"
+        android:onClick="showCreateApartment"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="showCreateApartment"/>
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join an Apartment"
+        android:id="@+id/join_apartment_button"
+        android:onClick="showJoinApartment"
+        android:layout_alignTop="@+id/create_apartment"
+        android:layout_alignLeft="@+id/create_apartment"
+        android:layout_alignStart="@+id/create_apartment"
+        android:layout_marginTop="65dp" />
 
 
 </RelativeLayout>

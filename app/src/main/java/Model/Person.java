@@ -22,7 +22,7 @@ public class Person extends ParseUser
      * Accesor to the residence of this person
      * @return The apartment which they live in.
      */
-    public ParseObject getApartment()
+    public static ParseObject getApartment()
     {
         return ParseUser.getCurrentUser().getParseObject("apartment");
     }
@@ -68,6 +68,7 @@ public class Person extends ParseUser
         Person.logoutUser();
 
         ParseUser newUser = new ParseUser();
+
         newUser.setUsername(email);
         newUser.setEmail(email);
         newUser.setPassword(password);
@@ -83,7 +84,7 @@ public class Person extends ParseUser
      */
     public static void loginUser(String username, String password, LogInCallback callback)
     {
-        ParseUser.logInInBackground(username,password, callback);
+        ParseUser.logInInBackground(username, password, callback);
     }
 
     /**

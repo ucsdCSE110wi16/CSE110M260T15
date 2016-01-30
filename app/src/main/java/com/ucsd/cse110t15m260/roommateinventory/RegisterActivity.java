@@ -152,6 +152,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      * errors are presented and no actual login attempt is made.
      */
     private void attemptRegister() {
+
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -160,6 +161,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         String name = mNameView.getText().toString();
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+
+        Log.d("REGISTER", "Name: " + name);
+        Log.d("REGISTER", "Email: " + email);
+        Log.d("REGISTER", "Password: " + password);
 
         boolean cancel = false;
         View focusView = null;
@@ -206,7 +211,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                         // Hooray! Let them use the app now.
                         finish();
                     } else {
-                        Log.e("LOGIN", e.toString());
+                        Log.e("REGISTER", e.toString());
                         // Sign up didn't succeed. Look at the ParseException
                         // to figure out what went wrong
                     }

@@ -57,20 +57,22 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         ParseUser user = ParseUser.getCurrentUser();
+        String welcomeMessage;
 
         TextView welcome = (TextView) findViewById(R.id.textview_welcome);
 
+        /* Set up a string for welcome because Android Studio was complaining. */
         if (user == null) {
-            welcome.setText("Welcome, user! Please log in.");
+            welcomeMessage = "Welcome, user! Please log in.";
+            welcome.setText(welcomeMessage);
         } else {
-            welcome.setText(
-                    "Welcome, "+ user.getString("name") + "!\n" +
-                            "Your session token is: " + user.getSessionToken()
-            );
+
+            welcomeMessage = "Welcome, "+ user.getRelation("name").toString() + "!\n";
+            welcome.setText(welcomeMessage);
 
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    "Welcome, " + user.getString("name") + "!",
+                    "Welcome, " + user.getUsername() + "!",
                     Snackbar.LENGTH_LONG
             ).show();
         }
@@ -164,12 +166,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates virtual apartment
+     * Starts CreateApartmentActivity
      */
     public void showCreateApartment(View view) {
         Intent intent = new Intent(getBaseContext(), CreateApartmentActivity.class);
         startActivity(intent);
-
-
     }
+
+    /**
+     * Creates virtual apartment
+     */
+    public void showJoinApartment(View view) {
+        Intent intent = new Intent(getBaseContext(), JoinApartmentActivity.class);
+        startActivity(intent);
+    }
+
+
 }

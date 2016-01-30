@@ -61,6 +61,14 @@
         <activity
             android:name=".CreateApartmentActivity"
             android:label="@string/title_activity_create_apartment"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".InvitationCodeActivity"
+            android:label="@string/title_activity_invitation_code"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".JoinApartmentActivity"
+            android:label="@string/title_activity_join_apartment"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
