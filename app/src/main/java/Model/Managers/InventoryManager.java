@@ -20,7 +20,6 @@ import Model.InventoryItem;
  * It enforces the singleton instance paradigm. The singleton instance can be accessed as a static variable.
  */
 public class InventoryManager {
-
     /**
      * The singleton instance of this class.
      */
