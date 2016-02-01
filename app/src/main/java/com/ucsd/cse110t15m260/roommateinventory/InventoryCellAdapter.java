@@ -27,7 +27,7 @@ public class InventoryCellAdapter<I> extends ArrayAdapter<InventoryItem>{
         View customView = imageInflator.inflate(R.layout.custom_row, parent, false);
 
         String itemNameString = getItem(position).getName();
-        TextView itemName = (TextView) customView.findViewById(R.id.inventoryItemName);
+        TextView itemName = (TextView) customView.findViewById(R.id.itemName);
         TextView itemCount = (TextView) customView.findViewById(R.id.itemCount);
         ImageView imageView = (ImageView) customView.findViewById(R.id.itemPicture);
 
