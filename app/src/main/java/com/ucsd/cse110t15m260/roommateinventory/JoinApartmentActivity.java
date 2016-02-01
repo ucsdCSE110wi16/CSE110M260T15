@@ -1,6 +1,7 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,8 +20,8 @@ import java.util.List;
 
 import Model.Apartment;
 import Model.Person;
-
 public class JoinApartmentActivity extends AppCompatActivity {
+
     private EditText mJoinApartmentId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,52 +43,50 @@ public class JoinApartmentActivity extends AppCompatActivity {
     public void joinApartment(View view) {
 
         mJoinApartmentId = (EditText) findViewById(R.id.join_apartment_id);
+
         String apartment_id = mJoinApartmentId.getText().toString();
 
         /* TODO: remove log statements (for debugging) */
         ParseQuery<Apartment> query = ParseQuery.getQuery("Apartment");
-        query.whereEqualTo("id", apartment_id);
-        query.findInBackground(new FindCallback<Apartment>() {
-            public void done(List<Apartment> apartments, ParseException e) {
-                if (e == null) {
-                    // object will be Apartment
-                    Log.d("JoinApartmentActivity", "Apartment attempted to join (name): " + apartments.get(0).getName());
-                    Person person = Person.getCurrentPerson();
+        query.getInBackground("objectID", new GetCallback<Apartment>() {
+            @Override
+            public void done(Apartment apartment, ParseException e) {
+                Person person = Person.getCurrentPerson();
 
-                    if(!person.hasApartment()) {
+                if (!person.hasApartment()) {
+                    if (e == null && apartment != null) {
+                        // object will be Apartment
+                        Log.d("JoinApartmentActivity", "Apartment attempted to join (name): " + apartment.getName());
+
+                    /* Person doesn't already have aparment */
+
                         // Set person's apartment to be apartment queried
-                        person.setApartment(apartments.get(0));
+                        person.setApartment(apartment);
 
                         // Set apartment to contain person
-                        apartments.get(0).addPersonToApartment(person);
+                        apartment.addPersonToApartment(person);
+                        finish();
+                    } else {
 
+                        mJoinApartmentId.requestFocus();
+
+                        Log.d("JoinApartmentActivity", "Apartment was returned as null");
                         Snackbar.make(
                                 findViewById(android.R.id.content),
-                                "Welcome to " + apartments.get(0).getName(),
+                                "You've entered an incorrect pin! Try again",
                                 Snackbar.LENGTH_LONG
                         ).show();
-                    }
-                    else{
-                        Snackbar.make(
-                                findViewById(android.R.id.content),
-                                "You already have an apartment!",
-                                Snackbar.LENGTH_LONG).show();
-                    }
-                } else {
-                    /* TODO: There's a bug here when the user enters an incorrect ID program crashes!! */
-                    // something went wrong
-                    Log.d("JoinApartmentActivity", "id was returned as null");
+                     }
+                 } else {
                     Snackbar.make(
                             findViewById(android.R.id.content),
-                            "You've entered an incorrect pin!",
+                            "You already have an apartment",
                             Snackbar.LENGTH_LONG
                     ).show();
                 }
-
-                finish();
             }
-        });
 
+        });
     }
 
 }
