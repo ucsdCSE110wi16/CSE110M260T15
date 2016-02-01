@@ -1,11 +1,7 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,20 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import Model.Apartment;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import java.util.ArrayList;
 
 import Model.Apartment;
 import Model.Person;
@@ -87,14 +76,6 @@ public class CreateApartmentActivity extends AppCompatActivity {
             ).show();
         } else {
 
-            /* Apartment id will be the session token of the person who first created apartment */
-            String full_apartment_id = person.getSessionToken();
-
-            /* Take only first 5 characters of full_apartment_id */
-            String apartment_id = full_apartment_id.substring(2, 8);
-
-            Log.d("CreateApartmentActivity", "Apartment ID: " + apartment_id);
-
             String name = mApartmentNameView.getText().toString();
             String street_1 = mStreet1View.getText().toString();
             String street_2 = mStreet2View.getText().toString();
@@ -146,7 +127,7 @@ public class CreateApartmentActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            // Hooray! Apartment has been succesfully created
+                            // Hooray! Apartment has been successfully created
                             finish();
                         } else {
                             Log.e("Create Apartment", e.toString());
@@ -161,13 +142,14 @@ public class CreateApartmentActivity extends AppCompatActivity {
                 /* Add apartment pointer to person */
                 person.setApartment(apartment);
 
+                Log.d("CREATE APARTMENT", apartment.getObjectId());
+
                 Intent intent = new Intent(getBaseContext(), InvitationCodeActivity.class);
 
                 startActivity(intent);
 
                 finish();
             }
-
         }
     }
 

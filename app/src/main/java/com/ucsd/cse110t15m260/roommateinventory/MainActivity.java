@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -72,13 +71,8 @@ public class MainActivity extends AppCompatActivity {
                     "Welcome, "+ person.getString("name") + "!\n" +
                     "Your User ID is: " + person.getObjectId() + "\n" +
                     "Your Session Token is: " + person.getSessionToken() + "\n" +
-                    "Your Apartment is: " + (person.getApartment() == null ? null : person.getApartment().toString())
+                    "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
             );
-            Snackbar.make(
-                    findViewById(android.R.id.content),
-                    "Welcome, " + person.getString("name") + "!",
-                    Snackbar.LENGTH_LONG
-            ).show();
         }
     }
 
@@ -160,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
             bye.setText("Goodbye");
             Person.logoutPerson();
         }
+
+        onResume();
     }
 
     /**
