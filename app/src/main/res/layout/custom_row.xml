@@ -44,7 +44,8 @@ android:layout_height="wrap_content"
         android:layout_above="@+id/itemCount"
         android:layout_toRightOf="@+id/itemName"
         android:layout_toEndOf="@+id/itemName"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="20dp"
+        android:onClick="incrementInventoryItem" />
 
     <Button
         android:layout_width="40dp"
@@ -53,7 +54,9 @@ android:layout_height="wrap_content"
         android:id="@+id/decrementButton"
         android:layout_below="@+id/incrementButton"
         android:layout_alignLeft="@+id/incrementButton"
-        android:layout_alignStart="@+id/incrementButton" />
+        android:layout_alignStart="@+id/incrementButton"
+        android:onClick="decrementInventoryItem"
+        android:nestedScrollingEnabled="true" />
 
 </RelativeLayout>
 

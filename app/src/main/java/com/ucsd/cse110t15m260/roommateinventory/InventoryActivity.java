@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -22,6 +23,7 @@ import Model.Managers.InventoryManager;
 public class InventoryActivity extends AppCompatActivity {
 
     public static Inventory currentInventory;
+    public static ListView theListView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,14 +51,43 @@ public class InventoryActivity extends AppCompatActivity {
         this.currentInventory = ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
 
         getActionBar().setTitle(this.currentInventory.getName());
+        String[] items = new String[currentInventory.items.size()];
+
 
         InventoryItem[] inventoryItems = (InventoryItem[]) this.currentInventory.items.toArray();
 
         ListAdapter inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(this, inventoryItems);
-        ListView inventoryView = (ListView) findViewById(R.id.inventoryListView);
-        inventoryView.setAdapter(inventoryFoodAdapter);
+        theListView = (ListView) findViewById(R.id.inventoryListView);
+        theListView.setAdapter(inventoryFoodAdapter);
 
     }
+
+    public void incrementInventoryItem(View v)
+    {
+        RelativeLayout vwParentRow = (RelativeLayout)v.getParent();
+        int position = theListView.getPositionForView((View)v.getParent());
+        this.currentInventory.items.get(position).setQuantity((int)this.currentInventory.items.get(position).getQuantity() + 1);
+
+        theListView.refreshDrawableState();
+
+
+    }
+
+    public void decrementInventoryItem(View v)
+    {
+        RelativeLayout vwParentRow = (RelativeLayout)v.getParent();
+        int position = theListView.getPositionForView((View)v.getParent());
+        this.currentInventory.items.get(position).setQuantity((int)this.currentInventory.items.get(position).getQuantity() + 1);
+
+        theListView.refreshDrawableState();
+    }
+
+    public void addInventoryItem(InventoryItem item)
+    {
+        this.currentInventory.items.add(item);
+        theListView.refreshDrawableState();
+    }
+
 
 
 }
