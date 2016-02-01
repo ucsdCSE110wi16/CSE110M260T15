@@ -1,6 +1,8 @@
 package Model;
 
-import com.parse.*;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+import com.parse.ParseRelation;
 
 /**
  * Created by satre on 1/23/16.

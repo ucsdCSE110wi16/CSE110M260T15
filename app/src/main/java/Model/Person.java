@@ -2,7 +2,6 @@ package Model;
 
 import com.parse.LogInCallback;
 import com.parse.ParseObject;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -24,7 +23,7 @@ public class Person extends ParseUser
      */
     public ParseObject getApartment()
     {
-        return ParseUser.getCurrentUser().getParseObject("apartment");
+        return getParseObject("apartment");
     }
 
     /**
@@ -33,9 +32,9 @@ public class Person extends ParseUser
      */
     public void setApartment(Apartment apartment)
     {
-        if(ParseUser.getCurrentUser().getParseObject("apartment") == null)
+        if(getParseObject("apartment") == null)
         {
-            ParseUser.getCurrentUser().put("apartment",apartment);
+            put("apartment",apartment);
         }
         hasApartment = true;
     }
@@ -49,7 +48,7 @@ public class Person extends ParseUser
      * @return Their first name
      */
     public String getFirstName () {
-        return ParseUser.getCurrentUser().getString("firstName");
+        return getString("firstName");
     }
 
     /**
@@ -57,44 +56,50 @@ public class Person extends ParseUser
      * @return Their last name
      */
     public String getLastName() {
-        return ParseUser.getCurrentUser().getString("lastName");
+        return getString("lastName");
+    }
+
+    public static Person getCurrentPerson() {
+        return (Person) ParseUser.getCurrentUser();
     }
 
     /**
-     * Convenience method to sign up a new user.
+     * Convenience method to sign up a new Person.
      */
-    public static void createUser(String name, String email, String password, SignUpCallback callback)
+    public static Person createPerson(String name, String email, String password, SignUpCallback callback)
     {
-        Person.logoutUser();
+        Person.logoutPerson();
 
-        ParseUser newUser = new ParseUser();
-        newUser.setUsername(email);
-        newUser.setEmail(email);
-        newUser.setPassword(password);
-        newUser.put("name", name);
+        Person person = new Person();
+        person.setUsername(email);
+        person.setEmail(email);
+        person.setPassword(password);
+        person.put("name", name);
 
-        newUser.signUpInBackground(callback);
+        person.signUpInBackground(callback);
+
+        return person;
     }
 
     /**
-     * Convenience method to login a person with the given username and password.
+     * Convenience method to login a Person with the given username and password.
      * @param username
      * @param password
      */
-    public static void loginUser(String username, String password, LogInCallback callback)
+    public static void loginPerson(String username, String password, LogInCallback callback)
     {
-        ParseUser.logInInBackground(username,password, callback);
+        ParseUser.logInInBackground(username, password, callback);
     }
 
     /**
      * Convenience method to logout a person
      */
-    public static void logoutUser()
+    public static void logoutPerson()
     {
-        ParseUser user = ParseUser.getCurrentUser();
+        Person person = getCurrentPerson();
 
-        if (user != null) {
-            user.logOutInBackground();
+        if (person != null) {
+            person.logOutInBackground();
         }
     }
 

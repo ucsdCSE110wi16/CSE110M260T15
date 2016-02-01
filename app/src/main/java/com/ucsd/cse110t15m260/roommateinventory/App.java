@@ -1,7 +1,9 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.app.Application;
-import com.parse.*;
+
+import com.parse.Parse;
+import com.parse.ParseObject;
 
 import Model.Apartment;
 import Model.Person;
@@ -21,6 +23,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        ParseObject.registerSubclass(Person.class);
         ParseObject.registerSubclass(Apartment.class);
 
         Parse.enableLocalDatastore(this);
