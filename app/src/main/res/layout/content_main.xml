@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ucsd.cse110t15m260.roommateinventory.MainActivity"
+    tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
     <LinearLayout
@@ -21,16 +21,16 @@
             android:id="@+id/textview_welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            android:layout_marginBottom="100dp" />
+            android:layout_marginBottom="100dp"
+            android:text="Hello World!" />
 
         <Button
             android:id="@+id/login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="goToLogin"
-            android:text="@string/action_log_in"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:onClick="showLogin"
+            android:text="@string/action_log_in" />
 
         <Button
             android:id="@+id/logout"

@@ -3,10 +3,8 @@ package com.ucsd.cse110t15m260.roommateinventory;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -41,8 +39,6 @@ public class CreateApartmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_apartment);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         //Set up Address Form
         mApartmentNameView = (EditText) findViewById(R.id.apartment_name);
@@ -60,7 +56,7 @@ public class CreateApartmentActivity extends AppCompatActivity {
     public void createNewApartment(View view) {
         mPerson = Person.getCurrentPerson();
 
-        if(mPerson.getApartment() != null) {
+        if (mPerson.getApartment() != null) {
             Log.d("CreateApartment", "User already has an apartment!");
 
             Snackbar.make(

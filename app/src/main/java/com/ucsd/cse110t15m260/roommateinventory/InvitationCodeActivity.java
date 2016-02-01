@@ -1,12 +1,8 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
@@ -19,15 +15,13 @@ public class InvitationCodeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invitation_code);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         Person person = Person.getCurrentPerson();
 
-        ParseObject apartment =  person.getApartment();
+        ParseObject apartment = person.getApartment();
 
         TextView apartmentInvitationId = (TextView) findViewById(R.id.apartment_invitation_id);
-        
+
         Log.d("InvitationCode", "Invitation Code is: " + apartment.getObjectId());
         apartmentInvitationId.setText(apartment.getObjectId());
 

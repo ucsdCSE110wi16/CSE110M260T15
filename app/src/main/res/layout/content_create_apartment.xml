@@ -13,81 +13,87 @@
     tools:showIn="@layout/activity_create_apartment">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="244dp"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center_horizontal"
             android:text="@string/apartment_info"
-            android:id="@+id/textView"
-            android:layout_gravity="center_horizontal" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal" />
 
-        <EditText android:id="@+id/apartment_name"
+        <EditText
+            android:id="@+id/apartment_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/apartment_name"
-            android:singleLine="true"
-            android:minLines="1" />
+            android:minLines="1"
+            android:singleLine="true" />
 
-        <EditText android:id="@+id/street_1"
+        <EditText
+            android:id="@+id/street_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPostalAddress"
             android:hint="@string/street_1"
-            android:singleLine="true"
-            android:minLines="1" />
+            android:inputType="textPostalAddress"
+            android:minLines="1"
+            android:singleLine="true" />
 
-        <EditText android:id="@+id/street_2"
+        <EditText
+            android:id="@+id/street_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:inputType="textPostalAddress"
             android:hint="@string/street_2"
-            android:singleLine="true"
-            android:minLines="1" />
+            android:inputType="textPostalAddress"
+            android:minLines="1"
+            android:singleLine="true" />
 
-        <EditText android:id="@+id/city"
+        <EditText
+            android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:hint="@string/city"
-            android:singleLine="true"
-            android:minLines="1" />
+            android:minLines="1"
+            android:singleLine="true" />
 
-        <EditText android:id="@+id/state"
+        <EditText
+            android:id="@+id/state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:hint="@string/state"
-            android:singleLine="true"
-            android:minLines="1" />
+            android:minLines="1"
+            android:singleLine="true" />
 
-        <EditText android:id="@+id/zip_code"
+        <EditText
+            android:id="@+id/zip_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:hint="@string/zip_code"
             android:inputType="number"
-            android:singleLine="true"
-            android:minLines="1" />
+            android:minLines="1"
+            android:singleLine="true" />
 
         <Button
+            android:id="@+id/button_create_create_apartment"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_create_apartment"
-            android:id="@+id/button_create_create_apartment"
             android:layout_gravity="center_horizontal"
-            android:onClick="createNewApartment"/>
+            android:onClick="createNewApartment"
+            android:text="@string/button_create_apartment" />
 
     </LinearLayout>
 
