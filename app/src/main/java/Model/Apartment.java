@@ -14,7 +14,7 @@ public class Apartment extends ParseObject {
      */
     public Apartment() {
         super();
-
+        put("inventory", new Inventory());
     }
 
     /***********************
@@ -101,5 +101,13 @@ public class Apartment extends ParseObject {
         }
 
         return getNumberOfResidents();
+    }
+
+    /**
+     * Accessor for the inventory of this apartment.
+     * @return
+     */
+    public Inventory getInventory() {
+        return (Inventory) getParseObject("inventory");
     }
 }
