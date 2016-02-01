@@ -61,15 +61,28 @@
         <activity
             android:name=".CreateApartmentActivity"
             android:label="@string/title_activity_create_apartment"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
+        </activity>
         <activity
             android:name=".InvitationCodeActivity"
             android:label="@string/title_activity_invitation_code"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
+        </activity>
         <activity
             android:name=".JoinApartmentActivity"
             android:label="@string/title_activity_join_apartment"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>

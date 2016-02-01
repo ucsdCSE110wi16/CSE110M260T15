@@ -3,17 +3,13 @@ package Model;
 import android.util.Log;
 
 import com.parse.LogInCallback;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 /**
  * Created by saiteja64 on 1/23/16.
  */
-public class Person extends ParseUser
-{
-    private boolean hasApartment = false;
-
+public class Person extends ParseUser {
 
     public Person()
     {
@@ -24,9 +20,9 @@ public class Person extends ParseUser
      * Accessor to the residence of this person
      * @return The apartment which they live in.
      */
-    public ParseObject getApartment()
+    public Apartment getApartment()
     {
-        return getParseObject("apartment");
+        return (Apartment) getParseObject("apartment");
     }
 
     /**
@@ -35,17 +31,16 @@ public class Person extends ParseUser
      */
     public void setApartment(Apartment apartment)
     {
-        if(getParseObject("apartment") == null)
+        if (getParseObject("apartment") == null)
         {
             Log.d("Person", "Apartment is null! User doesn't have an apartment yet.");
             put("apartment", apartment);
             saveInBackground();
         }
-        hasApartment = true;
     }
 
     public boolean hasApartment() {
-        return hasApartment;
+        return getApartment() != null;
     }
 
     /**

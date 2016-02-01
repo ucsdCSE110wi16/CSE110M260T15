@@ -2,8 +2,8 @@ package Model;
 
 
 import android.util.Log;
+
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.SaveCallback;
@@ -85,7 +85,7 @@ public class Apartment extends ParseObject {
      * Adds the given person the relation that contains the members of this apartment.
      * @param person
      */
-    public void addPersonToApartment( Person person) {
+    public void addPersonToApartment(Person person) {
         if (person == null) {
             return;
         }

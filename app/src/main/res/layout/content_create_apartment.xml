@@ -34,37 +34,49 @@
         <EditText android:id="@+id/apartment_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/apartment_name" />
+            android:hint="@string/apartment_name"
+            android:singleLine="true"
+            android:minLines="1" />
 
         <EditText android:id="@+id/street_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/street_1" />
+            android:hint="@string/street_1"
+            android:singleLine="true"
+            android:minLines="1" />
 
 
         <EditText android:id="@+id/street_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:hint="@string/street_2" />
+            android:hint="@string/street_2"
+            android:singleLine="true"
+            android:minLines="1" />
 
         <EditText android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:hint="@string/city" />
+            android:hint="@string/city"
+            android:singleLine="true"
+            android:minLines="1" />
 
         <EditText android:id="@+id/state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:hint="@string/state" />
+            android:hint="@string/state"
+            android:singleLine="true"
+            android:minLines="1" />
 
         <EditText android:id="@+id/zip_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:hint="@string/zip_code" />
+            android:hint="@string/zip_code"
+            android:singleLine="true"
+            android:minLines="1" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
