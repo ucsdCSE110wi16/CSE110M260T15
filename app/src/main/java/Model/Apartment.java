@@ -1,14 +1,12 @@
 package Model;
 
-<<<<<<< HEAD
-import android.util.Log;
 
-import com.parse.*;
-=======
+import android.util.Log;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
->>>>>>> develop
+import com.parse.SaveCallback;
 
 /**
  * Created by satre on 1/23/16.
@@ -25,22 +23,34 @@ public class Apartment extends ParseObject {
     }
 
 
-    public Apartment(String apartment_id, String apartment_name, String street_1, String street_2, String state, String city, String zip_code) {
+    public static Apartment createApartment(String apartment_id, String apartment_name, String street_1, String street_2, String state, String city, String zip_code, SaveCallback sc) {
 
         Log.d("Apartment", "creating apartment");
+
         Apartment apartment = new Apartment();
 
-        apartment.add("id", apartment_id);
-        apartment.add("name", apartment_name);
-        apartment.add("street_1", street_1);
-        apartment.add("street_2", street_2);
-        apartment.add("state", state);
-        apartment.add("city", city);
-        apartment.add("zip_code", zip_code);
+        apartment.put("id", apartment_id);
+        apartment.put("name", apartment_name);
+        apartment.put("street_1", street_1);
+        apartment.put("street_2", street_2);
+        apartment.put("state", state);
+        apartment.put("city", city);
+        apartment.put("zip_code", zip_code);
 
-        apartment.saveInBackground();
+        apartment.saveInBackground(sc);
+
+        return apartment;
     }
 
+    /**
+     * Removes apartment from database
+     *
+     */
+    public void deleteApartment(Apartment apartment) {
+        /* TODO: remove all roomies' relations to apartment and then delete apartment */
+
+
+    }
     /***********************
      * Properties
      */
@@ -126,6 +136,8 @@ public class Apartment extends ParseObject {
 
         return getNumberOfResidents();
     }
+
+
 
     /**
      * Sets address fields for the apartment

@@ -75,12 +75,9 @@ public class CreateApartmentActivity extends AppCompatActivity {
     }
 
     public void createNewApartment(View view) {
-        ParseUser user = ParseUser.getCurrentUser();
-        /*
-        Person person;
-        Apartment apartment;
+        Person person = Person.getCurrentPerson();
 
-        if(apartment = user.getApartment() == null) {
+        if(person.getApartment() != null) {
             Log.d("CreateApartment", "User already has an apartment!");
 
             Snackbar.make(
@@ -89,10 +86,9 @@ public class CreateApartmentActivity extends AppCompatActivity {
                     Snackbar.LENGTH_LONG
             ).show();
         } else {
-        */
 
-            /* Apartment id will be the session token of the user who first created apartment */
-            String full_apartment_id = user.getSessionToken();
+            /* Apartment id will be the session token of the person who first created apartment */
+            String full_apartment_id = person.getSessionToken();
 
             /* Take only first 5 characters of full_apartment_id */
             String apartment_id = full_apartment_id.substring(2, 8);
@@ -146,16 +142,24 @@ public class CreateApartmentActivity extends AppCompatActivity {
             if (cancel) {
                 focusView.requestFocus();
             } else {
-                Apartment apartment = new Apartment(apartment_id, name, street_1, street_2, state, city, zip_code);
+                Apartment apartment = Apartment.createApartment(apartment_id, name, street_1, street_2, state, city, zip_code, new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            // Hooray! Apartment has been succesfully created
+                            finish();
+                        } else {
+                            Log.e("Create Apartment", e.toString());
+                            // Sign up didn't succeed. Look at the ParseException
+                            // to figure out what went wrong
+                        }
+                    }
+                });
 
-                /* Add users relation to apartment */
-                //ArrayList<ParseObject>  users = new ArrayList<ParseObject>();
-                //users.add(user);
+                apartment.addPersonToApartment(person);
 
-                //apartment.put("users", users);
-
-                /* Add apartment pointer to user */
-                //user.add("apartment", apartment);
+                /* Add apartment pointer to person */
+                person.setApartment(apartment);
 
                 Intent intent = new Intent(getBaseContext(), InvitationCodeActivity.class);
 
@@ -166,6 +170,7 @@ public class CreateApartmentActivity extends AppCompatActivity {
                 finish();
             }
 
+        }
     }
 
     @Override

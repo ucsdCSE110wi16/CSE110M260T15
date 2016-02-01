@@ -1,5 +1,7 @@
 package Model;
 
+import android.util.Log;
+
 import com.parse.LogInCallback;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -18,10 +20,10 @@ public class Person extends ParseUser
     }
 
     /**
-     * Accesor to the residence of this person
+     * Accessor to the residence of this person
      * @return The apartment which they live in.
      */
-    public static ParseObject getApartment()
+    public ParseObject getApartment()
     {
         return getParseObject("apartment");
     }
@@ -34,7 +36,9 @@ public class Person extends ParseUser
     {
         if(getParseObject("apartment") == null)
         {
-            put("apartment",apartment);
+            Log.d("Person", "Apartment is null! User doesn't have an apartment yet.");
+            put("apartment", apartment);
+            saveInBackground();
         }
         hasApartment = true;
     }
@@ -77,7 +81,6 @@ public class Person extends ParseUser
         person.put("name", name);
 
         person.signUpInBackground(callback);
-
 
         return person;
     }

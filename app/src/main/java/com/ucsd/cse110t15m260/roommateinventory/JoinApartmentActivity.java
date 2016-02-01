@@ -18,6 +18,7 @@ import com.parse.ParseException;
 import java.util.List;
 
 import Model.Apartment;
+import Model.Person;
 
 public class JoinApartmentActivity extends AppCompatActivity {
     private EditText mJoinApartmentId;
@@ -39,6 +40,7 @@ public class JoinApartmentActivity extends AppCompatActivity {
     }
 
     public void joinApartment(View view) {
+
         mJoinApartmentId = (EditText) findViewById(R.id.join_apartment_id);
         String apartment_id = mJoinApartmentId.getText().toString();
 
@@ -50,15 +52,41 @@ public class JoinApartmentActivity extends AppCompatActivity {
                 if (e == null) {
                     // object will be Apartment
                     Log.d("JoinApartmentActivity", "Apartment attempted to join (name): " + apartments.get(0).getName());
+                    Person person = Person.getCurrentPerson();
+
+                    if(!person.hasApartment()) {
+                        // Set person's apartment to be apartment queried
+                        person.setApartment(apartments.get(0));
+
+                        // Set apartment to contain person
+                        apartments.get(0).addPersonToApartment(person);
+
+                        Snackbar.make(
+                                findViewById(android.R.id.content),
+                                "Welcome to " + apartments.get(0).getName(),
+                                Snackbar.LENGTH_LONG
+                        ).show();
+                    }
+                    else{
+                        Snackbar.make(
+                                findViewById(android.R.id.content),
+                                "You already have an apartment!",
+                                Snackbar.LENGTH_LONG).show();
+                    }
                 } else {
+                    /* TODO: There's a bug here when the user enters an incorrect ID program crashes!! */
                     // something went wrong
                     Log.d("JoinApartmentActivity", "id was returned as null");
-
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            "You've entered an incorrect pin!",
+                            Snackbar.LENGTH_LONG
+                    ).show();
                 }
+
+                finish();
             }
         });
-
-        /* TODO: Set apartment to have current user */
 
     }
 
