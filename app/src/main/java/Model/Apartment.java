@@ -23,13 +23,12 @@ public class Apartment extends ParseObject {
     }
 
 
-    public static Apartment createApartment(String apartment_id, String apartment_name, String street_1, String street_2, String state, String city, String zip_code, SaveCallback sc) {
+    public static Apartment createApartment(String apartment_name, String street_1, String street_2, String state, String city, String zip_code, SaveCallback sc) {
 
         Log.d("Apartment", "creating apartment");
 
         Apartment apartment = new Apartment();
 
-        apartment.put("id", apartment_id);
         apartment.put("name", apartment_name);
         apartment.put("street_1", street_1);
         apartment.put("street_2", street_2);

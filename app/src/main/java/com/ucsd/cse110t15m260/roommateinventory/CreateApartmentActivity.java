@@ -142,7 +142,7 @@ public class CreateApartmentActivity extends AppCompatActivity {
             if (cancel) {
                 focusView.requestFocus();
             } else {
-                Apartment apartment = Apartment.createApartment(apartment_id, name, street_1, street_2, state, city, zip_code, new SaveCallback() {
+                Apartment apartment = Apartment.createApartment(name, street_1, street_2, state, city, zip_code, new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
@@ -163,8 +163,6 @@ public class CreateApartmentActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getBaseContext(), InvitationCodeActivity.class);
 
-                /* Pass the apartment_id to next activity */
-                intent.putExtra("apartment_id", apartment_id);
                 startActivity(intent);
 
                 finish();
