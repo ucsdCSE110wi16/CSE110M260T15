@@ -3,20 +3,22 @@ package com.ucsd.cse110t15m260.roommateinventory;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.app.LoaderManager.LoaderCallbacks;
+
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,12 +28,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.parse.ParseException;
-import com.parse.SignUpCallback;
-
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
+
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import Model.Person;
 
@@ -148,6 +151,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      * errors are presented and no actual login attempt is made.
      */
     private void attemptRegister() {
+
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -156,6 +160,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         String name = mNameView.getText().toString();
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+
+        Log.d("REGISTER", "Name: " + name);
+        Log.d("REGISTER", "Email: " + email);
+        Log.d("REGISTER", "Password: " + password);
 
         boolean cancel = false;
         View focusView = null;
@@ -202,7 +210,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                         // Hooray! Let them use the app now.
                         finish();
                     } else {
-                        Log.e("LOGIN", e.toString());
+                        Log.e("REGISTER", e.toString());
                         // Sign up didn't succeed. Look at the ParseException
                         // to figure out what went wrong
                     }

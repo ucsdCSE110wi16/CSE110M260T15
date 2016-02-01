@@ -1,8 +1,12 @@
 package Model;
 
+
+import android.util.Log;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
+import com.parse.SaveCallback;
 
 /**
  * Created by satre on 1/23/16.
@@ -16,9 +20,36 @@ public class Apartment extends ParseObject {
      */
     public Apartment() {
         super();
-
     }
 
+
+    public static Apartment createApartment(String apartment_name, String street_1, String street_2, String state, String city, String zip_code, SaveCallback sc) {
+
+        Log.d("Apartment", "creating apartment");
+
+        Apartment apartment = new Apartment();
+
+        apartment.put("name", apartment_name);
+        apartment.put("street_1", street_1);
+        apartment.put("street_2", street_2);
+        apartment.put("state", state);
+        apartment.put("city", city);
+        apartment.put("zip_code", zip_code);
+
+        apartment.saveInBackground(sc);
+
+        return apartment;
+    }
+
+    /**
+     * Removes apartment from database
+     *
+     */
+    public void deleteApartment(Apartment apartment) {
+        /* TODO: remove all roomies' relations to apartment and then delete apartment */
+
+
+    }
     /***********************
      * Properties
      */
@@ -54,7 +85,7 @@ public class Apartment extends ParseObject {
      * Adds the given person the relation that contains the members of this apartment.
      * @param person
      */
-    public void addPersonToApartment( Person person) {
+    public void addPersonToApartment(Person person) {
         if (person == null) {
             return;
         }
@@ -104,4 +135,10 @@ public class Apartment extends ParseObject {
 
         return getNumberOfResidents();
     }
+
+
+
+    /**
+     * Sets address fields for the apartment
+     */
 }

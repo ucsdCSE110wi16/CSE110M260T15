@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ucsd.cse110t15m260.roommateinventory" >
+    package="com.ucsd.cse110t15m260.roommateinventory">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,16 +11,16 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
-        android:name="com.ucsd.cse110t15m260.roommateinventory.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,7 +45,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
@@ -53,11 +53,36 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.LoginActivity" />
         </activity>
+        <activity
+            android:name=".CreateApartmentActivity"
+            android:label="@string/title_activity_create_apartment"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
+        </activity>
+        <activity
+            android:name=".InvitationCodeActivity"
+            android:label="@string/title_activity_invitation_code"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
+        </activity>
+        <activity
+            android:name=".JoinApartmentActivity"
+            android:label="@string/title_activity_join_apartment"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>
