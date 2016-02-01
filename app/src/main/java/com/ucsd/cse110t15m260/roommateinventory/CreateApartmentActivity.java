@@ -28,6 +28,8 @@ public class CreateApartmentActivity extends AppCompatActivity {
     private EditText mStateView;
     private EditText mCityView;
     private EditText mZipCodeView;
+    private Apartment mApartment;
+    private Person mPerson;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -50,23 +52,15 @@ public class CreateApartmentActivity extends AppCompatActivity {
         mCityView = (EditText) findViewById(R.id.city);
         mZipCodeView = (EditText) findViewById(R.id.zip_code);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     public void createNewApartment(View view) {
-        Person person = Person.getCurrentPerson();
+        mPerson = Person.getCurrentPerson();
 
-        if(person.getApartment() != null) {
+        if(mPerson.getApartment() != null) {
             Log.d("CreateApartment", "User already has an apartment!");
 
             Snackbar.make(
@@ -123,12 +117,15 @@ public class CreateApartmentActivity extends AppCompatActivity {
             if (cancel) {
                 focusView.requestFocus();
             } else {
-                Apartment apartment = Apartment.createApartment(name, street_1, street_2, state, city, zip_code, new SaveCallback() {
+
+                Log.d("CreateApartment", "creating apartment");
+
+                mApartment = Apartment.createApartment(name, street_1, street_2, state, city, zip_code, new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
                             // Hooray! Apartment has been successfully created
-                            finish();
+                            finishCreateApartment();
                         } else {
                             Log.e("Create Apartment", e.toString());
                             // Sign up didn't succeed. Look at the ParseException
@@ -137,20 +134,24 @@ public class CreateApartmentActivity extends AppCompatActivity {
                     }
                 });
 
-                apartment.addPersonToApartment(person);
 
-                /* Add apartment pointer to person */
-                person.setApartment(apartment);
-
-                Log.d("CREATE APARTMENT", apartment.getObjectId());
-
-                Intent intent = new Intent(getBaseContext(), InvitationCodeActivity.class);
-
-                startActivity(intent);
-
-                finish();
             }
         }
+    }
+
+    private void finishCreateApartment() {
+        mApartment.addPersonToApartment(mPerson);
+
+        /* Add apartment pointer to person */
+        mPerson.setApartment(mApartment);
+
+        Log.d("CREATE APARTMENT", mApartment.getObjectId());
+        Log.d("CreateApartment", "calling next activity");
+
+        Intent intent = new Intent(getBaseContext(), InvitationCodeActivity.class);
+        startActivity(intent);
+
+        finish();
     }
 
     @Override

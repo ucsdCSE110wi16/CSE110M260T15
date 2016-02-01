@@ -10,8 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,15 +34,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -55,15 +46,32 @@ public class MainActivity extends AppCompatActivity {
         Person person = Person.getCurrentPerson();
 
         TextView welcome = (TextView) findViewById(R.id.textview_welcome);
-
+        Button createApt = (Button) findViewById(R.id.create_apartment);
+        Button joinApt = (Button) findViewById(R.id.join_apartment_button);
+        Button login = (Button) findViewById(R.id.login);
+        Button logout = (Button) findViewById(R.id.logout);
         if (person == null) {
+            joinApt.setVisibility(View.GONE);
+            logout.setVisibility(View.GONE);
+            createApt.setVisibility(View.GONE);
+            login.setVisibility(View.VISIBLE);
             welcome.setText("Welcome, user! Please log in.");
         } else {
+            login.setVisibility(View.GONE);
+            logout.setVisibility(View.VISIBLE);
+            createApt.setVisibility(View.VISIBLE);
+            if(person.getApartment() == null) {
+                joinApt.setVisibility(View.VISIBLE);
+            }
+            else {
+                joinApt.setVisibility(View.GONE);
+            }
+
             welcome.setText(
-                    "Welcome, "+ person.getString("name") + "!\n" +
-                    "Your User ID is: " + person.getObjectId() + "\n" +
-                    "Your Session Token is: " + person.getSessionToken() + "\n" +
-                    "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
+                    "Welcome, " + person.getString("name") + "!\n" +
+                            "Your User ID is: " + person.getObjectId() + "\n" +
+                            "Your Session Token is: " + person.getSessionToken() + "\n" +
+                            "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
             );
         }
     }
@@ -86,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -135,14 +142,18 @@ public class MainActivity extends AppCompatActivity {
      */
     public void logout(View view) {
         Person person = Person.getCurrentPerson();
-
+        TextView bye = (TextView) findViewById(R.id.textview_welcome);
+        Button login = (Button) findViewById(R.id.login);
+        Button createApt = (Button) findViewById(R.id.create_apartment);
+        login.setVisibility(View.VISIBLE);
+        createApt.setVisibility(View.GONE);
         if (person != null) {
             Snackbar.make(
                     findViewById(android.R.id.content),
                     "Goodbye, " + person.getString("name") + ".",
                     Snackbar.LENGTH_LONG
             ).show();
-
+            bye.setText("Goodbye");
             Person.logoutPerson();
         }
 
@@ -172,6 +183,4 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getBaseContext(), JoinApartmentActivity.class);
         startActivity(intent);
     }
-
-
 }
