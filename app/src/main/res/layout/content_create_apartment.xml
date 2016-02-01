@@ -41,15 +41,16 @@
         <EditText android:id="@+id/street_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPostalAddress"
             android:hint="@string/street_1"
             android:singleLine="true"
             android:minLines="1" />
-
 
         <EditText android:id="@+id/street_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:inputType="textPostalAddress"
             android:hint="@string/street_2"
             android:singleLine="true"
             android:minLines="1" />
@@ -75,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:hint="@string/zip_code"
+            android:inputType="number"
             android:singleLine="true"
             android:minLines="1" />
 

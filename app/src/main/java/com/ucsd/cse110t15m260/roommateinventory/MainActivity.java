@@ -49,29 +49,29 @@ public class MainActivity extends AppCompatActivity {
         Button createApt = (Button) findViewById(R.id.create_apartment);
         Button joinApt = (Button) findViewById(R.id.join_apartment_button);
         Button login = (Button) findViewById(R.id.login);
-
+        Button logout = (Button) findViewById(R.id.logout);
         if (person == null) {
             joinApt.setVisibility(View.GONE);
+            logout.setVisibility(View.GONE);
             createApt.setVisibility(View.GONE);
             login.setVisibility(View.VISIBLE);
             welcome.setText("Welcome, user! Please log in.");
         } else {
             login.setVisibility(View.GONE);
-
+            logout.setVisibility(View.VISIBLE);
+            createApt.setVisibility(View.VISIBLE);
             if(person.getApartment() == null) {
-                createApt.setVisibility(View.VISIBLE);
                 joinApt.setVisibility(View.VISIBLE);
             }
             else {
-                createApt.setVisibility(View.GONE);
                 joinApt.setVisibility(View.GONE);
             }
 
             welcome.setText(
-                    "Welcome, "+ person.getString("name") + "!\n" +
-                    "Your User ID is: " + person.getObjectId() + "\n" +
-                    "Your Session Token is: " + person.getSessionToken() + "\n" +
-                    "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
+                    "Welcome, " + person.getString("name") + "!\n" +
+                            "Your User ID is: " + person.getObjectId() + "\n" +
+                            "Your Session Token is: " + person.getSessionToken() + "\n" +
+                            "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
             );
         }
     }
@@ -144,7 +144,9 @@ public class MainActivity extends AppCompatActivity {
         Person person = Person.getCurrentPerson();
         TextView bye = (TextView) findViewById(R.id.textview_welcome);
         Button login = (Button) findViewById(R.id.login);
+        Button createApt = (Button) findViewById(R.id.create_apartment);
         login.setVisibility(View.VISIBLE);
+        createApt.setVisibility(View.GONE);
         if (person != null) {
             Snackbar.make(
                     findViewById(android.R.id.content),
