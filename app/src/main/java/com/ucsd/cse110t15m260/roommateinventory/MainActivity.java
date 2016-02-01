@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
@@ -55,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
         Person person = Person.getCurrentPerson();
 
         TextView welcome = (TextView) findViewById(R.id.textview_welcome);
+        Button createApt = (Button) findViewById(R.id.create_apartment);
+
+        if(person.getApartment() == null) {
+            createApt.setVisibility(View.VISIBLE);
+        }
+        else
+            createApt.setVisibility(View.GONE);
 
         if (person == null) {
             welcome.setText("Welcome, user! Please log in.");
@@ -92,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -167,7 +174,5 @@ public class MainActivity extends AppCompatActivity {
     public void showCreateApartment(View view) {
         Intent intent = new Intent(getBaseContext(), CreateApartmentActivity.class);
         startActivity(intent);
-
-
     }
 }

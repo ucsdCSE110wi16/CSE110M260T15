@@ -197,7 +197,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // perform the user login attempt.
             showProgress(true);
 
-            Person.createUser(name, email, password, new SignUpCallback() {
+            Person.createPerson(name, email, password, new SignUpCallback() {
                 public void done(ParseException e) {
                     showProgress(false);
 
