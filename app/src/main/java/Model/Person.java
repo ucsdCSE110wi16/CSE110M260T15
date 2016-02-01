@@ -1,6 +1,7 @@
 package Model;
 
 import com.parse.LogInCallback;
+import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -9,8 +10,10 @@ import com.parse.SignUpCallback;
 /**
  * Created by saiteja64 on 1/23/16.
  */
+@ParseClassName(Person.className)
 public class Person extends ParseUser
 {
+    public final static String className = "Person";
     public Person()
     {
         super();
