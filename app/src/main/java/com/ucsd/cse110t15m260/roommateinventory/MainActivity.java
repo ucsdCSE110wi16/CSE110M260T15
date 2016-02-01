@@ -34,16 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -63,12 +54,14 @@ public class MainActivity extends AppCompatActivity {
         if (person == null) {
             joinApt.setVisibility(View.GONE);
             createApt.setVisibility(View.GONE);
+            login.setVisibility(View.VISIBLE);
             welcome.setText("Welcome, user! Please log in.");
         } else {
             login.setVisibility(View.GONE);
 
             if(person.getApartment() == null) {
                 createApt.setVisibility(View.VISIBLE);
+                joinApt.setVisibility(View.VISIBLE);
             }
             else {
                 createApt.setVisibility(View.GONE);
@@ -155,14 +148,16 @@ public class MainActivity extends AppCompatActivity {
      */
     public void logout(View view) {
         Person person = Person.getCurrentPerson();
-
+        TextView bye = (TextView) findViewById(R.id.textview_welcome);
+        Button login = (Button) findViewById(R.id.login);
+        login.setVisibility(View.VISIBLE);
         if (person != null) {
             Snackbar.make(
                     findViewById(android.R.id.content),
                     "Goodbye, " + person.getString("name") + ".",
                     Snackbar.LENGTH_LONG
             ).show();
-
+            bye.setText("Goodbye");
             Person.logoutPerson();
         }
     }
