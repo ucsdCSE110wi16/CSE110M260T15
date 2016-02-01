@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import Model.Apartment;
@@ -26,18 +27,12 @@ public class InvitationCodeActivity extends AppCompatActivity {
 
         Person person = Person.getCurrentPerson();
 
-        Apartment apartment = (Apartment) person.getApartment();
+        ParseObject apartment =  person.getApartment();
 
-
-
-
-
-
-
-        TextView apartment_invitation_id = (TextView) findViewById(R.id.apartment_invitation_id);
-
-
-        apartment_invitation_id.setText(apartment.getObjectId());
+        TextView apartmentInvitationId = (TextView) findViewById(R.id.apartment_invitation_id);
+        
+        Log.d("InvitationCode", "Invitation Code is: " + apartment.getObjectId());
+        apartmentInvitationId.setText(apartment.getObjectId());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

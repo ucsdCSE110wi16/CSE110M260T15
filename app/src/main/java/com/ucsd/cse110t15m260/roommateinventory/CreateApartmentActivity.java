@@ -87,14 +87,6 @@ public class CreateApartmentActivity extends AppCompatActivity {
             ).show();
         } else {
 
-            /* Apartment id will be the session token of the person who first created apartment */
-            String full_apartment_id = person.getSessionToken();
-
-            /* Take only first 5 characters of full_apartment_id */
-            String apartment_id = full_apartment_id.substring(2, 8);
-
-            Log.d("CreateApartmentActivity", "Apartment ID: " + apartment_id);
-
             String name = mApartmentNameView.getText().toString();
             String street_1 = mStreet1View.getText().toString();
             String street_2 = mStreet2View.getText().toString();
@@ -146,7 +138,7 @@ public class CreateApartmentActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            // Hooray! Apartment has been succesfully created
+                            // Hooray! Apartment has been successfully created
                             finish();
                         } else {
                             Log.e("Create Apartment", e.toString());
@@ -161,13 +153,14 @@ public class CreateApartmentActivity extends AppCompatActivity {
                 /* Add apartment pointer to person */
                 person.setApartment(apartment);
 
+                Log.d("CREATE APARTMENT", apartment.getObjectId());
+
                 Intent intent = new Intent(getBaseContext(), InvitationCodeActivity.class);
 
                 startActivity(intent);
 
                 finish();
             }
-
         }
     }
 
