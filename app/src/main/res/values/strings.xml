@@ -24,8 +24,10 @@
     </string>
     <string name="title_activity_register">Register</string>
 
+    <string name="leave_toast">Leaving Apartment</string>
+    <string name="leave_apartment">Leave my Apartment</string>
 
-    <!-- String related to creating apartment -->
+    <!-- Strings related to creating apartment -->
     <string name="title_activity_create_apartment">Create New Apartment</string>
     <string name="button_new_apartment">Create an Apartment</string>
     <string name="apartment_info">Please enter the following</string>
@@ -35,5 +37,6 @@
     <string name="state">State</string>
     <string name="zip_code">Zip Code</string>
     <string name="button_create_apartment">Create Apartment</string>
+
 
 </resources>

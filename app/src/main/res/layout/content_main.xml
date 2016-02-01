@@ -50,5 +50,15 @@
         android:layout_centerHorizontal="true"
         android:onClick="showCreateApartment"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/leave_apartment"
+        android:id="@+id/leave_apartment"
+        android:layout_marginBottom="112dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
+
 
 </RelativeLayout>

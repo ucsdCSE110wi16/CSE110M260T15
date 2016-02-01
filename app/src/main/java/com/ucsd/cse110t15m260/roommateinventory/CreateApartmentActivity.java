@@ -25,6 +25,7 @@ import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
 import Model.Apartment;
+import Model.Person;
 
 public class CreateApartmentActivity extends AppCompatActivity {
 
@@ -107,7 +108,10 @@ public class CreateApartmentActivity extends AppCompatActivity {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            Apartment.createApartment(street_1, street_2, state, city, zip_code);
+            Apartment apt = Apartment.createApartment(street_1, street_2, state, city, zip_code);
+            Person person = Person.getCurrentPerson();
+            apt.addPersonToApartment(person);
+            person.setApartment(apt);
             finish();
         }
 

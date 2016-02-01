@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -57,13 +58,22 @@ public class MainActivity extends AppCompatActivity {
 
         TextView welcome = (TextView) findViewById(R.id.textview_welcome);
         Button createApt = (Button) findViewById(R.id.create_apartment);
+        Button leaveApt = (Button) findViewById(R.id.leave_apartment);
 
         if(person.getApartment() == null) {
             createApt.setVisibility(View.VISIBLE);
+            leaveApt.setVisibility(View.GONE);
         }
-        else
+        else {
             createApt.setVisibility(View.GONE);
-
+            leaveApt.setVisibility(View.VISIBLE);
+            leaveApt.setOnClickListener(new View.OnClickListener(){
+                int id = R.string.leave_toast;
+                public void onClick(View v){
+                    Toast.makeText(MainActivity.this, id, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
         if (person == null) {
             welcome.setText("Welcome, user! Please log in.");
         } else {

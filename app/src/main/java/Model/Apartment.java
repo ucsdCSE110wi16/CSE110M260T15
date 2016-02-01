@@ -18,8 +18,7 @@ public class Apartment extends ParseObject {
         super();
     }
 
-
-    public static void createApartment(String s1, String s2, String st, String ct, String zc) {
+    public static Apartment createApartment(String s1, String s2, String st, String ct, String zc) {
         Apartment apartment = new Apartment();
         apartment.add("street_1", s1);
         apartment.add("street_2", s2);
@@ -28,6 +27,7 @@ public class Apartment extends ParseObject {
         apartment.add("zip_code", zc);
 
         apartment.saveInBackground();
+        return apartment;
     }
 
     /***********************
@@ -65,11 +65,10 @@ public class Apartment extends ParseObject {
      * Adds the given person the relation that contains the members of this apartment.
      * @param person
      */
-    public void addPersonToApartment( Person person) {
+    public void addPersonToApartment(Person person) {
         if (person == null) {
             return;
         }
-
         ParseRelation<Person> relation = getUserRelation();
         relation.add(person);
         incrementNumberOfResidents();
