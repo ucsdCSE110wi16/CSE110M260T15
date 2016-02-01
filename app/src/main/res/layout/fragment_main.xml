@@ -1,0 +1,69 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ucsd.cse110t15m260.roommateinventory.MainFragment">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal|top">
+
+        <TextView
+            android:id="@+id/textview_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World!"
+            android:layout_marginBottom="100dp" />
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="goToLogin"
+            android:text="@string/action_log_in"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="logout"
+            android:text="@string/action_log_out" />
+
+        <Button
+            android:id="@+id/create_apartment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showCreateApartment"
+            android:text="@string/button_new_apartment" />
+
+        <Button
+            android:id="@+id/join_apartment_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showJoinApartment"
+            android:text="Join an Apartment" />
+
+    </LinearLayout>
+
+</FrameLayout>
+
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ucsd.cse110t15m260.roommateinventory.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+</RelativeLayout>
+-->

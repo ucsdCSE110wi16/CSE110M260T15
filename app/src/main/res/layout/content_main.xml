@@ -10,49 +10,28 @@
     tools:context="com.ucsd.cse110t15m260.roommateinventory.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+    <android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textview_welcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
-            android:layout_marginBottom="100dp" />
+        <!-- The main content view -->
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <Button
-            android:id="@+id/login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="goToLogin"
-            android:text="@string/action_log_in"
-            android:layout_gravity="center_horizontal" />
+        <!-- The navigation drawer -->
+        <ListView android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:background="#111"/>
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="logout"
-            android:text="@string/action_log_out" />
-
-        <Button
-            android:id="@+id/create_apartment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="showCreateApartment"
-            android:text="@string/button_new_apartment" />
-
-        <Button
-            android:id="@+id/join_apartment_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="showJoinApartment"
-            android:text="Join an Apartment" />
-
-    </LinearLayout>
+    </android.support.v4.widget.DrawerLayout>
 
 </RelativeLayout>
