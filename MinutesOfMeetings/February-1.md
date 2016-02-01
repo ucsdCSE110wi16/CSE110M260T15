@@ -10,7 +10,7 @@
    - As a user, I can see the people in my apartment
 - Add Sidemenu
    - Sidemenu should contain navigation to other activities (pages/screens).
-   - My Apt
+   - My Apt (Edit/People List/etc.)
    - Inventory
    - Login
    - Logout 
