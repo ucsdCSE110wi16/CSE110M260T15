@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
+        */
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -57,23 +57,30 @@ public class MainActivity extends AppCompatActivity {
 
         TextView welcome = (TextView) findViewById(R.id.textview_welcome);
         Button createApt = (Button) findViewById(R.id.create_apartment);
-
-        if(person.getApartment() == null) {
-            createApt.setVisibility(View.VISIBLE);
-        }
-        else
-            createApt.setVisibility(View.GONE);
+        Button joinApt = (Button) findViewById(R.id.join_apartment_button);
+        Button login = (Button) findViewById(R.id.login);
 
         if (person == null) {
+            joinApt.setVisibility(View.GONE);
+            createApt.setVisibility(View.GONE);
             welcome.setText("Welcome, user! Please log in.");
         } else {
+            login.setVisibility(View.GONE);
+
+            if(person.getApartment() == null) {
+                createApt.setVisibility(View.VISIBLE);
+            }
+            else {
+                createApt.setVisibility(View.GONE);
+                joinApt.setVisibility(View.GONE);
+            }
+
             welcome.setText(
                     "Welcome, "+ person.getString("name") + "!\n" +
                     "Your User ID is: " + person.getObjectId() + "\n" +
                     "Your Session Token is: " + person.getSessionToken() + "\n" +
                     "Your Apartment is: " + (person.getApartment() == null ? null : person.getApartment().toString())
             );
-
             Snackbar.make(
                     findViewById(android.R.id.content),
                     "Welcome, " + person.getString("name") + "!",
@@ -169,10 +176,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates virtual apartment
+     * Starts CreateApartmentActivity
      */
     public void showCreateApartment(View view) {
         Intent intent = new Intent(getBaseContext(), CreateApartmentActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Creates virtual apartment
+     */
+    public void showJoinApartment(View view) {
+        Intent intent = new Intent(getBaseContext(), JoinApartmentActivity.class);
         startActivity(intent);
     }
 }

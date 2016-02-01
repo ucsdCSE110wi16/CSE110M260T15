@@ -1,8 +1,12 @@
 package Model;
 
+
+import android.util.Log;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
+import com.parse.SaveCallback;
 
 /**
  * Created by satre on 1/23/16.
@@ -19,17 +23,34 @@ public class Apartment extends ParseObject {
     }
 
 
-    public static void createApartment(String s1, String s2, String st, String ct, String zc) {
-        Apartment apartment = new Apartment();
-        apartment.add("street_1", s1);
-        apartment.add("street_2", s2);
-        apartment.add("state", st);
-        apartment.add("city", ct);
-        apartment.add("zip_code", zc);
+    public static Apartment createApartment(String apartment_id, String apartment_name, String street_1, String street_2, String state, String city, String zip_code, SaveCallback sc) {
 
-        apartment.saveInBackground();
+        Log.d("Apartment", "creating apartment");
+
+        Apartment apartment = new Apartment();
+
+        apartment.put("id", apartment_id);
+        apartment.put("name", apartment_name);
+        apartment.put("street_1", street_1);
+        apartment.put("street_2", street_2);
+        apartment.put("state", state);
+        apartment.put("city", city);
+        apartment.put("zip_code", zip_code);
+
+        apartment.saveInBackground(sc);
+
+        return apartment;
     }
 
+    /**
+     * Removes apartment from database
+     *
+     */
+    public void deleteApartment(Apartment apartment) {
+        /* TODO: remove all roomies' relations to apartment and then delete apartment */
+
+
+    }
     /***********************
      * Properties
      */
@@ -115,6 +136,8 @@ public class Apartment extends ParseObject {
 
         return getNumberOfResidents();
     }
+
+
 
     /**
      * Sets address fields for the apartment

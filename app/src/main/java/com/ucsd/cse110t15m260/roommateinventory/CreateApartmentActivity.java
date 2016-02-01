@@ -3,6 +3,7 @@ package com.ucsd.cse110t15m260.roommateinventory;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import Model.Apartment;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -22,12 +24,16 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.ArrayList;
+
 import Model.Apartment;
+import Model.Person;
 
 public class CreateApartmentActivity extends AppCompatActivity {
-
+    private EditText mApartmentNameView;
     private EditText mStreet1View;
     private EditText mStreet2View;
     private EditText mStateView;
@@ -48,6 +54,7 @@ public class CreateApartmentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //Set up Address Form
+        mApartmentNameView = (EditText) findViewById(R.id.apartment_name);
         mStreet1View = (EditText) findViewById(R.id.street_1);
         mStreet2View = (EditText) findViewById(R.id.street_2);
         mStateView = (EditText) findViewById(R.id.state);
@@ -68,49 +75,102 @@ public class CreateApartmentActivity extends AppCompatActivity {
     }
 
     public void createNewApartment(View view) {
-        String street_1 = mStreet1View.getText().toString();
-        String street_2 = mStreet2View.getText().toString();
-        String state = mStateView.getText().toString();
-        String city = mCityView.getText().toString();
-        String zip_code = mZipCodeView.getText().toString();
+        Person person = Person.getCurrentPerson();
 
-        boolean cancel = false;
-        View focusView = null;
+        if(person.getApartment() != null) {
+            Log.d("CreateApartment", "User already has an apartment!");
 
-        /* Check that user filled in street_1, street_2 is optional */
-        if (TextUtils.isEmpty(street_1)) {
-            mStreet1View.setError("This field is required");
-            focusView = mStreet1View;
-            cancel = true;
-        }
-
-        /* Check that user filled in state */
-        if (TextUtils.isEmpty(state)) {
-            mStateView.setError("This field is required");
-            focusView = mStateView;
-            cancel = true;
-        }
-        /* Check that user filled in city */
-        if (TextUtils.isEmpty(city)) {
-            mCityView.setError("This field is required");
-            focusView = mCityView;
-            cancel = true;
-        }
-
-        /* Check that user filled in zip code */
-        if (TextUtils.isEmpty(zip_code)) {
-            mZipCodeView.setError("This field is required");
-            focusView = mZipCodeView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            focusView.requestFocus();
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "You already have an apartment! You must delete it first before creating a new one.",
+                    Snackbar.LENGTH_LONG
+            ).show();
         } else {
-            Apartment.createApartment(street_1, street_2, state, city, zip_code);
-            finish();
-        }
 
+            /* Apartment id will be the session token of the person who first created apartment */
+            String full_apartment_id = person.getSessionToken();
+
+            /* Take only first 5 characters of full_apartment_id */
+            String apartment_id = full_apartment_id.substring(2, 8);
+
+            Log.d("CreateApartmentActivity", "Apartment ID: " + apartment_id);
+
+            String name = mApartmentNameView.getText().toString();
+            String street_1 = mStreet1View.getText().toString();
+            String street_2 = mStreet2View.getText().toString();
+            String state = mStateView.getText().toString();
+            String city = mCityView.getText().toString();
+            String zip_code = mZipCodeView.getText().toString();
+
+            boolean cancel = false;
+            View focusView = null;
+
+            /* Check that user filled in apartment_name */
+            if (TextUtils.isEmpty(name)) {
+                mApartmentNameView.setError("This field is required");
+                focusView = mApartmentNameView;
+                cancel = true;
+            }
+
+            /* Check that user filled in street_1, street_2 is optional */
+            if (TextUtils.isEmpty(street_1)) {
+                mStreet1View.setError("This field is required");
+                focusView = mStreet1View;
+                cancel = true;
+            }
+
+            /* Check that user filled in state */
+            if (TextUtils.isEmpty(state)) {
+                mStateView.setError("This field is required");
+                focusView = mStateView;
+                cancel = true;
+            }
+            /* Check that user filled in city */
+            if (TextUtils.isEmpty(city)) {
+                mCityView.setError("This field is required");
+                focusView = mCityView;
+                cancel = true;
+            }
+
+            /* Check that user filled in zip code */
+            if (TextUtils.isEmpty(zip_code)) {
+                mZipCodeView.setError("This field is required");
+                focusView = mZipCodeView;
+                cancel = true;
+            }
+
+            if (cancel) {
+                focusView.requestFocus();
+            } else {
+                Apartment apartment = Apartment.createApartment(apartment_id, name, street_1, street_2, state, city, zip_code, new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            // Hooray! Apartment has been succesfully created
+                            finish();
+                        } else {
+                            Log.e("Create Apartment", e.toString());
+                            // Sign up didn't succeed. Look at the ParseException
+                            // to figure out what went wrong
+                        }
+                    }
+                });
+
+                apartment.addPersonToApartment(person);
+
+                /* Add apartment pointer to person */
+                person.setApartment(apartment);
+
+                Intent intent = new Intent(getBaseContext(), InvitationCodeActivity.class);
+
+                /* Pass the apartment_id to next activity */
+                intent.putExtra("apartment_id", apartment_id);
+                startActivity(intent);
+
+                finish();
+            }
+
+        }
     }
 
     @Override

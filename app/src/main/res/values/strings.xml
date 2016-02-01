@@ -29,11 +29,14 @@
     <string name="title_activity_create_apartment">Create New Apartment</string>
     <string name="button_new_apartment">Create an Apartment</string>
     <string name="apartment_info">Please enter the following</string>
+    <string name="apartment_name">Apartment Name</string>
     <string name="street_1">Street 1</string>
     <string name="street_2">Street 2</string>
     <string name="city">City</string>
     <string name="state">State</string>
     <string name="zip_code">Zip Code</string>
     <string name="button_create_apartment">Create Apartment</string>
+    <string name="title_activity_invitation_code">Invite your apartment mates</string>
+    <string name="title_activity_join_apartment">JoinApartmentActivity</string>
 
 </resources>
