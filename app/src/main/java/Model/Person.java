@@ -14,6 +14,7 @@ public class Person extends ParseUser
 {
     private boolean hasApartment = false;
 
+
     public Person()
     {
         super();

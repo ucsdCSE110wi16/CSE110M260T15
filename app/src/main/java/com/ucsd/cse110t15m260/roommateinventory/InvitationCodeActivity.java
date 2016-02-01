@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 
+import Model.Apartment;
+import Model.Person;
+
 public class InvitationCodeActivity extends AppCompatActivity {
 
     @Override
@@ -21,13 +24,20 @@ public class InvitationCodeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ParseUser user = ParseUser.getCurrentUser();
+        Person person = Person.getCurrentPerson();
+
+        Apartment apartment = (Apartment) person.getApartment();
+
+
+
+
+
+
 
         TextView apartment_invitation_id = (TextView) findViewById(R.id.apartment_invitation_id);
-        Intent intent = getIntent();
-        String apartment_id = intent.getExtras().getString("apartment_id");
 
-        apartment_invitation_id.setText(apartment_id);
+
+        apartment_invitation_id.setText(apartment.getObjectId());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
