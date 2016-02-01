@@ -26,8 +26,6 @@ public class InventoryManager {
      */
     public static final InventoryManager inventoryManager = new InventoryManager();
 
-    private Apartment apartment;
-
     /**
      * Default constructor, made private to enforce singleton.
      */
@@ -40,8 +38,12 @@ public class InventoryManager {
      * @param callback Function to call upon completion.
      */
     public void fetchInventory(final FindCallback<InventoryItem> callback) {
+        Apartment currentApartment = ApartmentManager.apartmentManager.getCurrentApartment();
+        if (currentApartment == null) {
+            return;
+        }
         //get the inventory from the apartment
-        final Inventory inventory = apartment.getInventory();
+        final Inventory inventory = currentApartment.getInventory();
         //get the relation to InventoryItem
         ParseRelation<InventoryItem> itemRelation = inventory.getInventoryItemsRelation();
 
