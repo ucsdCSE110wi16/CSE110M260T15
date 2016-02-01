@@ -28,7 +28,6 @@ public class InventoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inventory);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +47,7 @@ public class InventoryActivity extends AppCompatActivity {
         });
 
         this.currentInventory = ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
+
         getActionBar().setTitle(this.currentInventory.getName());
 
         InventoryItem[] inventoryItems = (InventoryItem[]) this.currentInventory.items.toArray();
