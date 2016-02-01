@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -51,14 +50,9 @@ public class InventoryActivity extends AppCompatActivity {
         this.currentInventory = ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
         getActionBar().setTitle(this.currentInventory.getName());
 
-        String[] inventoryItems = new String[this.currentInventory.items.size()];
+        InventoryItem[] inventoryItems = (InventoryItem[]) this.currentInventory.items.toArray();
 
-        for(int i = 0; i < this.currentInventory.items.size();i++)
-        {
-            inventoryItems[i] = this.currentInventory.items.get(i).getName();
-        }
-
-        ListAdapter inventoryFoodAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,inventoryItems);
+        ListAdapter inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(this, inventoryItems);
         ListView inventoryView = (ListView) findViewById(R.id.inventoryListView);
         inventoryView.setAdapter(inventoryFoodAdapter);
 
