@@ -1,11 +1,7 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,20 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import Model.Apartment;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import java.util.ArrayList;
 
 import Model.Apartment;
 import Model.Person;

@@ -1,6 +1,5 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,9 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
-import Model.Apartment;
 import Model.Person;
 
 public class InvitationCodeActivity extends AppCompatActivity {
