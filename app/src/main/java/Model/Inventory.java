@@ -14,10 +14,10 @@ public class Inventory extends ParseObject {
 
     /**
      * The run-time array that contains the items stored in this list.
-     * Note that when this object is fetch, this variable is not populated by default,
+     * Note that when {@code this} object is fetched, the variable is not populated by default,
      * it must be fetched separately.
      */
-    protected InventoryItem[] items = new InventoryItem[0];
+    public InventoryItem[] items = new InventoryItem[0];
 
     /**
      * Getter for the name of this inventory list.
