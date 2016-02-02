@@ -6,6 +6,8 @@ import com.parse.Parse;
 import com.parse.ParseObject;
 
 import Model.Apartment;
+import Model.Inventory;
+import Model.InventoryItem;
 import Model.Person;
 
 /**
@@ -25,6 +27,9 @@ public class App extends Application {
 
         ParseObject.registerSubclass(Person.class);
         ParseObject.registerSubclass(Apartment.class);
+        ParseObject.registerSubclass(Person.class);
+        ParseObject.registerSubclass(Inventory.class);
+        ParseObject.registerSubclass(InventoryItem.class);
 
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);

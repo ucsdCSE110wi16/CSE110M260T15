@@ -5,11 +5,12 @@ import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import Model.Apartment;
 
 /**
  * Created by saiteja64 on 1/23/16.
  */
-@ParseClassName(Person.className)
+//@ParseClassName(Person.className)
 public class Person extends ParseUser
 {
     public final static String className = "Person";
@@ -22,9 +23,9 @@ public class Person extends ParseUser
      * Accesor to the residence of this person
      * @return The apartment which they live in.
      */
-    public ParseObject getApartment()
+    public Apartment getApartment()
     {
-        return getParseObject("apartment");
+        return (Apartment) getParseObject("apartment");
     }
 
     /**
@@ -56,7 +57,7 @@ public class Person extends ParseUser
     }
 
     public static Person getCurrentPerson() {
-        return (Person) ParseUser.getCurrentUser();
+        return (Person )ParseUser.getCurrentUser();
     }
 
     /**
