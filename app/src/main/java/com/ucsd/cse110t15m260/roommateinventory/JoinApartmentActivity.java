@@ -1,10 +1,8 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -15,15 +13,15 @@ import com.parse.ParseQuery;
 
 import Model.Apartment;
 import Model.Person;
+
 public class JoinApartmentActivity extends AppCompatActivity {
 
     private EditText mApartmentIdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_apartment);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
     }
 
@@ -54,7 +52,7 @@ public class JoinApartmentActivity extends AppCompatActivity {
                     } else {
                         mApartmentIdView.setError("Incorrect PIN!");
                         mApartmentIdView.requestFocus();
-                     }
+                    }
                 } else {
                     Snackbar.make(
                             findViewById(android.R.id.content),

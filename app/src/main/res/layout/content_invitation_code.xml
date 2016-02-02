@@ -9,32 +9,30 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ucsd.cse110t15m260.roommateinventory.InvitationCodeActivity"
+    tools:context=".InvitationCodeActivity"
     tools:showIn="@layout/activity_invitation_code">
 
     <TextView
+        android:id="@+id/apartment_invitation_instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="To invite your apartment mates, simply have them enter this code when prompted on the join apartment page:"
-        android:id="@+id/apartment_invitation_instructions"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="100dp"
+        android:text="To invite your apartment mates, simply have them enter this code when prompted on the join apartment page:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
     <TextView
+        android:id="@+id/apartment_invitation_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/apartment_invitation_id"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:autoText="false"
         android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#044efa" />
-
-
 
 
 </RelativeLayout>

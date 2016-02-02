@@ -5,11 +5,9 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toolbar;
+
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -56,9 +56,8 @@ public class MainActivity extends AppCompatActivity {
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -93,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void setTitle(CharSequence title) {
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
+        //mTitle = title;
+        //getActionBar().setTitle(mTitle);
     }
 
     @Override
@@ -118,10 +117,9 @@ public class MainActivity extends AppCompatActivity {
             login.setVisibility(View.GONE);
             logout.setVisibility(View.VISIBLE);
             createApt.setVisibility(View.VISIBLE);
-            if(person.getApartment() == null) {
+            if (person.getApartment() == null) {
                 joinApt.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 joinApt.setVisibility(View.GONE);
             }
 
@@ -221,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Starts RegisterActivity
      */
-    public void goToLogin(View view) {
+    public void showLogin(View view) {
         Intent intent = new Intent(getBaseContext(), LoginActivity.class);
         startActivity(intent);
     }
