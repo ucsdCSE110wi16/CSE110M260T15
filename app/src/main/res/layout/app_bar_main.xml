@@ -22,6 +22,8 @@ tools:context="com.ucsd.cse110t15m260.roommateinventory.MainActivity">
 
 </android.support.design.widget.AppBarLayout>
 
+<!--
 <include layout="@layout/content_main" />
+-->
 
 </android.support.design.widget.CoordinatorLayout>
