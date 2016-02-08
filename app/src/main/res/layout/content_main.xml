@@ -40,6 +40,13 @@
             android:text="@string/action_log_out" />
 
         <Button
+            android:id="@+id/button_leave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leave Apartment"
+            android:onClick="leaveApartment" />
+
+        <Button
             android:id="@+id/create_apartment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +54,7 @@
             android:text="@string/button_new_apartment" />
 
         <Button
-            android:id="@+id/join_apartment_button"
+            android:id="@+id/button_join"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="showJoinApartment"
