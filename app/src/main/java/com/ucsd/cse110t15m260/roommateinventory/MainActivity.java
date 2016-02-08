@@ -14,10 +14,14 @@ import android.widget.TextView;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.parse.FindCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
+import java.util.List;
+
+import Model.Apartment;
 import Model.Person;
 
 public class MainActivity extends AppCompatActivity {
@@ -114,12 +118,14 @@ public class MainActivity extends AppCompatActivity {
         Person person = Person.getCurrentPerson();
 
         TextView welcome = (TextView) findViewById(R.id.textview_welcome);
+        Button apt = (Button) findViewById(R.id.button_apartment);
         Button createApt = (Button) findViewById(R.id.create_apartment);
         Button joinApt = (Button) findViewById(R.id.button_join);
         Button leave = (Button) findViewById(R.id.button_leave);
         Button login = (Button) findViewById(R.id.login);
         Button logout = (Button) findViewById(R.id.logout);
 
+        apt.setVisibility(View.GONE);
         createApt.setVisibility(View.GONE);
         joinApt.setVisibility(View.GONE);
         leave.setVisibility(View.GONE);
@@ -132,11 +138,12 @@ public class MainActivity extends AppCompatActivity {
             welcome.setText("Welcome, user! Please log in.");
         } else {
             logout.setVisibility(View.VISIBLE);
-            createApt.setVisibility(View.VISIBLE);
 
             if (person.hasApartment()) {
                 leave.setVisibility(View.VISIBLE);
+                apt.setVisibility(View.VISIBLE);
             } else {
+                createApt.setVisibility(View.VISIBLE);
                 joinApt.setVisibility(View.VISIBLE);
             }
 
@@ -197,6 +204,14 @@ public class MainActivity extends AppCompatActivity {
      */
     public void showLogin(View view) {
         Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Starts ApartmentActivity
+     */
+    public void showApartment(View view) {
+        Intent intent = new Intent(getBaseContext(), ApartmentActivity.class);
         startActivity(intent);
     }
 

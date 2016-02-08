@@ -108,5 +108,8 @@ public class Person extends ParseUser {
         return getString("lastName");
     }
 
-
+    @Override
+    public String toString() {
+        return getString("name");
+    }
 }

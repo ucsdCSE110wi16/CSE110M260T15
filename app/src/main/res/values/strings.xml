@@ -37,6 +37,7 @@
     <string name="zip_code">Zip Code</string>
     <string name="button_create_apartment">Create Apartment</string>
     <string name="title_activity_invitation_code">Invite your apartment mates</string>
-    <string name="title_activity_join_apartment">JoinApartmentActivity</string>
+    <string name="title_activity_join_apartment">Join an apartment</string>
+    <string name="title_activity_apartment">My apartment</string>
 
 </resources>

@@ -3,10 +3,16 @@ package Model;
 
 import android.util.Log;
 
+import com.parse.FindCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseRelation;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by satre on 1/23/16.
@@ -108,6 +114,14 @@ public class Apartment extends ParseObject {
         relation.remove(person);
         decrementNumberOfResidents();
         saveInBackground();
+    }
+
+    public void findMembers(FindCallback<Person> callback) {
+        ParseQuery<Person> query = ParseQuery.getQuery(Person.class);
+        query.whereEqualTo("apartment", this);
+
+        query.findInBackground(callback);
+
     }
 
     /**

@@ -40,6 +40,13 @@
             android:text="@string/action_log_out" />
 
         <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Apartment"
+            android:onClick="showApartment"
+            android:id="@+id/button_apartment" />
+
+        <Button
             android:id="@+id/button_leave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
