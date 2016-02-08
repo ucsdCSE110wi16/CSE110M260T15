@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.parse.LogOutCallback;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import Model.Person;
 
@@ -40,36 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Person person = Person.getCurrentPerson();
-
-        TextView welcome = (TextView) findViewById(R.id.textview_welcome);
-        Button createApt = (Button) findViewById(R.id.create_apartment);
-        Button joinApt = (Button) findViewById(R.id.join_apartment_button);
-        Button login = (Button) findViewById(R.id.login);
-        Button logout = (Button) findViewById(R.id.logout);
-        if (person == null) {
-            joinApt.setVisibility(View.GONE);
-            logout.setVisibility(View.GONE);
-            createApt.setVisibility(View.GONE);
-            login.setVisibility(View.VISIBLE);
-            welcome.setText("Welcome, user! Please log in.");
-        } else {
-            login.setVisibility(View.GONE);
-            logout.setVisibility(View.VISIBLE);
-            createApt.setVisibility(View.VISIBLE);
-            if (person.getApartment() == null) {
-                joinApt.setVisibility(View.VISIBLE);
-            } else {
-                joinApt.setVisibility(View.GONE);
-            }
-
-            welcome.setText(
-                    "Welcome, " + person.getString("name") + "!\n" +
-                            "Your User ID is: " + person.getObjectId() + "\n" +
-                            "Your Session Token is: " + person.getSessionToken() + "\n" +
-                            "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
-            );
-        }
+        updateInfo();
     }
 
     @Override
@@ -134,6 +108,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Updates the information on the screen
+     */
+    private void updateInfo() {
+        Person person = Person.getCurrentPerson();
+
+        TextView welcome = (TextView) findViewById(R.id.textview_welcome);
+        Button createApt = (Button) findViewById(R.id.create_apartment);
+        Button joinApt = (Button) findViewById(R.id.button_join);
+        Button leave = (Button) findViewById(R.id.button_leave);
+        Button login = (Button) findViewById(R.id.login);
+        Button logout = (Button) findViewById(R.id.logout);
+
+        createApt.setVisibility(View.GONE);
+        joinApt.setVisibility(View.GONE);
+        leave.setVisibility(View.GONE);
+        login.setVisibility(View.GONE);
+        logout.setVisibility(View.GONE);
+
+
+        if (person == null) {
+            login.setVisibility(View.VISIBLE);
+            welcome.setText("Welcome, user! Please log in.");
+        } else {
+            logout.setVisibility(View.VISIBLE);
+            createApt.setVisibility(View.VISIBLE);
+
+            if (person.hasApartment()) {
+                leave.setVisibility(View.VISIBLE);
+            } else {
+                joinApt.setVisibility(View.VISIBLE);
+            }
+
+            welcome.setText(
+                    "Welcome, " + person.getString("name") + "!\n" +
+                            "Your User ID is: " + person.getObjectId() + "\n" +
+                            "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
+            );
+        }
+    }
+
+    /**
      * Logs out
      */
     public void logout(View view) {
@@ -150,10 +165,31 @@ public class MainActivity extends AppCompatActivity {
                     Snackbar.LENGTH_LONG
             ).show();
             bye.setText("Goodbye");
-            Person.logoutPerson();
+            Person.logoutPerson(new LogOutCallback() {
+                @Override
+                public void done(ParseException e) {
+                    updateInfo();
+                }
+            });
         }
 
         onResume();
+    }
+
+    /**
+     * Removes the current user from his/her apartment
+     */
+    public void leaveApartment(View view) {
+        Person person = Person.getCurrentPerson();
+
+        if (person != null) {
+            person.leaveApartment(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    updateInfo();
+                }
+            });
+        }
     }
 
     /**
