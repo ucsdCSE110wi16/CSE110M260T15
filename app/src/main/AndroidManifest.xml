@@ -45,9 +45,6 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -80,7 +77,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
         </activity>
+        <activity
+            android:name=".ApartmentActivity"
+            android:label="@string/title_activity_apartment">
 
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

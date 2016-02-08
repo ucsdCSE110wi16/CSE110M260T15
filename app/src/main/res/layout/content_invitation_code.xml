@@ -22,7 +22,6 @@
         android:text="To invite your apartment mates, simply have them enter this code when prompted on the join apartment page:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-
     <TextView
         android:id="@+id/apartment_invitation_id"
         android:layout_width="wrap_content"
@@ -33,6 +32,5 @@
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#044efa" />
-
 
 </RelativeLayout>

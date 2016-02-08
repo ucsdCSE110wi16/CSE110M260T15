@@ -3,7 +3,9 @@ package Model;
 import android.util.Log;
 
 import com.parse.LogInCallback;
+import com.parse.LogOutCallback;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 /**
@@ -23,7 +25,7 @@ public class Person extends ParseUser {
      * Convenience method to sign up a new Person.
      */
     public static Person createPerson(String name, String email, String password, SignUpCallback callback) {
-        Person.logoutPerson();
+        Person.logoutPerson(null);
 
         Person person = new Person();
         person.setUsername(email);
@@ -49,11 +51,11 @@ public class Person extends ParseUser {
     /**
      * Convenience method to logout a person
      */
-    public static void logoutPerson() {
+    public static void logoutPerson(LogOutCallback callback) {
         Person person = getCurrentPerson();
 
         if (person != null) {
-            person.logOutInBackground();
+            person.logOutInBackground(callback);
         }
     }
 
@@ -79,6 +81,11 @@ public class Person extends ParseUser {
         }
     }
 
+    public void leaveApartment(SaveCallback callback) {
+        remove("apartment");
+        saveInBackground(callback);
+    }
+
     public boolean hasApartment() {
         return getApartment() != null;
     }
@@ -101,5 +108,8 @@ public class Person extends ParseUser {
         return getString("lastName");
     }
 
-
+    @Override
+    public String toString() {
+        return getString("name");
+    }
 }

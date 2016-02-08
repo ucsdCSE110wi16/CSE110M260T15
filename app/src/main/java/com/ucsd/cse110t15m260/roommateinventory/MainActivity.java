@@ -20,20 +20,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.parse.FindCallback;
+import com.parse.LogOutCallback;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.Locale;
+import java.util.List;
 
+import Model.Apartment;
 import Model.Person;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,10 +58,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Person person = Person.getCurrentPerson();
 
-        if(person == null)
-        {
+        if (person == null) {
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
+            finish();
         }
 
         mTitle = mDrawerTitle = getTitle();
@@ -82,13 +85,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
-        navView.setNavigationItemSelectedListener(this);
-        Menu menuNav = navView.getMenu();
-        MenuItem logoutItem = menuNav.findItem(R.id.nav_logout);
-        if (person == null) {
-            logoutItem.setVisible(false);
-        }
+        updateInfo();
+
         Fragment frag = new Frag();
         FragmentTransaction fragManager = getFragmentManager().beginTransaction();
         fragManager.replace(R.id.content_frame, frag);
@@ -177,27 +175,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d("OnNavigation", "JOIN APARTMENT");
             Intent intent = new Intent(getBaseContext(), JoinApartmentActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_login) {
-            Log.d("OnNavigation", "LOGIN PRESSED");
-            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+        } else if (id == R.id.nav_my_apt) {
+            Log.d("OnNavigation", "MY APARTMENT");
+            Intent intent = new Intent(getBaseContext(), ApartmentActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             Log.d("OnNavigation", "LOGOUT PRESSED");
-            Person person = Person.getCurrentPerson();
-            TextView bye = (TextView) findViewById(R.id.textview_welcome);
-            if (person != null) {
-                Snackbar.make(
-                        findViewById(android.R.id.content),
-                        "Goodbye, " + person.getString("name") + ".",
-                        Snackbar.LENGTH_LONG
-                ).show();
-                bye.setText("Goodbye");
-                Person.logoutPerson();
-            }
-            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-            startActivity(intent);
+            logout();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -230,17 +215,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navView.setNavigationItemSelectedListener(this);
         Menu menuNav = navView.getMenu();
         MenuItem logoutItem = menuNav.findItem(R.id.nav_logout);
-        MenuItem loginItem = menuNav.findItem(R.id.nav_login);
         if (person == null) {
             logoutItem.setVisible(false);
-            loginItem.setVisible(true);
-        }
-        else {
-            loginItem.setVisible(false);
+        } else {
             logoutItem.setVisible(true);
         }
-        TextView text = (TextView) findViewById(R.id.textview_welcome);
-        text.setText("Hello");
+        updateInfo();
     }
 
     @Override
@@ -283,6 +263,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         client.disconnect();
     }
 
+    public void logout() {
+        Person person = Person.getCurrentPerson();
+        TextView bye = (TextView) findViewById(R.id.textview_welcome);
+
+        if (person != null) {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Goodbye, " + person.getString("name") + ".",
+                    Snackbar.LENGTH_LONG
+            ).show();
+            bye.setText("Goodbye");
+            Person.logoutPerson(new LogOutCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        updateInfo();
+                        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Log.d("LOGOUT", e.toString());
+                    }
+                }
+            });
+        }
+    }
+
+    private void updateInfo() {
+
+        Person person = Person.getCurrentPerson();
+        TextView text = (TextView) findViewById(R.id.textview_welcome);
+
+        //TODO -- NULL EXCEPTION NEED TO FIX
+        /*if(person == null)
+        {
+            text.setText(  "Welcome, " + person.getString("name") + "!\n" +
+                    "Your User ID is: " + person.getObjectId() + "\n" +
+                    "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
+        }*/
+
+    }
+
     /**
      * Fragment that appears in the "content_frame"
      */
@@ -298,44 +320,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             //Person person = Person.getCurrentPerson();
-
             TextView text = (TextView) rootView.findViewById(R.id.textview_welcome);
             text.setText("Hello");
             getActivity().setTitle("Home Page");
             return rootView;
         }
-
-
     }
 }
-
-/*
-            TextView welcome = (TextView) rootView.findViewById(R.id.textview_welcome);
-            Button createApt = (Button) rootView.findViewById(R.id.create_apartment);
-            Button joinApt = (Button) rootView.findViewById(R.id.join_apartment_button);
-            Button login = (Button) rootView.findViewById(R.id.login);
-            Button logout = (Button) rootView.findViewById(R.id.logout);
-            if (person == null) {
-                joinApt.setVisibility(View.GONE);
-                logout.setVisibility(View.GONE);
-                createApt.setVisibility(View.GONE);
-                login.setVisibility(View.VISIBLE);
-                welcome.setText("Welcome, user! Please log in.");
-            } else {
-                login.setVisibility(View.GONE);
-                logout.setVisibility(View.VISIBLE);
-                createApt.setVisibility(View.VISIBLE);
-                if (person.getApartment() == null) {
-                    joinApt.setVisibility(View.VISIBLE);
-                } else {
-                    joinApt.setVisibility(View.GONE);
-                }
-
-                welcome.setText(
-                        "Welcome, " + person.getString("name") + "!\n" +
-                                "Your User ID is: " + person.getObjectId() + "\n" +
-                                "Your Session Token is: " + person.getSessionToken() + "\n" +
-                                "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
-                );
-            }
-*/

@@ -58,6 +58,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -177,8 +179,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 public void done(ParseUser user, ParseException e) {
                     showProgress(false);
 
-                    if (user != null) {
+                    if (user != null && e == null) {
                         // Hooray! The user is logged in.
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(intent);
                         finish();
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
