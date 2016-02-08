@@ -2,10 +2,12 @@ package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,65 +36,77 @@ import java.util.Locale;
 
 import Model.Person;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mPages;
-    //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-    //setSupportActionBar(toolbar);
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        mPages = getResources().getStringArray(R.array.mpages);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        Person person = Person.getCurrentPerson();
+
+        if(person == null)
+        {
+            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+            startActivity(intent);
+        }
+
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
                 R.string.drawer_open, R.string.drawer_close) {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mTitle);
+                getSupportActionBar().setTitle("Home Page");
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(mDrawerTitle);
+                getSupportActionBar().setTitle("Home Page");
                 invalidateOptionsMenu();
             }
         };
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
 
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mPages));
-
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
+        Menu menuNav = navView.getMenu();
+        MenuItem logoutItem = menuNav.findItem(R.id.nav_logout);
+        if (person == null) {
+            logoutItem.setVisible(false);
+        }
+        Fragment frag = new Frag();
+        FragmentTransaction fragManager = getFragmentManager().beginTransaction();
+        fragManager.replace(R.id.content_frame, frag);
+        fragManager.commit();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -104,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -138,33 +152,55 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-    /**
-     * Swaps fragments in the main content view
-     */
-    private void selectItem(int position) {
-        // Create a new fragment and specify the planet to show based on position
         Fragment fragment = new Frag();
-        Bundle args = new Bundle();
-        args.putInt(Frag.FRAG_NUM, position);
-        fragment.setArguments(args);
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
 
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mPages[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+        if (id == R.id.nav_first) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
+        } else if (id == R.id.nav_second) {
+            Log.d("OnNavigation", "GALLERY PRESSED");
+        } else if (id == R.id.nav_third) {
+            Log.d("OnNavigation", "CREATE APARTMENT");
+            Intent intent = new Intent(getBaseContext(), CreateApartmentActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_fourth) {
+            Log.d("OnNavigation", "JOIN APARTMENT");
+            Intent intent = new Intent(getBaseContext(), JoinApartmentActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_login) {
+            Log.d("OnNavigation", "LOGIN PRESSED");
+            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_logout) {
+            Log.d("OnNavigation", "LOGOUT PRESSED");
+            Person person = Person.getCurrentPerson();
+            TextView bye = (TextView) findViewById(R.id.textview_welcome);
+            if (person != null) {
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        "Goodbye, " + person.getString("name") + ".",
+                        Snackbar.LENGTH_LONG
+                ).show();
+                bye.setText("Goodbye");
+                Person.logoutPerson();
+            }
+            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
@@ -185,11 +221,26 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
+        Person person = Person.getCurrentPerson();
 
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
+        Menu menuNav = navView.getMenu();
+        MenuItem logoutItem = menuNav.findItem(R.id.nav_logout);
+        MenuItem loginItem = menuNav.findItem(R.id.nav_login);
+        if (person == null) {
+            logoutItem.setVisible(false);
+            loginItem.setVisible(true);
+        }
+        else {
+            loginItem.setVisible(false);
+            logoutItem.setVisible(true);
+        }
+        TextView text = (TextView) findViewById(R.id.textview_welcome);
+        text.setText("Hello");
     }
 
     @Override
@@ -233,53 +284,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Logs out
-     */
-    public void logout(View view) {
-        Person person = Person.getCurrentPerson();
-        TextView bye = (TextView) findViewById(R.id.textview_welcome);
-        Button login = (Button) findViewById(R.id.login);
-        Button createApt = (Button) findViewById(R.id.create_apartment);
-        login.setVisibility(View.VISIBLE);
-        createApt.setVisibility(View.GONE);
-        if (person != null) {
-            Snackbar.make(
-                    findViewById(android.R.id.content),
-                    "Goodbye, " + person.getString("name") + ".",
-                    Snackbar.LENGTH_LONG
-            ).show();
-            bye.setText("Goodbye");
-            Person.logoutPerson();
-        }
-
-        onResume();
-    }
-
-    /**
-     * Starts RegisterActivity
-     */
-    public void showLogin(View view) {
-        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Starts CreateApartmentActivity
-     */
-    public void showCreateApartment(View view) {
-        Intent intent = new Intent(getBaseContext(), CreateApartmentActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Creates virtual apartment
-     */
-    public void showJoinApartment(View view) {
-        Intent intent = new Intent(getBaseContext(), JoinApartmentActivity.class);
-        startActivity(intent);
-    }
-
-    /**
      * Fragment that appears in the "content_frame"
      */
     public static class Frag extends Fragment {
@@ -293,10 +297,19 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            int i = getArguments().getInt(FRAG_NUM);
-            String page = getResources().getStringArray(R.array.mpages)[i];
-            Person person = Person.getCurrentPerson();
+            //Person person = Person.getCurrentPerson();
 
+            TextView text = (TextView) rootView.findViewById(R.id.textview_welcome);
+            text.setText("Hello");
+            getActivity().setTitle("Home Page");
+            return rootView;
+        }
+
+
+    }
+}
+
+/*
             TextView welcome = (TextView) rootView.findViewById(R.id.textview_welcome);
             Button createApt = (Button) rootView.findViewById(R.id.create_apartment);
             Button joinApt = (Button) rootView.findViewById(R.id.join_apartment_button);
@@ -325,8 +338,4 @@ public class MainActivity extends AppCompatActivity {
                                 "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
                 );
             }
-            getActivity().setTitle(page);
-            return rootView;
-        }
-    }
-}
+*/

@@ -19,6 +19,7 @@
             android:text="Hello World!"
             android:layout_marginBottom="100dp" />
 
+<!--
         <Button
             android:id="@+id/login"
             android:layout_width="wrap_content"
@@ -33,7 +34,8 @@
             android:layout_height="wrap_content"
             android:onClick="logout"
             android:text="@string/action_log_out" />
-
+-->
+<!--
         <Button
             android:id="@+id/create_apartment"
             android:layout_width="wrap_content"
@@ -46,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="showJoinApartment"
-            android:text="Join an Apartment" />
+            android:text="Join an Apartment" />-->
 
     </LinearLayout>
 

@@ -3,17 +3,53 @@
     <!-- activity_main_drawer.xml -->
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_first_fragment"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="First"
+            android:id="@+id/nav_first"
+            android:title="Home Page"
             android:checked="true"/>
+
+        <!--
+                    android:icon="@drawable/ic_menu_gallery"
+        -->
+
         <item
-            android:id="@+id/nav_second_fragment"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Second" />
+            android:id="@+id/nav_second"
+            android:title="Edit Inventory" />
+        <!--
+                    android:icon="@drawable/ic_menu_camera"
+        -->
         <item
-            android:id="@+id/nav_third_fragment"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Third" />
+            android:id="@+id/nav_third"
+            android:title="Create Apartment" />
+
+        <!--
+                    android:icon="@drawable/ic_menu_manage"
+        -->
+        <item
+            android:id="@+id/nav_fourth"
+            android:title="Edit/Leave Apartment" />
+
+        <!--
+                    android:icon="@drawable/ic_menu_slideshow"
+        -->
     </group>
+
+    <item android:title="Account">
+        <menu>
+            <item
+                android:id="@+id/nav_login"
+                android:title="Login" />
+
+            <!--
+                            android:icon="@drawable/ic_menu_share"
+            -->
+            <item
+                android:id="@+id/nav_logout"
+                android:title="Logout" />
+
+            <!--
+                            android:icon="@drawable/ic_menu_send"
+            -->
+        </menu>
+    </item>
+
 </menu>
