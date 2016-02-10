@@ -28,7 +28,7 @@ import com.parse.ParseException;
 
 import Model.Person;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnFragmentInteractionListener, ApartmentFragment.OnFragmentInteractionListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        updateInfo();
+        //updateInfo();
         MainFragment fragger = null;
         Class<MainFragment> frag = MainFragment.class;
         try {
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         android.support.v4.app.FragmentTransaction fragManager = getSupportFragmentManager().beginTransaction();
         fragManager.replace(R.id.content_frame, fragger);
         fragManager.commit();
-
+        updateMenu();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -150,42 +150,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        MainFragment fragger = null;
         android.support.v4.app.FragmentTransaction fragManager = getSupportFragmentManager().beginTransaction();
 
-        /*Fragment fragment = new Frag();
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
-        */
-
-        if (id == R.id.nav_first) {
+        if (id == R.id.home_page) {
+            MainFragment mainFrag = null;
             Class<MainFragment> frag = MainFragment.class;
             try {
-                fragger = frag.newInstance();
+                mainFrag = frag.newInstance();
             } catch (Exception e) {
                 Log.d("Exception",e.toString());
             }
-            fragManager.replace(R.id.content_frame, fragger);
+            fragManager.replace(R.id.content_frame, mainFrag);
             fragManager.commit();
-        } else if (id == R.id.nav_second) {
-            Log.d("OnNavigation", "GALLERY PRESSED");
-            //TODO Make another fragment
-        } else if (id == R.id.nav_third) {
+        } else if (id == R.id.my_apt) {
+            ApartmentFragment aptFrag = null;
+            Class<ApartmentFragment> apt = ApartmentFragment.class;
+            try {
+                aptFrag = apt.newInstance();
+            } catch (Exception e) {
+                Log.d("Exception",e.toString());
+            }
+            fragManager.replace(R.id.content_frame, aptFrag);
+            fragManager.commit();
+        } else if (id == R.id.create_apt) {
             Log.d("OnNavigation", "CREATE APARTMENT");
             Intent intent = new Intent(getBaseContext(), CreateApartmentActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_fourth) {
+        } else if (id == R.id.join_apt) {
             Log.d("OnNavigation", "JOIN APARTMENT");
             Intent intent = new Intent(getBaseContext(), JoinApartmentActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_my_apt) {
+        } else if (id == R.id.edit_inventory) {
             Log.d("OnNavigation", "MY APARTMENT");
-            //TODO Convert activity to fragment
-            Intent intent = new Intent(getBaseContext(), ApartmentActivity.class);
-            startActivity(intent);
+            //TODO Create inventory fragment
         } else if (id == R.id.nav_logout) {
             Log.d("OnNavigation", "LOGOUT PRESSED");
             logout();
@@ -216,20 +213,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+        updateMenu();
+    }
+
+    private void updateMenu(){
         Person person = Person.getCurrentPerson();
 
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
-        Menu menuNav = navView.getMenu();
-        MenuItem logoutItem = menuNav.findItem(R.id.nav_logout);
-        if (person == null) {
-            logoutItem.setVisible(false);
-        } else {
-            logoutItem.setVisible(true);
-        }
-        updateInfo();
-    }
 
+        View header = navView.getHeaderView(0);
+        TextView headerTitle = (TextView) header.findViewById(R.id.nav_header_title);
+        TextView headerDescription = (TextView) header.findViewById(R.id.nav_header_description);
+
+        Log.d("UpdateMenu","SETTING HEADER TITLE");
+
+        Menu menuNav = navView.getMenu();
+        MenuItem createAptItem = menuNav.findItem(R.id.create_apt);
+        MenuItem joinAptItem = menuNav.findItem(R.id.join_apt);
+
+        if (person == null) {
+            headerTitle.setText("No user");
+            headerDescription.setText("Please login");
+        } else {
+            if(person.hasApartment())
+            {
+                createAptItem.setVisible(false);
+                joinAptItem.setVisible(false);
+            }
+            else
+            {
+                createAptItem.setVisible(true);
+                joinAptItem.setVisible(true);
+            }
+            headerTitle.setText(person.getString("name"));
+            headerDescription.setText("User ID: " + person.getObjectId());
+        }
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -285,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
-                        updateInfo();
+                        //updateInfo();
                         Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                         startActivity(intent);
                         finish();
@@ -297,42 +317,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void updateInfo() {
-
-        Person person = Person.getCurrentPerson();
-        TextView text = (TextView) findViewById(R.id.textview_welcome);
-
-        //TODO -- NULL EXCEPTION NEED TO FIX
-        /*if(person == null)
-        {
-            text.setText(  "Welcome, " + person.getString("name") + "!\n" +
-                    "Your User ID is: " + person.getObjectId() + "\n" +
-                    "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
-        }*/
-    }
 
     public void onFragmentInteraction(Uri uri) {
         Log.d("Ok","Wat is lyfe");
-    }
-
-    /**
-     * Fragment that appears in the "content_frame"
-     */
-    public static class Frag extends Fragment {
-        public static final String FRAG_NUM = "fragment_number";
-
-        public Frag() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            //Person person = Person.getCurrentPerson();
-            TextView text = (TextView) rootView.findViewById(R.id.textview_welcome);
-            getActivity().setTitle("Home Page");
-            return rootView;
-        }
     }
 }

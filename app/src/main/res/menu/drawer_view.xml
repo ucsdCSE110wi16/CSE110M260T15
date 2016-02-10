@@ -3,24 +3,24 @@
     <!-- activity_main_drawer.xml -->
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_first"
+            android:id="@+id/home_page"
             android:checked="true"
             android:title="Home Page" />
 
         <item
-            android:id="@+id/nav_second"
-            android:title="Edit Inventory" />
+            android:id="@+id/my_apt"
+            android:title="My Apartment" />
         <item
-            android:id="@+id/nav_third"
+            android:id="@+id/create_apt"
             android:title="Create Apartment" />
 
         <item
-            android:id="@+id/nav_fourth"
+            android:id="@+id/join_apt"
             android:title="Join Apartment" />
 
         <item
-            android:id="@+id/nav_my_apt"
-            android:title="My Apartment" />
+            android:id="@+id/edit_inventory"
+            android:title="Apartment Inventory" />
 
     </group>
 

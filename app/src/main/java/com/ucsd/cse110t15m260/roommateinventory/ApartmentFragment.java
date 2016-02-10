@@ -1,7 +1,6 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.content.Context;
-import android.media.AudioRecord;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import Model.Person;
 
@@ -17,16 +23,17 @@ import Model.Person;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MainFragment.OnFragmentInteractionListener} interface
+ * {@link ApartmentFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the  factory method to
- * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class ApartmentFragment extends Fragment {
+
+    List<String> people;
+    ArrayAdapter<String> adapter;
 
     private OnFragmentInteractionListener mListener;
 
-    public MainFragment() {
+    public ApartmentFragment() {
         // Required empty public constructor
     }
 
@@ -38,38 +45,34 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        updateInfo(rootView);
-        return rootView;
-    }
-
-    private View updateInfo(View rootView) {
-
-        TextView text = (TextView) rootView.findViewById(R.id.textview_welcome);
+        View rootView = inflater.inflate(R.layout.fragment_apartment, container, false);
 
         Person person = Person.getCurrentPerson();
 
-        Log.d("ok","ONCREATEVIEW MAINFRAGMENT");
+        people = new ArrayList<>();
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, people);
 
-        if(person != null)
-        {
-            Log.d("ok","USER LOGGED IN");
-            text.setText( "Welcome, " + person.getString("name") + "!\n" +
-                    "Your User ID is: " + person.getObjectId() + "\n" +
-                    "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
+        ((ListView) rootView.findViewById(R.id.aptListView)).setAdapter(adapter);
+
+        if (person != null && person.hasApartment()) {
+            person.getApartment().findMembers(new FindCallback<Person>() {
+                @Override
+                public void done(List<Person> objects, ParseException e) {
+                    if (e == null) {
+                        for (Person p: objects) {
+                            people.add(p.toString());
+                        }
+                        Log.d("PEOPLE_LIST", people.toString());
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        Log.d("PEOPLE_LIST", e.toString());
+                    }
+                }
+            });
         }
-        else
-        {
-            Log.d("ok","NO USER");
-            text.setText("No User Logged In");
-        }
-        getActivity().setTitle("Home Page");
+        // Inflate the layout for this fragment
         return rootView;
     }
-
-
-    //@Override
-    //TODO ONRESUME
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

@@ -43,7 +43,6 @@ public class ApartmentActivity extends AppCompatActivity {
                         for (Person p: objects) {
                             people.add(p.toString());
                         }
-
                         Log.d("PEOPLE_LIST", people.toString());
                         adapter.notifyDataSetChanged();
                     } else {
