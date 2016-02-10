@@ -2,7 +2,6 @@ package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -14,32 +13,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.parse.FindCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
-import com.parse.SaveCallback;
 
-import java.util.Locale;
-import java.util.List;
-
-import Model.Apartment;
 import Model.Person;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnFragmentInteractionListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -86,10 +75,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerToggle.syncState();
 
         updateInfo();
-
-        Fragment frag = new Frag();
-        FragmentTransaction fragManager = getFragmentManager().beginTransaction();
-        fragManager.replace(R.id.content_frame, frag);
+        MainFragment fragger = null;
+        Class<MainFragment> frag = MainFragment.class;
+        try {
+            fragger = frag.newInstance();
+        } catch (Exception e) {
+            Log.d("Exception",e.toString());
+        }
+        android.support.v4.app.FragmentTransaction fragManager = getSupportFragmentManager().beginTransaction();
+        fragManager.replace(R.id.content_frame, fragger);
         fragManager.commit();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -156,17 +150,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Fragment fragment = new Frag();
+        MainFragment fragger = null;
+        android.support.v4.app.FragmentTransaction fragManager = getSupportFragmentManager().beginTransaction();
 
+        /*Fragment fragment = new Frag();
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+        */
 
         if (id == R.id.nav_first) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment)
-                    .commit();
+            Class<MainFragment> frag = MainFragment.class;
+            try {
+                fragger = frag.newInstance();
+            } catch (Exception e) {
+                Log.d("Exception",e.toString());
+            }
+            fragManager.replace(R.id.content_frame, fragger);
+            fragManager.commit();
         } else if (id == R.id.nav_second) {
             Log.d("OnNavigation", "GALLERY PRESSED");
+            //TODO Make another fragment
         } else if (id == R.id.nav_third) {
             Log.d("OnNavigation", "CREATE APARTMENT");
             Intent intent = new Intent(getBaseContext(), CreateApartmentActivity.class);
@@ -177,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         } else if (id == R.id.nav_my_apt) {
             Log.d("OnNavigation", "MY APARTMENT");
+            //TODO Convert activity to fragment
             Intent intent = new Intent(getBaseContext(), ApartmentActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
@@ -302,7 +309,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     "Your User ID is: " + person.getObjectId() + "\n" +
                     "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
         }*/
+    }
 
+    public void onFragmentInteraction(Uri uri) {
+        Log.d("Ok","Wat is lyfe");
     }
 
     /**
@@ -321,7 +331,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             //Person person = Person.getCurrentPerson();
             TextView text = (TextView) rootView.findViewById(R.id.textview_welcome);
-            text.setText("Hello");
             getActivity().setTitle("Home Page");
             return rootView;
         }

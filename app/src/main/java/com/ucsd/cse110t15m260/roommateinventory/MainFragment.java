@@ -1,6 +1,7 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.content.Context;
+import android.media.AudioRecord;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import Model.Person;
 
 
 /**
@@ -35,12 +38,26 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        //Person person = Person.getCurrentPerson();
         TextView text = (TextView) rootView.findViewById(R.id.textview_welcome);
-        text.setText("Hello");
+
+        Person person = Person.getCurrentPerson();
+
+        if(person != null)
+        {
+            text.setText( "Welcome, " + person.getString("name") + "!\n" +
+                    "Your User ID is: " + person.getObjectId() + "\n" +
+                    "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
+        }
+        else
+        {
+            text.setText("No User Logged In");
+        }
         getActivity().setTitle("Home Page");
         return rootView;
     }
+
+    //@Override
+    //TODO ONRESUME
 
    /* @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
