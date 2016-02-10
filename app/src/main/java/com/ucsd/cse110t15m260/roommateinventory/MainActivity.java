@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-
-    private CharSequence mDrawerTitle;
     private CharSequence mTitle;
 
     private GoogleApiClient client;
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
         }
 
-        mTitle = mDrawerTitle = getTitle();
+        mTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
                 R.string.drawer_open, R.string.drawer_close) {
@@ -74,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        //updateInfo();
         MainFragment fragger = null;
         Class<MainFragment> frag = MainFragment.class;
         try {
@@ -305,7 +302,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
-                        //updateInfo();
                         Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                         startActivity(intent);
                         finish();
@@ -316,7 +312,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
         }
     }
-
 
     public void onFragmentInteraction(Uri uri) {
         Log.d("Ok","Wat is lyfe");
