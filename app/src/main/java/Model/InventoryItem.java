@@ -21,6 +21,7 @@ public class InventoryItem extends ParseObject {
 
     private Bitmap image;
 
+
     public InventoryItem() {
         super();
     }
@@ -32,6 +33,7 @@ public class InventoryItem extends ParseObject {
 
     /**
      * Returns the name of this item.
+     *
      * @return The name
      */
     public String getName() {
@@ -40,14 +42,16 @@ public class InventoryItem extends ParseObject {
 
     /**
      * Sets the name for this item.
+     *
      * @param newName
      */
-    public void setName( String newName) {
+    public void setName(String newName) {
         put("name", newName);
     }
 
     /**
      * Gets the quantity of this item. It is returned as a generic Number class, as whether the data type is an int or float can be dependent on the item.
+     *
      * @return The quantity registered for this item.
      */
     public Number getQuantity() {
@@ -56,10 +60,48 @@ public class InventoryItem extends ParseObject {
 
     /**
      * Update the
+     *
      * @param newQuantity The updated quantity to add to this item.
      */
     public void setQuantity(Number newQuantity) {
         put("quantity", newQuantity);
+    }
+
+    /**
+     * Set the description field for the item.
+     *
+     * @param description The description of the item.
+     */
+    public void setDescription(String description) {
+        put("description", description);
+    }
+
+    /**
+     * Get description field for item as a String.
+     *
+     * @return description of item
+     */
+
+    public String getDescription() {
+        return getString("description");
+    }
+
+
+    /**
+     * Sets the creator of item.
+     *
+     * @param person The person that created the  item.
+     */
+    public void setCreator(Person person) {
+        put("creator", person);
+    }
+
+    /**
+     * Gets the creator of item.
+     * @return The person that created the item.
+     */
+    public Person getCreator() {
+        return (Person) getParseObject("creator");
     }
 
     /**
@@ -113,4 +155,8 @@ public class InventoryItem extends ParseObject {
     public Bitmap getImage() {
         return image;
     }
+
+
+
+
 }
