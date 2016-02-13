@@ -1,8 +1,15 @@
 package Model;
 
+import com.parse.FindCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseRelation;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by satre on 1/23/16.
@@ -10,6 +17,8 @@ import com.parse.ParseRelation;
 @ParseClassName(Apartment.className)
 public class Apartment extends ParseObject {
     public final static String className = "Apartment";
+
+    private ArrayList<Person> members = new ArrayList<Person>();
 
     /**
      * Default Constructor
@@ -54,26 +63,54 @@ public class Apartment extends ParseObject {
      * Adds the given person the relation that contains the members of this apartment.
      * @param person
      */
-    public void addPersonToApartment( Person person) {
+    public boolean addPersonToApartment( Person person) {
         if (person == null) {
-            return;
+            return false;
+        }
+
+        if (members.contains(person)) {
+            return false;
         }
 
         ParseRelation<Person> relation = getUserRelation();
         relation.add(person);
         incrementNumberOfResidents();
         saveInBackground();
+        return true;
     }
 
-    public void removePersonFromApartment( Person person) {
+    public boolean removePersonFromApartment( Person person) {
         if (person == null) {
-            return;
+            return false;
         }
 
+        if(!members.contains(person)) {
+            return false;
+        }
         ParseRelation<Person> relation = getUserRelation();
         relation.remove(person);
         decrementNumberOfResidents();
         saveInBackground();
+        return true;
+    }
+
+    public void fetchMembersOfApartment(final FindCallback<Person> callback) {
+        final ParseRelation<Person> memberRelation = getUserRelation();
+        ParseQuery<Person> memberQuery = memberRelation.getQuery();
+
+        memberQuery.findInBackground(new FindCallback<Model.Person>() {
+            @Override
+            public void done(List<Person> objects, ParseException e) {
+                if (objects != null) {
+                    members = new ArrayList<>(objects.size());
+                    for (Person aPerson : objects) members.add(aPerson);
+                }
+
+                if (callback != null) {
+                    callback.done(objects, e);
+                }
+            }
+        });
     }
 
     /**
