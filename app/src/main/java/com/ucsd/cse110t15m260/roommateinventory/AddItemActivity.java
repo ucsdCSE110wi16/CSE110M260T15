@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
 import java.text.ParseException;
@@ -107,6 +108,14 @@ public class AddItemActivity extends AppCompatActivity {
                 launchCamera();
             }
         });
+
+        FloatingActionButton flab = (FloatingActionButton) findViewById(R.id.fab);
+        flab.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptToCreateNewItem();
+            }
+        });
     }
 
 
@@ -116,14 +125,16 @@ public class AddItemActivity extends AppCompatActivity {
         mQuantityView.setError(null);
         mDescriptionView.setError(null);
 
+
         boolean cancel = false;
         View focusView = null;
 
         String itemName = mNameView.getText().toString();
-        String category = mNameView.getText().toString();
-        Number quantity = (Number) mNameView.getText();
-        String description = mNameView.getText().toString();
+        String category = mCategoryView.getText().toString();
+        Number quantity = Integer.parseInt(mQuantityView.getText().toString());
+        String description = mDescriptionView.getText().toString();
 
+        Log.d("AddItemActivity", "Before checking fields");
         if (TextUtils.isEmpty(itemName)) {
             mNameView.setError("This field is required");
             focusView = mNameView;
@@ -146,10 +157,13 @@ public class AddItemActivity extends AppCompatActivity {
         } else {
 
             Log.d("AddItemActivity", "Creating a new inventory item");
-            theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, Person.getCurrentPerson(), new SaveCallback() {
+            //TODO: replace person with GetCurrentPerson()
+            Person person = (Person) ParseObject.createWithoutData(Person.className, "irp90BKjWw");
+            theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, person, new SaveCallback() {
                 @Override
                 public void done(com.parse.ParseException e) {
                     if (e == null) {
+                        Log.d("AddItemActivity", "Finishing creating item");
                         //Hooray! Inventory item has been successfully created
                         finishCreateInventoryItem();
                     } else {

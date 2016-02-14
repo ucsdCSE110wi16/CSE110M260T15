@@ -12,7 +12,7 @@ import com.parse.SignUpCallback;
 @ParseClassName(Person.className)
 public class Person extends ParseUser
 {
-    public final static String className = "Person";
+    public final static String className = "_User";
     public Person()
     {
         super();

@@ -39,21 +39,27 @@
             android:layout_height="wrap_content"
             android:id="@+id/text_item_name"
             android:layout_gravity="center_horizontal"
-            android:text="Name" />
+            android:focusable="true"
+            android:hint="Name"
+            android:focusableInTouchMode="true"
+            android:enabled="true" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/text_item_category"
             android:layout_gravity="center_horizontal"
-            android:text="Category" />
+            android:hint="Category"
+            android:enabled="true" />
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
             android:id="@+id/text_item_count"
-            android:layout_gravity="center_horizontal"
-            android:text="Count" />
+            android:hint="Count"
+            android:enabled="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -76,10 +82,10 @@
         android:id="@+id/text_description"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.47"
-        android:text="Enter Description Here"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:hint="Enter Description Here" />
 
     <LinearLayout
         android:orientation="horizontal"
