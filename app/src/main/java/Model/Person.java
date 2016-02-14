@@ -1,9 +1,13 @@
 package Model;
 
+import android.util.Log;
+
 import com.parse.LogInCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.LogOutCallback;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import Model.Apartment;
 
@@ -14,15 +18,11 @@ import Model.Apartment;
 public class Person extends ParseUser
 {
     public final static String className = "_User";
-    public Person()
-    {
+
+    public Person() {
         super();
     }
 
-    /**
-     * Accesor to the residence of this person
-     * @return The apartment which they live in.
-     */
     public Apartment getApartment()
     {
         return (Apartment) getParseObject("apartment");
@@ -40,21 +40,6 @@ public class Person extends ParseUser
         }
     }
 
-    /**
-     * Get this person's first name
-     * @return Their first name
-     */
-    public String getFirstName () {
-        return getString("firstName");
-    }
-
-    /**
-     * Get this person's last name
-     * @return Their last name
-     */
-    public String getLastName() {
-        return getString("lastName");
-    }
 
     public static Person getCurrentPerson() {
         return (Person )ParseUser.getCurrentUser();
@@ -63,9 +48,8 @@ public class Person extends ParseUser
     /**
      * Convenience method to sign up a new Person.
      */
-    public static Person createPerson(String name, String email, String password, SignUpCallback callback)
-    {
-        Person.logoutPerson();
+    public static Person createPerson(String name, String email, String password, SignUpCallback callback) {
+        Person.logoutPerson(null);
 
         Person person = new Person();
         person.setUsername(email);
@@ -80,25 +64,76 @@ public class Person extends ParseUser
 
     /**
      * Convenience method to login a Person with the given username and password.
+     *
      * @param username
      * @param password
      */
-    public static void loginPerson(String username, String password, LogInCallback callback)
-    {
+    public static void loginPerson(String username, String password, LogInCallback callback) {
         ParseUser.logInInBackground(username, password, callback);
     }
 
     /**
      * Convenience method to logout a person
      */
-    public static void logoutPerson()
-    {
+    public static void logoutPerson(LogOutCallback callback) {
         Person person = getCurrentPerson();
 
         if (person != null) {
-            person.logOutInBackground();
+            person.logOutInBackground(callback);
         }
     }
 
+    /**
+     * Accessor to the residence of this person
+     *
+     * @return The apartment which they live in.
+     */
+    public Apartment getApartment() {
+        return (Apartment) getParseObject("apartment");
+    }
 
+    /**
+     * Registers this person as living in the given apartment, iff they do not already live elsewhere
+     *
+     * @param apartment The apartment to add them to.
+     */
+    public void setApartment(Apartment apartment) {
+        if (getParseObject("apartment") == null) {
+            Log.d("Person", "Apartment is null! User doesn't have an apartment yet.");
+            put("apartment", apartment);
+            saveInBackground();
+        }
+    }
+
+    public void leaveApartment(SaveCallback callback) {
+        remove("apartment");
+        saveInBackground(callback);
+    }
+
+    public boolean hasApartment() {
+        return getApartment() != null;
+    }
+
+    /**
+     * Get this person's first name
+     *
+     * @return Their first name
+     */
+    public String getFirstName() {
+        return getString("firstName");
+    }
+
+    /**
+     * Get this person's last name
+     *
+     * @return Their last name
+     */
+    public String getLastName() {
+        return getString("lastName");
+    }
+
+    @Override
+    public String toString() {
+        return getString("name");
+    }
 }

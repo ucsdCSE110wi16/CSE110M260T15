@@ -148,6 +148,7 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
      * errors are presented and no actual login attempt is made.
      */
     private void attemptRegister() {
+
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -156,6 +157,10 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
         String name = mNameView.getText().toString();
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+
+        Log.d("REGISTER", "Name: " + name);
+        Log.d("REGISTER", "Email: " + email);
+        Log.d("REGISTER", "Password: " + password);
 
         boolean cancel = false;
         View focusView = null;
@@ -202,7 +207,7 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
                         // Hooray! Let them use the app now.
                         finish();
                     } else {
-                        Log.e("LOGIN", e.toString());
+                        Log.e("REGISTER", e.toString());
                         // Sign up didn't succeed. Look at the ParseException
                         // to figure out what went wrong
                     }
@@ -268,7 +273,7 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
                 // Select only email addresses.
                 ContactsContract.Contacts.Data.MIMETYPE +
                         " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                                                                     .CONTENT_ITEM_TYPE},
+                .CONTENT_ITEM_TYPE},
 
                 // Show primary email addresses first. Note that there won't be
                 // a primary email address if the user hasn't specified one.
@@ -292,6 +297,16 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
 
     }
 
+    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(RegisterActivity.this,
+                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+
+        mEmailView.setAdapter(adapter);
+    }
+
+
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -300,16 +315,6 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
-    }
-
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(RegisterActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
     }
 }
 
