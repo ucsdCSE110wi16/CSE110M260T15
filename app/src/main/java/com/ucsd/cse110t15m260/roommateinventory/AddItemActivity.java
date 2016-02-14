@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -178,6 +179,7 @@ public class AddItemActivity extends AppCompatActivity {
 
         // TODO: Set inventory item to be in current Inventory
 
+        Toast.makeText(AddItemActivity.this, "New Item Created", Toast.LENGTH_SHORT).show();
         finish();
     }
 
