@@ -33,7 +33,10 @@ public class InventoryCellAdapter<I> extends ArrayAdapter<InventoryItem>{
 
         itemName.setText(itemNameString);
         itemCount.setText(getItem(position).getQuantity() + "");
+        if(getItem(position).getImage() != null)
         imageView.setImageBitmap(getItem(position).getImage());
+        else
+        imageView.setImageResource(R.drawable.carrot);
         return customView;
     }
 }

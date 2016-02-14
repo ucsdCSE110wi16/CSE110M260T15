@@ -58,7 +58,7 @@ public class Inventory extends ParseObject {
      * Upon completion, the callback is called. The items and error (if existent) are delivered via the callback.
      * @param callback {@code FindCallback<InventoryItem>}
      */
-    protected void fetchInventoryItems(final FindCallback<InventoryItem> callback) {
+    /*protected*/public void fetchInventoryItems(final FindCallback<InventoryItem> callback) {
         ParseQuery<InventoryItem> itemQuery = getInventoryItemsRelation().getQuery();
         itemQuery.orderByAscending("quantity");
 
