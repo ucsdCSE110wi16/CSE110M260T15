@@ -8,6 +8,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -57,6 +58,32 @@ public class InventoryManager {
                 callback.done(objects, e);
             }
         });
+    }
+
+    /**
+     * Puts the given item in the given inventory.
+     * @param item The object to store in the inventory.
+     * @param inventory The container within which to store
+     * @param callback
+     */
+    public void addItemToInventory( InventoryItem item, Inventory inventory, final SaveCallback callback) {
+        ParseRelation<InventoryItem> itemsRelation = inventory.getInventoryItemsRelation();
+
+        itemsRelation.add(item);
+        inventory.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                callback.done(e);
+            }
+        });
+    }
+
+    /**
+     * Deletes the given item from Parse.
+     * @param item
+     */
+    public void deleteItem(InventoryItem item) {
+        item.deleteInBackground();
     }
 
 }
