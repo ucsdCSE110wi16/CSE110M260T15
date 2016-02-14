@@ -26,6 +26,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
+import java.nio.ByteBuffer;
 import java.text.ParseException;
 
 import Model.InventoryItem;
@@ -244,11 +245,12 @@ public class AddItemActivity extends AbstractActivity {
             if (resultCode == RESULT_OK) {
                 Bitmap image = processImageWithUri(data.getData());
                 updateImageButtonWithImage(image);
-
+                addImageToInventoryItem(image);
             } else if (resultCode == RESULT_CANCELED) {
                 //user cancelled image capture
             } else {
                 //image capture failed.
+                Toast.makeText(AddItemActivity.this, "Error with image. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -281,6 +283,12 @@ public class AddItemActivity extends AbstractActivity {
      */
     private void addImageToInventoryItem( Bitmap image) {
         //create a new ParseFile for the item
-//        ParseFile imageFile = new ParseFile(image);
+        int byteCount = image.getByteCount();
+        ByteBuffer buffer = ByteBuffer.allocate(byteCount);
+        image.copyPixelsToBuffer(buffer);
+
+        byte[] bytes = buffer.array();
+        ParseFile imageFile = new ParseFile(theItem.getName(), bytes);
+        theItem.setImageFile(imageFile);
     }
 }

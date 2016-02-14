@@ -157,4 +157,22 @@ public class Apartment extends ParseObject {
     public ArrayList<Person> getMembers() {
         return members;
     }
+
+    public void setStreet_1( String street_1) {
+        put("street_1", street_1);
+    }
+
+    public String getStreet_1() {
+        return getString("street_1");
+    }
+
+    public void setStreet_2(String street_2) {
+        put("street_2", street_2);
+    }
+
+    public String getStreet_2() {
+        return getString("street_2");
+    }
+
+
 }
