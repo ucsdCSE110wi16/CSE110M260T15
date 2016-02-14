@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
@@ -234,6 +235,7 @@ public class AddItemActivity extends AppCompatActivity {
                 //user cancelled image capture
             } else {
                 //image capture failed.
+                Toast.makeText(AddItemActivity.this, "Error with image. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
         }
