@@ -6,17 +6,21 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.BaseAdapter;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.List;
 
 import Model.Inventory;
 import Model.InventoryItem;
+import Model.Apartment;
 import Model.Managers.ApartmentManager;
 import Model.Managers.InventoryManager;
 
@@ -26,7 +30,14 @@ public class InventoryActivity extends AbstractActivity {
     public static ListView theListView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Request for custom title bar
+       // this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        //set to your layout file
+
+        //Set the titlebar layout
+       // this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_titlebar);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_inventory);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,13 +59,18 @@ public class InventoryActivity extends AbstractActivity {
             }
         });
 
-        this.currentInventory = ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
+        Apartment sampleApartment = (Apartment )ParseUser.getCurrentUser().get("apartment");
+        this.currentInventory = (Inventory)sampleApartment.getInventory();
 
-        getActionBar().setTitle(this.currentInventory.getName());
-        String[] items = new String[currentInventory.items.size()];
+        //getActionBar().setTitle(this.currentInventory.getName());
+        InventoryItem[] inventoryItems = new InventoryItem[currentInventory.items.size()];
 
 
-        InventoryItem[] inventoryItems = (InventoryItem[]) this.currentInventory.items.toArray();
+        for(int i = 0; i < this.currentInventory.items.size();i++)
+        {
+            inventoryItems[i] = (InventoryItem) this.currentInventory.items.get(i);
+        }
+
 
         ListAdapter inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(this, inventoryItems);
         theListView = (ListView) findViewById(R.id.inventoryListView);
@@ -66,9 +82,11 @@ public class InventoryActivity extends AbstractActivity {
     {
         RelativeLayout vwParentRow = (RelativeLayout)v.getParent();
         int position = theListView.getPositionForView((View)v.getParent());
-        this.currentInventory.items.get(position).setQuantity((int)this.currentInventory.items.get(position).getQuantity() + 1);
-
+        this.currentInventory.items.get(position).setQuantity((int) this.currentInventory.items.get(position).getQuantity() + 1);
+        this.currentInventory.items.get(position).saveInBackground();
         theListView.refreshDrawableState();
+        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
+
 
 
     }
@@ -77,15 +95,17 @@ public class InventoryActivity extends AbstractActivity {
     {
         RelativeLayout vwParentRow = (RelativeLayout)v.getParent();
         int position = theListView.getPositionForView((View)v.getParent());
-        this.currentInventory.items.get(position).setQuantity((int)this.currentInventory.items.get(position).getQuantity() + 1);
-
+        this.currentInventory.items.get(position).setQuantity((int) this.currentInventory.items.get(position).getQuantity() - 1);
+        this.currentInventory.items.get(position).saveInBackground();
         theListView.refreshDrawableState();
+        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
     }
 
     public void addInventoryItem(InventoryItem item)
     {
         this.currentInventory.items.add(item);
         theListView.refreshDrawableState();
+        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
     }
 
 

@@ -25,7 +25,7 @@ public class Apartment extends ParseObject {
      */
     public Apartment() {
         super();
-        put("inventory", new Inventory());
+       // put("inventory", new Inventory());
     }
 
     /***********************
