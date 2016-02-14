@@ -26,6 +26,20 @@ public class InventoryItem extends ParseObject {
         super();
     }
 
+    public static InventoryItem createInventoryItem(String itemName, String category, Number quantity, String description, Person person, SaveCallback sc) {
+        InventoryItem item = new InventoryItem();
+
+        item.setName(itemName);
+        item.setCategory(category);
+        item.setQuantity(quantity);
+        item.setDescription(description);
+        item.setCreator(person);
+
+        item.saveInBackground(sc);
+
+        return item;
+    }
+
 
     /*****************************
      * Properties
@@ -50,6 +64,21 @@ public class InventoryItem extends ParseObject {
     }
 
     /**
+     * Sets the category of this item.
+     * @param category The category of this item.
+     */
+    public void setCategory(String category) {
+        put("category", category);
+    }
+
+    /**
+     * Gets the category of this item.
+     * @return The category of this item.
+     */
+    public String getCategory() {
+        return getString("category");
+    }
+    /**
      * Gets the quantity of this item. It is returned as a generic Number class, as whether the data type is an int or float can be dependent on the item.
      *
      * @return The quantity registered for this item.
@@ -68,18 +97,18 @@ public class InventoryItem extends ParseObject {
     }
 
     /**
-     * Set the description field for the item.
+     * Set the description field for this item.
      *
-     * @param description The description of the item.
+     * @param description The description of this item.
      */
     public void setDescription(String description) {
         put("description", description);
     }
 
     /**
-     * Get description field for item as a String.
+     * Get description field for this item as a String.
      *
-     * @return description of item
+     * @return The description of this item
      */
 
     public String getDescription() {
@@ -88,17 +117,17 @@ public class InventoryItem extends ParseObject {
 
 
     /**
-     * Sets the creator of item.
+     * Sets the creator of the item.
      *
-     * @param person The person that created the  item.
+     * @param person The person that created this item.
      */
     public void setCreator(Person person) {
         put("creator", person);
     }
 
     /**
-     * Gets the creator of item.
-     * @return The person that created the item.
+     * Gets the creator of this item.
+     * @return The person that created this item.
      */
     public Person getCreator() {
         return (Person) getParseObject("creator");
