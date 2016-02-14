@@ -22,7 +22,8 @@
         android:layout_alignParentStart="true"
         android:layout_margin="10dp"
         android:src="@android:drawable/ic_menu_camera"
-        android:nestedScrollingEnabled="true" />
+        android:nestedScrollingEnabled="true"
+        android:longClickable="false" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -62,7 +63,8 @@
         android:weightSum="1"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/image_item"
-        android:layout_alignStart="@+id/image_item">
+        android:layout_alignStart="@+id/image_item"
+        android:id="@+id/linearLayout">
 
     </LinearLayout>
 
@@ -71,7 +73,7 @@
         android:layout_height="150dp"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/description_text"
+        android:id="@+id/text_description"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.47"
         android:text="Enter Description Here"
@@ -89,7 +91,7 @@
         android:layout_alignParentTop="false"
         android:layout_alignParentLeft="false"
         android:layout_alignParentStart="false"
-        android:layout_below="@+id/description_text">
+        android:layout_below="@+id/text_description">
 
         <TextView
             android:layout_width="100dp"
@@ -113,5 +115,17 @@
             android:layout_above="@+id/linearLayout2" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image_button"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignLeft="@+id/image_item"
+        android:layout_alignStart="@+id/image_item"
+        android:layout_alignBottom="@+id/image_item"
+        android:layout_alignRight="@+id/image_item"
+        android:layout_alignEnd="@+id/image_item"
+        android:onClick="takeImageForNewItem"/>
 
 </RelativeLayout>
