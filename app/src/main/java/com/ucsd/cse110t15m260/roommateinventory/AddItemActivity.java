@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
 
+import java.nio.ByteBuffer;
 import java.text.ParseException;
 
 import Model.InventoryItem;
@@ -265,6 +266,12 @@ public class AddItemActivity extends AppCompatActivity {
      */
     private void addImageToInventoryItem( Bitmap image) {
         //create a new ParseFile for the item
-//        ParseFile imageFile = new ParseFile(image);
+        int byteCount = image.getByteCount();
+        ByteBuffer buffer = ByteBuffer.allocate(byteCount);
+        image.copyPixelsToBuffer(buffer);
+
+        byte[] bytes = buffer.array();
+        ParseFile imageFile = new ParseFile(theItem.getName(), bytes);
+        theItem.setImageFile(imageFile);
     }
 }
