@@ -172,8 +172,6 @@ public class InventoryFragment extends Fragment {
         theListView.refreshDrawableState();
         ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
 
-
-
     }
 
     public void decrementInventoryItem(View v)
