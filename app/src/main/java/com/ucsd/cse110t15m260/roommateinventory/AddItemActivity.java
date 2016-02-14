@@ -200,6 +200,6 @@ public class AddItemActivity extends AppCompatActivity {
      * @param image the image to set.
      */
     private void addImageToInventoryItem( Bitmap image) {
-        
+
     }
 }
