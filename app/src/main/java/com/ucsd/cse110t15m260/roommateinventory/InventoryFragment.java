@@ -1,6 +1,7 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -190,5 +191,14 @@ public class InventoryFragment extends Fragment {
         theListView.refreshDrawableState();
         ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
     }
+
+    /**
+     * Starts addItemActivity
+     */
+    public void addItem(View view) {
+        Intent intent = new Intent(getView().getContext(), AddItemActivity.class);
+        startActivity(intent);
+    }
+
 
 }
