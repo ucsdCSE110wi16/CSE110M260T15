@@ -54,4 +54,22 @@ public class ApartmentManager {
         return currentApartment.removePersonFromApartment(formerMate);
     }
 
+
+    /**
+     * Deletes the current Apartment object completely. Note that deletion is only permitted if
+     * there is one or none people in the apartment.
+     * @return Indication of operation permissionc, boolean
+     */
+    public boolean deleteCurrentApartment() {
+        if( currentApartment == null ) {
+            return false;
+        }
+
+        if (currentApartment.getMembers().size() > 1) {
+            return false;
+        }
+
+        currentApartment.deleteInBackground();
+        return true;
+    }
 }
