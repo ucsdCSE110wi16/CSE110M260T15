@@ -23,23 +23,6 @@ public class Person extends ParseUser
         super();
     }
 
-    public Apartment getApartment()
-    {
-        return (Apartment) getParseObject("apartment");
-    }
-
-    /**
-     * Registers this person as living in the given apartment, iff they do not already live elsewhere
-     * @param apartment The apartment to add them to.
-     */
-    public void setApartment(Apartment apartment)
-    {
-        if(getParseObject("apartment") == null)
-        {
-            put("apartment",apartment);
-        }
-    }
-
 
     public static Person getCurrentPerson() {
         return (Person )ParseUser.getCurrentUser();

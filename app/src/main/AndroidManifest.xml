@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidDomInspection -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ucsd.cse110t15m260.roommateinventory">
 
@@ -64,21 +65,25 @@
         <activity
             android:name=".InventoryActivity"
             android:label="@string/title_activity_inventory"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".AddItemActivity"
             android:label="AddItemActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--suppress AndroidDomInspection, AndroidDomInspection -->
         <activity
             android:name=".AbstractActivity"
             android:label="@string/title_activity_abstract"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-            android:name=".CreateApartmentActivity"
-            android:label="@string/title_activity_create_apartment">
+            android:theme="@style/AppTheme.NoActionBar"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
-        </activity>
+
+
+        <activity
+            android:name=".CreateApartmentActivity"
+            android:label="@string/title_activity_create_apartment"
+            android:theme="@style/AppTheme.NoActionBar"> </activity>
         <activity
             android:name=".InvitationCodeActivity"
             android:label="@string/title_activity_invitation_code">
@@ -101,6 +106,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
         </activity>
-    </application>
+    /> </application>
 
 </manifest>
