@@ -229,7 +229,7 @@ public class AddItemActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Bitmap image = processImageWithUri(data.getData());
                 updateImageButtonWithImage(image);
-
+                addImageToInventoryItem(image);
             } else if (resultCode == RESULT_CANCELED) {
                 //user cancelled image capture
             } else {
