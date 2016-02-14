@@ -149,4 +149,12 @@ public class Apartment extends ParseObject {
     public Inventory getInventory() {
         return (Inventory) getParseObject("inventory");
     }
+
+    /**
+     * Getter for the people who live here.
+     * @return The list of people who live in this apartment.
+     */
+    public ArrayList<Person> getMembers() {
+        return members;
+    }
 }
