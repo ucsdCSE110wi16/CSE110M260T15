@@ -64,7 +64,7 @@ public class InventoryManager {
      * Puts the given item in the given inventory.
      * @param item The object to store in the inventory.
      * @param inventory The container within which to store
-     * @param callback 
+     * @param callback
      */
     public void addItemToInventory( InventoryItem item, Inventory inventory, final SaveCallback callback) {
         ParseRelation<InventoryItem> itemsRelation = inventory.getInventoryItemsRelation();
@@ -76,6 +76,14 @@ public class InventoryManager {
                 callback.done(e);
             }
         });
+    }
+
+    /**
+     * Deletes the given item from Parse.
+     * @param item
+     */
+    public void deleteItem(InventoryItem item) {
+        item.deleteInBackground();
     }
 
 }
