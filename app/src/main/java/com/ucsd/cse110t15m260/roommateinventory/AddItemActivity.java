@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseFile;
 import com.parse.SaveCallback;
 
 import java.text.ParseException;
@@ -263,6 +264,7 @@ public class AddItemActivity extends AppCompatActivity {
      * @param image the image to set.
      */
     private void addImageToInventoryItem( Bitmap image) {
-
+        //create a new ParseFile for the item
+//        ParseFile imageFile = new ParseFile(image);
     }
 }
