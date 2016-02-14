@@ -20,7 +20,7 @@ import Model.InventoryItem;
 import Model.Managers.ApartmentManager;
 import Model.Managers.InventoryManager;
 
-public class InventoryActivity extends AppCompatActivity {
+public class InventoryActivity extends AbstractActivity {
 
     public static Inventory currentInventory;
     public static ListView theListView;

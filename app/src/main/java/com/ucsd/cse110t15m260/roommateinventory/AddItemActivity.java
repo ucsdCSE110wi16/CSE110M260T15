@@ -40,7 +40,7 @@ import java.util.Date;
 
 import static android.view.View.*;
 
-public class AddItemActivity extends AppCompatActivity {
+public class AddItemActivity extends AbstractActivity {
 
     // UI references
     private ImageView mItemImageView;

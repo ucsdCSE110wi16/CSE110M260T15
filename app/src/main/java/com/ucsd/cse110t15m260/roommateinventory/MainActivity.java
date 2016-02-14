@@ -18,7 +18,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import Model.Person;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AbstractActivity {
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
