@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -27,4 +28,20 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+
+    // Android JUnit Runner
+                androidTestCompile 'com.android.support.test:runner:0.4.1'
+
+    // JUnit4 Rules
+        androidTestCompile 'com.android.support.test:rules:0.4.1'
+
+    // Espresso core
+        androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    // Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
+        androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
+    // Espresso-web for WebView support
+        androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.1'
+    // Espresso-idling-resource for synchronization with background jobs
+        androidTestCompile 'com.android.support.test.espresso:espresso-idling-resource:2.2.1'
+
 }
