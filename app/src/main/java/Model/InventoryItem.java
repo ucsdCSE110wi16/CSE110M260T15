@@ -12,11 +12,13 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
+import java.io.Serializable;
+
 /**
  * Created by satre on 1/31/16.
  */
 @ParseClassName(InventoryItem.className)
-public class InventoryItem extends ParseObject {
+public class InventoryItem extends ParseObject implements Serializable {
     public final static String className = "InventoryItem";
 
     private Bitmap image;

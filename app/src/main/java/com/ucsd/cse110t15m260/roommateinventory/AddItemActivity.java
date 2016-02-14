@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,10 +27,14 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.text.ParseException;
 
+import Model.Apartment;
 import Model.InventoryItem;
+import Model.Managers.ApartmentManager;
+import Model.Managers.InventoryManager;
 import Model.Person;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -78,13 +83,17 @@ public class AddItemActivity extends AbstractActivity {
 
         mUserName = (TextView) findViewById(R.id.text_username_created_by);
 
-        Bundle extras = getIntent().getExtras();
-        if(extras == null) {
+        /* TODO: Make sure it's passed on the other end as InventoryItem  */
+        Serializable item =  getIntent().getSerializableExtra("InventoryItem");
+        TextView createdByTextView = (TextView) findViewById(R.id.text_created_by);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        TextView usernameTextView = (TextView) findViewById(R.id.text_username_created_by);
+        if(item == null) {
             /* Creation Mode: New item needs to be created */
             theItem = new InventoryItem();
 
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -92,12 +101,20 @@ public class AddItemActivity extends AbstractActivity {
                 }
             });
 
+            createdByTextView.setVisibility(GONE);
+            usernameTextView.setVisibility(GONE);
+            fab.setVisibility(VISIBLE);
 
         } else {
-            /* Viewing Mode: item already exists.
-            String item = extras.getString("item");
+            /* Viewing Mode: item already exists. */
+            theItem = (InventoryItem) item;
+            fab.setVisibility(GONE);
+            createdByTextView.setVisibility(VISIBLE);
+            usernameTextView.setVisibility(VISIBLE);
 
-            /* Hide the new button */
+            if(theItem.getCreator() != null) {
+                usernameTextView.setText(theItem.getCreator().getUsername());
+            }
 
         }
 
@@ -177,9 +194,22 @@ public class AddItemActivity extends AbstractActivity {
     private void finishCreateInventoryItem() {
 
         // TODO: Set inventory item to be in current Inventory
+        Apartment apartment = ApartmentManager.apartmentManager.getCurrentApartment();
+        InventoryManager.inventoryManager.addItemToInventory(theItem, apartment.getInventory(), new SaveCallback() {
+            @Override
+            public void done(com.parse.ParseException e) {
+                if (e == null) {
+                    Toast.makeText(AddItemActivity.this, "New Item Created", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(AddItemActivity.this, "Error Occured: please try again.", Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(AddItemActivity.this, "New Item Created", Toast.LENGTH_SHORT).show();
-        finish();
+                }
+            }
+        });
+
+
+
     }
 
 
