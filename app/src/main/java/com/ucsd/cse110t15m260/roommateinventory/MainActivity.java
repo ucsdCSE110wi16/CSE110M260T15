@@ -63,11 +63,11 @@ public class MainActivity extends AbstractActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-<<<<<<< HEAD
-        //TODO: Remove this shit dude
+
+        //TODO: Remove this shit dude NOTED
         Intent addItemIntent = new Intent(getBaseContext(), AddItemActivity.class);
         startActivity(addItemIntent);
-=======
+
         ParseUser.getCurrentUser().logOut();
         if(ParseUser.getCurrentUser() == null){
             Person.loginPerson("leo@leo.com","leowong",new LogInCallback() {
@@ -120,7 +120,6 @@ public class MainActivity extends AbstractActivity {
             });
         }
 
->>>>>>> InventoryTest
     }
 
     @Override

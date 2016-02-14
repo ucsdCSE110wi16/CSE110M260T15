@@ -1,4 +1,5 @@
-package com.ucsd.cse110t15m260.roommateinventory;
+
+/*package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.app.Application;
 import android.support.test.rule.ActivityTestRule;
@@ -28,4 +29,5 @@ public class HelloWorldEspressoTest {
         onView(withHint("Count")).check(matches(isDisplayed()));
     }
 }
+*/
 
