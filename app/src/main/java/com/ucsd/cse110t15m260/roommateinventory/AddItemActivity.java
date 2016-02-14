@@ -80,24 +80,28 @@ public class AddItemActivity extends AbstractActivity {
 
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
-            /* New item needs to be created */
+            /* Creation Mode: New item needs to be created */
             theItem = new InventoryItem();
+
+
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    attemptToCreateNewItem();
+                }
+            });
+
+
         } else {
+            /* Viewing Mode: item already exists.
             String item = extras.getString("item");
+
+            /* Hide the new button */
 
         }
 
 
-        /* Already existing item needs to be viewed */
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -111,13 +115,7 @@ public class AddItemActivity extends AbstractActivity {
             }
         });
 
-        FloatingActionButton flab = (FloatingActionButton) findViewById(R.id.fab);
-        flab.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                attemptToCreateNewItem();
-            }
-        });
+
     }
 
 
