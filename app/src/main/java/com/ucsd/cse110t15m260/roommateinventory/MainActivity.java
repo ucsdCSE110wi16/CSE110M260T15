@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         ParseUser.getCurrentUser().logOut();
         if(ParseUser.getCurrentUser() == null){
-            Person.loginPerson("leo","leowong",new LogInCallback() {
+            Person.loginPerson("leo@leo.com","leowong",new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
                     if (e == null && user != null) {
                         Apartment apartment = (Apartment)ParseUser.getCurrentUser().get("apartment");

@@ -31,23 +31,24 @@ public class InventoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Request for custom title bar
-        this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+       // this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         //set to your layout file
-        setContentView(R.layout.activity_inventory);
+
         //Set the titlebar layout
-        this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_titlebar);
+       // this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_titlebar);
         super.onCreate(savedInstanceState);
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-       // setSupportActionBar(toolbar);
-        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        //fab.setOnClickListener(new View.OnClickListener() {
-          //  @Override
-            //public void onClick(View view) {
-              //  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
-         //   }
-       // });
+        setContentView(R.layout.activity_inventory);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         InventoryManager.inventoryManager.fetchInventory(new FindCallback<InventoryItem>() {
             @Override
