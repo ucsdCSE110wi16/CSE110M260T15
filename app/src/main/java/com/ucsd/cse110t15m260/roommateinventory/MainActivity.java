@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        Intent addItemIntent = new Intent(getBaseContext(), AddItemActivity.class);
+        startActivity(addItemIntent);
     }
 
     @Override

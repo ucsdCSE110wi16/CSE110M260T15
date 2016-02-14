@@ -125,7 +125,6 @@
         android:layout_alignStart="@+id/image_item"
         android:layout_alignBottom="@+id/image_item"
         android:layout_alignRight="@+id/image_item"
-        android:layout_alignEnd="@+id/image_item"
-        android:onClick="takeImageForNewItem"/>
+        android:layout_alignEnd="@+id/image_item" />
 
 </RelativeLayout>
