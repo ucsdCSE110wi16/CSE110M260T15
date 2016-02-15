@@ -30,10 +30,14 @@ import android.widget.TextView;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.ParseRelation;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Apartment;
+import Model.Inventory;
+import Model.InventoryItem;
 import Model.Person;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -41,7 +45,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AbstractActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -85,6 +89,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        ParseUser.getCurrentUser().logOut();
+        if(ParseUser.getCurrentUser() == null){
+                Person.loginPerson("leo","leowong",new LogInCallback() {
+                    public void done(ParseUser user, ParseException e) {
+                        if (e == null && user != null) {
+                            Apartment apartment = (Apartment)ParseUser.getCurrentUser().get("apartment");
+                            ParseRelation aRelation = (ParseRelation)apartment.getUserRelation();
+                            aRelation.add(ParseUser.getCurrentUser());
+                            Inventory inventory = (Inventory)apartment.get("inventory");
+                            InventoryItem item = new InventoryItem();
+                            item.setName("Banana");
+                            item.setQuantity(5);
+                            inventory.getInventoryItemsRelation().add(item);
+                        } else if (user == null) {
+                            System.out.println("error" + e);
+                        } else {
+                            System.out.println("error");
+                        }
+                    }
+                });
+            }
+
     }
 
     private void populateAutoComplete() {
@@ -93,6 +120,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    public void goToInventory(View view) {
+        Intent intent = new Intent(getBaseContext(), InventoryActivity.class);
+        startActivity(intent);
+
+        finish();
     }
 
     private boolean mayRequestContacts() {

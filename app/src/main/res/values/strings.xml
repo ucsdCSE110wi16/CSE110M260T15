@@ -23,6 +23,9 @@
         completions."
     </string>
     <string name="title_activity_register">Register</string>
+    <string name="title_activity_inventory">InventoryActivity</string>
+    <string name="title_activity_abstract">AbstractActivity</string>
+
 
 
     <!-- String related to creating apartment -->

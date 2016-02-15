@@ -17,55 +17,56 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textview_welcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp"
-            android:text="Hello World!" />
 
-        <Button
-            android:id="@+id/login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:onClick="showLogin"
-            android:text="@string/action_log_in" />
+	<TextView
+	    android:id="@+id/textview_welcome"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="100dp"
+	    android:text="Hello World!" />
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="logout"
-            android:text="@string/action_log_out" />
+	<Button
+	    android:id="@+id/login"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+	    android:onClick="showLogin"
+	    android:text="@string/action_log_in" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My Apartment"
-            android:onClick="showApartment"
-            android:id="@+id/button_apartment" />
+	<Button
+	    android:id="@+id/logout"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:onClick="logout"
+	    android:text="@string/action_log_out" />
 
-        <Button
-            android:id="@+id/button_leave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Leave Apartment"
-            android:onClick="leaveApartment" />
+	<Button
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="My Apartment"
+	    android:onClick="showApartment"
+	    android:id="@+id/button_apartment" />
 
-        <Button
-            android:id="@+id/create_apartment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="showCreateApartment"
-            android:text="@string/button_new_apartment" />
+	<Button
+	    android:id="@+id/button_leave"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="Leave Apartment"
+	    android:onClick="leaveApartment" />
 
-        <Button
-            android:id="@+id/button_join"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="showJoinApartment"
-            android:text="Join an Apartment" />
+	<Button
+	    android:id="@+id/create_apartment"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:onClick="showCreateApartment"
+	    android:text="@string/button_new_apartment" />
+
+	<Button
+	    android:id="@+id/button_join"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:onClick="showJoinApartment"
+	    android:text="Join an Apartment" />
 
     </LinearLayout>
 

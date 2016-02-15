@@ -3,22 +3,29 @@ package Model;
 import android.util.Log;
 
 import com.parse.LogInCallback;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
 import com.parse.LogOutCallback;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
+import Model.Apartment;
 
 /**
  * Created by saiteja64 on 1/23/16.
  */
-public class Person extends ParseUser {
+//@ParseClassName(Person.className)
+public class Person extends ParseUser
+{
+    public final static String className = "_User";
 
     public Person() {
         super();
     }
 
+
     public static Person getCurrentPerson() {
-        return (Person) ParseUser.getCurrentUser();
+        return (Person )ParseUser.getCurrentUser();
     }
 
     /**

@@ -14,23 +14,34 @@ import android.widget.TextView;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.parse.GetCallback;
+import com.parse.LogInCallback;
 import com.parse.FindCallback;
-import com.parse.LogOutCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
+import com.parse.ParseUser;
+import com.parse.LogOutCallback;
 import com.parse.SaveCallback;
 
 import java.util.List;
 
 import Model.Apartment;
+import Model.Inventory;
+import Model.InventoryItem;
 import Model.Person;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AbstractActivity {
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +52,60 @@ public class MainActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
+        ParseUser.getCurrentUser().logOut();
+        if(ParseUser.getCurrentUser() == null){
+            Person.loginPerson("leo@leo.com","leowong",new LogInCallback() {
+                public void done(ParseUser user, ParseException e) {
+                    if (e == null && user != null) {
+                        Apartment apartment = (Apartment)ParseUser.getCurrentUser().get("apartment");
+                        ParseRelation aRelation = (ParseRelation)apartment.getUserRelation();
+                        aRelation.add(ParseUser.getCurrentUser());
+                        apartment.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject object, ParseException e) {
+                                Apartment apartment =(Apartment)ParseUser.getCurrentUser().get("apartment");
+                                final Inventory inventory = (Inventory) apartment.get("inventory");
+                                InventoryItem item = new InventoryItem();
+                                item.setName("Banana");
+                                item.setQuantity(5);
+
+                                try {
+                                    item.save();
+                                } catch (ParseException e1) {
+                                    e1.printStackTrace();
+                                }
+                                inventory.getInventoryItemsRelation().add(item);
+                                inventory.saveInBackground();
+                                ParseUser.getCurrentUser().saveInBackground();
+                                inventory.fetchIfNeededInBackground();
+                                ParseQuery<InventoryItem> itemQuery = inventory.getInventoryItemsRelation().getQuery();
+                                itemQuery.orderByAscending("quantity");
+
+                                itemQuery.findInBackground(new FindCallback<InventoryItem>() {
+                                    @Override
+                                    public void done(List<InventoryItem> objects, ParseException e) {
+                                        if (e == null && objects != null) {
+                                            inventory.items = objects;
+                                        }
+
+                                       // callback.done(objects, e);
+                                    }
+                                });
+
+                            }
+                        });
+
+                    } else if (user == null) {
+                        System.out.println("error" + e);
+                    } else {
+                        System.out.println("error");
+                    }
+                }
+            });
+        }
+
     }
 
     @Override
@@ -69,6 +134,13 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void goToInventory(View view) {
+        Intent intent = new Intent(getBaseContext(), InventoryActivity.class);
+        startActivity(intent);
+
+        finish();
     }
 
     @Override

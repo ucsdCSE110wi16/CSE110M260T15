@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.parse.FindCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
@@ -14,12 +15,18 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by satre on 1/23/16.
  */
 @ParseClassName(Apartment.className)
 public class Apartment extends ParseObject {
     public final static String className = "Apartment";
+
+    private ArrayList<Person> members = new ArrayList<Person>();
 
     /**
      * Default Constructor
@@ -94,26 +101,54 @@ public class Apartment extends ParseObject {
      *
      * @param person
      */
-    public void addPersonToApartment(Person person) {
+    public boolean addPersonToApartment( Person person) {
         if (person == null) {
-            return;
+            return false;
+        }
+
+        if (members.contains(person)) {
+            return false;
         }
 
         ParseRelation<Person> relation = getUserRelation();
         relation.add(person);
         incrementNumberOfResidents();
         saveInBackground();
+        return true;
     }
 
-    public void removePersonFromApartment(Person person) {
+    public boolean removePersonFromApartment( Person person) {
         if (person == null) {
-            return;
+            return false;
         }
 
+        if(!members.contains(person)) {
+            return false;
+        }
         ParseRelation<Person> relation = getUserRelation();
         relation.remove(person);
         decrementNumberOfResidents();
         saveInBackground();
+        return true;
+    }
+
+    public void fetchMembersOfApartment(final FindCallback<Person> callback) {
+        final ParseRelation<Person> memberRelation = getUserRelation();
+        ParseQuery<Person> memberQuery = memberRelation.getQuery();
+
+        memberQuery.findInBackground(new FindCallback<Model.Person>() {
+            @Override
+            public void done(List<Person> objects, ParseException e) {
+                if (objects != null) {
+                    members = new ArrayList<>(objects.size());
+                    for (Person aPerson : objects) members.add(aPerson);
+                }
+
+                if (callback != null) {
+                    callback.done(objects, e);
+                }
+            }
+        });
     }
 
     public void findMembers(FindCallback<Person> callback) {
@@ -156,8 +191,40 @@ public class Apartment extends ParseObject {
         return getNumberOfResidents();
     }
 
-
     /**
      * Sets address fields for the apartment
      */
+    /**
+     * Accessor for the inventory of this apartment.
+     * @return
+     */
+    public Inventory getInventory() {
+        return (Inventory) getParseObject("inventory");
+    }
+
+    /**
+     * Getter for the people who live here.
+     * @return The list of people who live in this apartment.
+     */
+    public ArrayList<Person> getMembers() {
+        return members;
+    }
+
+    public void setStreet_1( String street_1) {
+        put("street_1", street_1);
+    }
+
+    public String getStreet_1() {
+        return getString("street_1");
+    }
+
+    public void setStreet_2(String street_2) {
+        put("street_2", street_2);
+    }
+
+    public String getStreet_2() {
+        return getString("street_2");
+    }
+
+
 }
