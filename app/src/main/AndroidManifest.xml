@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidDomInspection -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ucsd.cse110t15m260.roommateinventory">
 
@@ -9,6 +10,9 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera2" />
 
     <application
         android:name=".App"
@@ -57,11 +61,28 @@
         <activity
             android:name=".CreateApartmentActivity"
             android:label="@string/title_activity_create_apartment"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".InventoryActivity"
+            android:label="@string/title_activity_inventory"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".AddItemActivity"
+            android:label="AddItemActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--suppress AndroidDomInspection, AndroidDomInspection -->
+        <activity
+            android:name=".AbstractActivity"
+            android:label="@string/title_activity_abstract"
+            android:theme="@style/AppTheme.NoActionBar"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
-        </activity>
+
         <activity
             android:name=".InvitationCodeActivity"
             android:label="@string/title_activity_invitation_code">
@@ -77,6 +98,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
         </activity>
-    </application>
+    /> </application>
 
 </manifest>
