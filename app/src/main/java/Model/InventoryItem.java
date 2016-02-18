@@ -13,6 +13,7 @@ import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 
 /**
  * Created by satre on 1/31/16.
@@ -148,6 +149,7 @@ public class InventoryItem extends ParseObject implements Serializable {
      * @param imageFile The image wrapped in a ParseFile object.
      */
     public void setImageFile(ParseFile imageFile) {
+
         put("image", imageFile);
         imageFile.saveInBackground(new SaveCallback() {
             @Override
@@ -161,6 +163,26 @@ public class InventoryItem extends ParseObject implements Serializable {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Sets the image for this item. Also updates the bitmap property and saves the object back to parse.
+     * @param image The image to assign to this item.
+     */
+    public void setImage( Bitmap image) {
+        ParseFile imageFile = convertBitmapToParseFile(image);
+        setImageFile(imageFile);
+    }
+
+    private ParseFile convertBitmapToParseFile( Bitmap image ) {
+        //create a new ParseFile for the item
+        int byteCount = image.getByteCount();
+        ByteBuffer buffer = ByteBuffer.allocate(byteCount);
+        image.copyPixelsToBuffer(buffer);
+
+        byte[] bytes = buffer.array();
+        ParseFile imageFile = new ParseFile(getName(), bytes);
+        return imageFile;
     }
 
     /**
