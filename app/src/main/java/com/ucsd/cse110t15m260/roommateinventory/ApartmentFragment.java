@@ -31,10 +31,12 @@ import Model.Person;
  */
 public class ApartmentFragment extends Fragment {
 
-    List<String> people;
-    ArrayAdapter<String> adapter;
+    List<String> mPeople;
+    ArrayAdapter<String> mAdapter;
 
     private OnFragmentInteractionListener mListener;
+
+    Button mLeaveApt, mCreateApt, mJoinApt;
 
     public ApartmentFragment() {
         // Required empty public constructor
@@ -43,6 +45,9 @@ public class ApartmentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mPeople = new ArrayList<>();
+        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, mPeople);
     }
 
     @Override
@@ -50,16 +55,55 @@ public class ApartmentFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_apartment, container, false);
 
+        mLeaveApt = (Button) rootView.findViewById(R.id.leave_apt);
+        mCreateApt = (Button) rootView.findViewById(R.id.create_apt);
+        mJoinApt = (Button) rootView.findViewById(R.id.join_apt);
+
+        mJoinApt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), JoinApartmentActivity.class);
+                startActivity(intent);
+            }
+        });
+        mCreateApt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CreateApartmentActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mLeaveApt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Person person = Person.getCurrentPerson();
+                person.leaveApartment(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        mPeople.clear();
+                        mAdapter.notifyDataSetChanged();
+
+                        mJoinApt.setVisibility(View.VISIBLE);
+                        mCreateApt.setVisibility(View.VISIBLE);
+                        mLeaveApt.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+
+        ((ListView) rootView.findViewById(R.id.aptListView)).setAdapter(mAdapter);
+
+        // Inflate the layout for this fragment
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         Person person = Person.getCurrentPerson();
 
-        people = new ArrayList<>();
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, people);
-
-
-        ((ListView) rootView.findViewById(R.id.aptListView)).setAdapter(adapter);
-        final Button leaveApt = (Button) rootView.findViewById(R.id.leave_apt);
-        final Button createApt = (Button) rootView.findViewById(R.id.create_apt);
-        final Button joinApt = (Button) rootView.findViewById(R.id.join_apt);
 
         if (person != null && person.hasApartment()) {
             person.getApartment().findMembers(new FindCallback<Person>() {
@@ -67,10 +111,10 @@ public class ApartmentFragment extends Fragment {
                 public void done(List<Person> objects, ParseException e) {
                     if (e == null) {
                         for (Person p: objects) {
-                            people.add(p.toString());
+                            mPeople.add(p.toString());
                         }
-                        Log.d("PEOPLE_LIST", people.toString());
-                        adapter.notifyDataSetChanged();
+                        Log.d("PEOPLE_LIST", mPeople.toString());
+                        mAdapter.notifyDataSetChanged();
                     } else {
                         Log.d("PEOPLE_LIST", e.toString());
                     }
@@ -80,47 +124,16 @@ public class ApartmentFragment extends Fragment {
         //Manage UI for Apartment Page
         if(person.hasApartment())
         {
-            leaveApt.setVisibility(View.VISIBLE);
-            createApt.setVisibility(View.GONE);
-            joinApt.setVisibility(View.GONE);
-
-            leaveApt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Person person = Person.getCurrentPerson();
-                    person.leaveApartment(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            joinApt.setVisibility(View.VISIBLE);
-                            createApt.setVisibility(View.VISIBLE);
-                            leaveApt.setVisibility(View.GONE);
-                        }
-                    });
-                }
-            });
+            mLeaveApt.setVisibility(View.VISIBLE);
+            mCreateApt.setVisibility(View.GONE);
+            mJoinApt.setVisibility(View.GONE);
         }
         else
         {
-            leaveApt.setVisibility(View.GONE);
-            createApt.setVisibility(View.VISIBLE);
-            joinApt.setVisibility(View.VISIBLE);
-            joinApt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), JoinApartmentActivity.class);
-                    startActivity(intent);
-                }
-            });
-            createApt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), CreateApartmentActivity.class);
-                    startActivity(intent);
-                }
-            });
+            mLeaveApt.setVisibility(View.GONE);
+            mCreateApt.setVisibility(View.VISIBLE);
+            mJoinApt.setVisibility(View.VISIBLE);
         }
-        // Inflate the layout for this fragment
-        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
