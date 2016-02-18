@@ -10,18 +10,10 @@
         <item
             android:id="@+id/my_apt"
             android:title="My Apartment" />
-        <item
-            android:id="@+id/create_apt"
-            android:title="Create Apartment" />
-
-        <item
-            android:id="@+id/join_apt"
-            android:title="Join Apartment" />
 
         <item
             android:id="@+id/edit_inventory"
             android:title="Apartment Inventory" />
-
     </group>
 
     <item android:title="Account">

@@ -13,8 +13,30 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
         android:id="@+id/aptListView"
         android:layout_gravity="left|center" />
+
+    <Button
+        android:text="Leave Apartment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/leave_apt"
+        android:layout_gravity="bottom"/>
+
+    <Button
+        android:text="Create Apartment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/create_apt"
+        android:layout_gravity="bottom|left"/>
+
+    <Button
+        android:text="Join Apartment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/join_apt"
+        android:layout_gravity="bottom|right"/>
+
 
 </FrameLayout>

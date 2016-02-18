@@ -29,8 +29,12 @@ public class ApartmentManager {
      */
     private Apartment currentApartment;
 
-
     public final Apartment getCurrentApartment() {
+        fetchApartment(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+            }
+        });
         return currentApartment;
     }
 

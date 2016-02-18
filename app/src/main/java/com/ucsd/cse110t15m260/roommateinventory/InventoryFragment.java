@@ -81,7 +81,7 @@ public class InventoryFragment extends Fragment {
 
         Apartment sampleApartment = ApartmentManager.apartmentManager.getCurrentApartment();
         Log.i("Current User:", Person.getCurrentPerson().toString());
-        currentInventory = (Inventory)sampleApartment.getInventory();
+        currentInventory = (Inventory) sampleApartment.getInventory();
 
         //getActionBar().setTitle(this.currentInventory.getName());
         InventoryItem[] inventoryItems = new InventoryItem[currentInventory.items.size()];

@@ -102,7 +102,7 @@ public class Apartment extends ParseObject {
      *
      * @param person
      */
-    public boolean addPersonToApartment( Person person) {
+    public boolean addPersonToApartment(Person person) {
         if (person == null) {
             return false;
         }
@@ -201,7 +201,7 @@ public class Apartment extends ParseObject {
      */
     public Inventory getInventory() {
 
-        return (Inventory) getParseObject("Inventory");
+        return (Inventory) getParseObject("inventory");
     }
 
     /**

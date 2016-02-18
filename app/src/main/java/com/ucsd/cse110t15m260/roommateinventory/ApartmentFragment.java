@@ -1,6 +1,7 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +55,11 @@ public class ApartmentFragment extends Fragment {
         people = new ArrayList<>();
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, people);
 
+
         ((ListView) rootView.findViewById(R.id.aptListView)).setAdapter(adapter);
+        final Button leaveApt = (Button) rootView.findViewById(R.id.leave_apt);
+        final Button createApt = (Button) rootView.findViewById(R.id.create_apt);
+        final Button joinApt = (Button) rootView.findViewById(R.id.join_apt);
 
         if (person != null && person.hasApartment()) {
             person.getApartment().findMembers(new FindCallback<Person>() {
@@ -67,6 +74,48 @@ public class ApartmentFragment extends Fragment {
                     } else {
                         Log.d("PEOPLE_LIST", e.toString());
                     }
+                }
+            });
+        };
+        //Manage UI for Apartment Page
+        if(person.hasApartment())
+        {
+            leaveApt.setVisibility(View.VISIBLE);
+            createApt.setVisibility(View.GONE);
+            joinApt.setVisibility(View.GONE);
+
+            leaveApt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Person person = Person.getCurrentPerson();
+                    person.leaveApartment(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            joinApt.setVisibility(View.VISIBLE);
+                            createApt.setVisibility(View.VISIBLE);
+                            leaveApt.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            });
+        }
+        else
+        {
+            leaveApt.setVisibility(View.GONE);
+            createApt.setVisibility(View.VISIBLE);
+            joinApt.setVisibility(View.VISIBLE);
+            joinApt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), JoinApartmentActivity.class);
+                    startActivity(intent);
+                }
+            });
+            createApt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), CreateApartmentActivity.class);
+                    startActivity(intent);
                 }
             });
         }

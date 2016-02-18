@@ -178,12 +178,8 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
             fragManager.commit();
         } else if (id == R.id.create_apt) {
             Log.d("OnNavigation", "CREATE APARTMENT");
-            Intent intent = new Intent(getBaseContext(), CreateApartmentActivity.class);
-            startActivity(intent);
         } else if (id == R.id.join_apt) {
             Log.d("OnNavigation", "JOIN APARTMENT");
-            Intent intent = new Intent(getBaseContext(), JoinApartmentActivity.class);
-            startActivity(intent);
         } else if (id == R.id.edit_inventory) {
             Log.d("OnNavigation", "INVENTORY");
             //TODO Create inventory fragment
@@ -242,20 +238,11 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         Log.d("UpdateMenu", "SETTING HEADER TITLE");
 
         Menu menuNav = navView.getMenu();
-        MenuItem createAptItem = menuNav.findItem(R.id.create_apt);
-        MenuItem joinAptItem = menuNav.findItem(R.id.join_apt);
 
         if (person == null) {
             headerTitle.setText("No user");
             headerDescription.setText("Please login");
         } else {
-            if (person.hasApartment()) {
-                createAptItem.setVisible(false);
-                joinAptItem.setVisible(false);
-            } else {
-                createAptItem.setVisible(true);
-                joinAptItem.setVisible(true);
-            }
             headerTitle.setText(person.getString("name"));
             headerDescription.setText("User ID: " + person.getObjectId());
         }
