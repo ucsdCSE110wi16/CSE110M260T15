@@ -95,6 +95,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
 
+        //TODO: REMOVE THIS CODE. IT IS DANGEROUS.
         ParseUser.getCurrentUser().logOut();
         if (ParseUser.getCurrentUser() == null) {
             Person.loginPerson("leo@leo.com", "leowong", new LogInCallback() {

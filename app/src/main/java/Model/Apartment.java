@@ -49,6 +49,9 @@ public class Apartment extends ParseObject {
         apartment.put("city", city);
         apartment.put("zip_code", zip_code);
 
+        Inventory newInventory = new Inventory();
+        apartment.put("inventory", newInventory);
+
         apartment.saveInBackground(sc);
 
         return apartment;
