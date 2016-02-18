@@ -31,7 +31,7 @@ public class Apartment extends ParseObject {
     /**
      * Default Constructor
      */
-    public Apartment() {
+    private Apartment() {
         super();
     }
 
@@ -49,7 +49,7 @@ public class Apartment extends ParseObject {
         apartment.put("city", city);
         apartment.put("zip_code", zip_code);
 
-        Inventory newInventory = new Inventory();
+        Inventory newInventory = Inventory.createNewInventoryWithName(apartment_name + "-inventory");
         apartment.put("inventory", newInventory);
 
         apartment.saveInBackground(sc);

@@ -17,8 +17,18 @@ import java.util.List;
 public class Inventory extends ParseObject {
     public final static String className = "Inventory";
 
-    public Inventory() {
+    private Inventory() {
         super();
+    }
+
+    public static final Inventory createNewInventoryWithName(String name) {
+        Inventory inventory = new Inventory();
+
+        inventory.setName(name);
+
+        inventory.saveInBackground();
+
+        return inventory;
     }
 
     /**
