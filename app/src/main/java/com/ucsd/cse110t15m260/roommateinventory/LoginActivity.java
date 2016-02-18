@@ -90,29 +90,6 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        ParseUser.getCurrentUser().logOut();
-        if(ParseUser.getCurrentUser() == null){
-                Person.loginPerson("leo","leowong",new LogInCallback() {
-                    public void done(ParseUser user, ParseException e) {
-                        if (e == null && user != null) {
-                            Apartment apartment = (Apartment)ParseUser.getCurrentUser().get("apartment");
-                            ParseRelation aRelation = (ParseRelation)apartment.getUserRelation();
-                            aRelation.add(ParseUser.getCurrentUser());
-                            Inventory inventory = (Inventory)apartment.get("inventory");
-                            InventoryItem item = new InventoryItem();
-                            item.setName("Banana");
-                            item.setQuantity(5);
-                            inventory.getInventoryItemsRelation().add(item);
-                        } else if (user == null) {
-                            System.out.println("error" + e);
-                        } else {
-                            System.out.println("error");
-                        }
-                    }
-                });
-            }
-
     }
 
     private void populateAutoComplete() {

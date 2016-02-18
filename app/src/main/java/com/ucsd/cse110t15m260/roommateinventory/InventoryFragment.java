@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,9 @@ import java.util.List;
 import Model.Apartment;
 import Model.Inventory;
 import Model.InventoryItem;
+import Model.Managers.ApartmentManager;
 import Model.Managers.InventoryManager;
+import Model.Person;
 
 
 /**
@@ -107,7 +110,8 @@ public class InventoryFragment extends Fragment {
             }
         });
 
-        Apartment sampleApartment = (Apartment ) ParseUser.getCurrentUser().get("apartment");
+        Apartment sampleApartment = ApartmentManager.apartmentManager.getCurrentApartment();
+        Log.i("Current User:", Person.getCurrentPerson().toString());
         currentInventory = (Inventory)sampleApartment.getInventory();
 
         //getActionBar().setTitle(this.currentInventory.getName());
