@@ -55,7 +55,9 @@ public class InventoryManager {
                 if (e == null && objects != null) {
                     inventory.items = objects;
                 }
-                callback.done(objects, e);
+                if (callback != null) {
+                    callback.done(objects, e);
+                }
             }
         });
     }

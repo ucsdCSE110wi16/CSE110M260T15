@@ -21,6 +21,16 @@ public class Inventory extends ParseObject {
         super();
     }
 
+    public static Inventory createNewInventoryWithName(String name) {
+        Inventory inventory = new Inventory();
+
+        inventory.setName(name);
+
+        inventory.saveInBackground();
+
+        return inventory;
+    }
+
     /**
      * The run-time array that contains the items stored in this list.
      * Note that when {@code this} object is fetched, the variable is not populated by default,

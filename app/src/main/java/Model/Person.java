@@ -4,12 +4,15 @@ import android.util.Log;
 
 import com.parse.LogInCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.LogOutCallback;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import Model.Apartment;
+import Model.Managers.ApartmentManager;
+import Model.Managers.InventoryManager;
 
 /**
  * Created by saiteja64 on 1/23/16.
@@ -51,7 +54,18 @@ public class Person extends ParseUser
      * @param password
      */
     public static void loginPerson(String username, String password, LogInCallback callback) {
-        ParseUser.logInInBackground(username, password, callback);
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                Person person = (Person) user;
+                ApartmentManager.apartmentManager.fetchApartment(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        InventoryManager.inventoryManager.fetchInventory(null);
+                    }
+                });
+            }
+        });
     }
 
     /**
