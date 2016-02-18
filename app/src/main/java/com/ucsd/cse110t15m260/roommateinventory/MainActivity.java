@@ -96,6 +96,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
 
 
         //TODO: REMOVE THIS CODE. IT IS DANGEROUS.
+        /*
         ParseUser.getCurrentUser().logOut();
         if (ParseUser.getCurrentUser() == null) {
             Person.loginPerson("leo@leo.com", "leowong", new LogInCallback() {
@@ -147,7 +148,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
                 }
             });
         }
-
+        */
     }
 
     @Override

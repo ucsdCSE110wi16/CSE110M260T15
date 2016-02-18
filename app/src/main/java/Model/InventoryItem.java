@@ -29,7 +29,18 @@ public class InventoryItem extends ParseObject implements Serializable {
         super();
     }
 
-    public static InventoryItem createInventoryItem(String itemName, String category, Number quantity, String description, Person person, SaveCallback sc) {
+    /**
+     * Factory method to create a new item with all of its information.
+     * @param itemName The name of the new item
+     * @param category The string category it belongs to
+     * @param quantity Arbitrary number.
+     * @param description Optional description of the item.
+     * @param person The logged in user who created this item.
+     * @param inventory The container that this object is a part of.
+     * @param sc The save callback to call upon completion. Error is passed forward.
+     * @return The constructed object.
+     */
+    public static InventoryItem createInventoryItem(String itemName, String category, Number quantity, String description, Person person, Inventory inventory, SaveCallback sc) {
         InventoryItem item = new InventoryItem();
 
         item.setName(itemName);
@@ -37,6 +48,7 @@ public class InventoryItem extends ParseObject implements Serializable {
         item.setQuantity(quantity);
         item.setDescription(description);
         item.setCreator(person);
+        item.setInventory(inventory);
 
         item.saveInBackground(sc);
 
@@ -44,9 +56,41 @@ public class InventoryItem extends ParseObject implements Serializable {
     }
 
 
+    /**
+     * Creates an empty item.
+     * **Note** This method DOES NOT save the empty object. This is to prevent empty objects from accumulating in the database.
+     * In the event that the created object is actually used, it is up to the caller to save the object to the database.
+     * @param inventory The container to place the item in.
+     * @return The constructed item.
+     */
+    public static InventoryItem createEmptyInventoryItem(Inventory inventory) {
+        InventoryItem inventoryItem = new InventoryItem();
+
+        inventoryItem.setInventory(inventory);
+        return inventoryItem;
+    }
+
+
     /*****************************
      * Properties
      *****************************/
+
+    /**
+     * Returns the inventory object that this item is a part of.
+     * @return The @code{Inventory} container.
+     */
+    public Inventory getInventory() {
+        return (Inventory)getParseObject("inventory");
+    }
+
+    /**
+     * Updates the inventory container that this object is a part of.
+     * Method is private, as it should only be used at instantiation.
+     * @param inventory the container.
+     */
+    private void setInventory(Inventory inventory) {
+        put("inventory", inventory);
+    }
 
     /**
      * Returns the name of this item.
@@ -105,7 +149,11 @@ public class InventoryItem extends ParseObject implements Serializable {
      * @param description The description of this item.
      */
     public void setDescription(String description) {
-        put("description", description);
+        if (description == null || description.equals("")) {
+            put("description", "");
+        } else {
+            put("description", description);
+        }
     }
 
     /**

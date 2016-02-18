@@ -31,7 +31,7 @@ public class Apartment extends ParseObject {
     /**
      * Default Constructor
      */
-    private Apartment() {
+    public Apartment() {
         super();
     }
 

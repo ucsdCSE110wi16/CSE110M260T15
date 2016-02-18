@@ -17,11 +17,11 @@ import java.util.List;
 public class Inventory extends ParseObject {
     public final static String className = "Inventory";
 
-    private Inventory() {
+    public Inventory() {
         super();
     }
 
-    public static final Inventory createNewInventoryWithName(String name) {
+    public static Inventory createNewInventoryWithName(String name) {
         Inventory inventory = new Inventory();
 
         inventory.setName(name);

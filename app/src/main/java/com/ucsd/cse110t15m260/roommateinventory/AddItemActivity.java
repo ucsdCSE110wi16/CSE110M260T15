@@ -32,6 +32,7 @@ import java.nio.ByteBuffer;
 import java.text.ParseException;
 
 import Model.Apartment;
+import Model.Inventory;
 import Model.InventoryItem;
 import Model.Managers.ApartmentManager;
 import Model.Managers.InventoryManager;
@@ -91,7 +92,7 @@ public class AddItemActivity extends AbstractActivity {
         TextView usernameTextView = (TextView) findViewById(R.id.text_username_created_by);
         if(item == null) {
             /* Creation Mode: New item needs to be created */
-            theItem = new InventoryItem();
+            theItem = InventoryItem.createEmptyInventoryItem(ApartmentManager.apartmentManager.getCurrentApartment().getInventory());
 
 
             fab.setOnClickListener(new OnClickListener() {
@@ -176,7 +177,8 @@ public class AddItemActivity extends AbstractActivity {
             Log.d("AddItemActivity", "Creating a new inventory item");
             //TODO: replace person with GetCurrentPerson()
             Person person = (Person) ParseObject.createWithoutData(Person.className, "irp90BKjWw");
-            theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, person, new SaveCallback() {
+            Inventory aptInventory = ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
+            theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, person, aptInventory, new SaveCallback() {
                 @Override
                 public void done(com.parse.ParseException e) {
                     if (e == null) {
