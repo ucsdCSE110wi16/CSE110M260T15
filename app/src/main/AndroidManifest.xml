@@ -50,6 +50,7 @@
             android:label="@string/title_activity_login"
             android:parentActivityName=".MainActivity">
         </activity>
+
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
@@ -58,15 +59,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.LoginActivity" />
         </activity>
+
         <activity
             android:name=".CreateApartmentActivity"
             android:label="@string/title_activity_create_apartment"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity
-            android:name=".InventoryActivity"
-            android:label="@string/title_activity_inventory"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 

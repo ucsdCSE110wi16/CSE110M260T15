@@ -93,7 +93,6 @@ public class AddItemActivity extends AbstractActivity {
             /* Creation Mode: New item needs to be created */
             theItem = new InventoryItem();
 
-
             fab.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

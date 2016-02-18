@@ -21,9 +21,9 @@
         completions."
     </string>
     <string name="title_activity_register">Register</string>
+
     <string name="title_activity_inventory">InventoryActivity</string>
     <string name="title_activity_abstract">AbstractActivity</string>
-
 
     <!-- Strings related to creating apartment -->
     <string name="title_activity_create_apartment">Create New Apartment</string>
@@ -43,12 +43,6 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web Search</string>
-
-    <string-array name="mpages">
-        <item>wow</item>
-        <item>dang</item>
-        <item>bang</item>
-    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="apt_fragment">My Apartment</string>

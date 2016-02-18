@@ -35,7 +35,6 @@ public class Apartment extends ParseObject {
         super();
     }
 
-
     public static Apartment createApartment(String apartment_name, String street_1, String street_2, String state, String city, String zip_code, SaveCallback sc) {
 
         Log.d("Apartment", "creating apartment");
@@ -65,7 +64,6 @@ public class Apartment extends ParseObject {
     /***********************
      * Properties
      */
-
 
     /**
      * Fetches the name of this apartment
@@ -199,7 +197,8 @@ public class Apartment extends ParseObject {
      * @return
      */
     public Inventory getInventory() {
-        return (Inventory) getParseObject("inventory");
+
+        return (Inventory) getParseObject("Inventory");
     }
 
     /**
@@ -225,6 +224,5 @@ public class Apartment extends ParseObject {
     public String getStreet_2() {
         return getString("street_2");
     }
-
 
 }

@@ -42,7 +42,6 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
     private CharSequence mTitle;
     private GoogleApiClient client;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,63 +89,10 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         fragManager.replace(R.id.content_frame, fragger);
         fragManager.commit();
         updateMenu();
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-
-        ParseUser.getCurrentUser().logOut();
-        if (ParseUser.getCurrentUser() == null) {
-            Person.loginPerson("leo@leo.com", "leowong", new LogInCallback() {
-                public void done(ParseUser user, ParseException e) {
-                    if (e == null && user != null) {
-                        Apartment apartment = (Apartment) ParseUser.getCurrentUser().get("apartment");
-                        ParseRelation aRelation = (ParseRelation) apartment.getUserRelation();
-                        aRelation.add(ParseUser.getCurrentUser());
-                        apartment.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                            @Override
-                            public void done(ParseObject object, ParseException e) {
-                                Apartment apartment = (Apartment) ParseUser.getCurrentUser().get("apartment");
-                                final Inventory inventory = (Inventory) apartment.get("inventory");
-                                InventoryItem item = new InventoryItem();
-                                item.setName("Banana");
-                                item.setQuantity(5);
-
-                                try {
-                                    item.save();
-                                } catch (ParseException e1) {
-                                    e1.printStackTrace();
-                                }
-                                inventory.getInventoryItemsRelation().add(item);
-                                inventory.saveInBackground();
-                                ParseUser.getCurrentUser().saveInBackground();
-                                inventory.fetchIfNeededInBackground();
-                                ParseQuery<InventoryItem> itemQuery = inventory.getInventoryItemsRelation().getQuery();
-                                itemQuery.orderByAscending("quantity");
-
-                                itemQuery.findInBackground(new FindCallback<InventoryItem>() {
-                                    @Override
-                                    public void done(List<InventoryItem> objects, ParseException e) {
-                                        if (e == null && objects != null) {
-                                            inventory.items = objects;
-                                        }
-
-                                        // callback.done(objects, e);
-                                    }
-                                });
-
-                            }
-                        });
-
-                    } else if (user == null) {
-                        System.out.println("error" + e);
-                    } else {
-                        System.out.println("error");
-                    }
-                }
-            });
-        }
-
     }
 
     @Override
@@ -313,13 +259,6 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
             headerTitle.setText(person.getString("name"));
             headerDescription.setText("User ID: " + person.getObjectId());
         }
-    }
-
-    public void goToInventory(View view) {
-        Intent intent = new Intent(getBaseContext(), InventoryActivity.class);
-        startActivity(intent);
-
-        finish();
     }
 
     @Override

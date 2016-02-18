@@ -23,9 +23,8 @@ public class Person extends ParseUser
         super();
     }
 
-
     public static Person getCurrentPerson() {
-        return (Person )ParseUser.getCurrentUser();
+        return (Person)ParseUser.getCurrentUser();
     }
 
     /**
@@ -98,21 +97,12 @@ public class Person extends ParseUser
     }
 
     /**
-     * Get this person's first name
+     * Get this person's name
      *
-     * @return Their first name
+     * @return Their name
      */
-    public String getFirstName() {
-        return getString("firstName");
-    }
-
-    /**
-     * Get this person's last name
-     *
-     * @return Their last name
-     */
-    public String getLastName() {
-        return getString("lastName");
+    public String getName() {
+        return getString("name");
     }
 
     //public String getEmail() { return getString("email"); }

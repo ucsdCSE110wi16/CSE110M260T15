@@ -29,14 +29,14 @@ public class InventoryCellAdapter<I> extends ArrayAdapter<InventoryItem>{
         String itemNameString = getItem(position).getName();
         TextView itemName = (TextView) customView.findViewById(R.id.itemName);
         TextView itemCount = (TextView) customView.findViewById(R.id.itemCount);
-        ImageView imageView = (ImageView) customView.findViewById(R.id.itemPicture);
+        //ImageView imageView = (ImageView) customView.findViewById(R.id.itemPicture);
 
         itemName.setText(itemNameString);
         itemCount.setText(getItem(position).getQuantity() + "");
-        if(getItem(position).getImage() != null)
-        imageView.setImageBitmap(getItem(position).getImage());
-        else
-        imageView.setImageResource(R.drawable.carrot);
+        //if(getItem(position).getImage() != null)
+            //imageView.setImageBitmap(getItem(position).getImage());
+        //else
+            //imageView.setImageResource(R.drawable.carrot);
         return customView;
     }
 }
