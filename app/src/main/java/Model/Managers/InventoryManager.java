@@ -4,6 +4,8 @@ package Model.Managers;
  * Created by satre on 1/31/16.
  */
 
+import android.util.Log;
+
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -42,6 +44,7 @@ public class InventoryManager {
         if (currentApartment == null) {
             return;
         }
+
         //get the inventory from the apartment
         final Inventory inventory = currentApartment.getInventory();
         //get the relation to InventoryItem

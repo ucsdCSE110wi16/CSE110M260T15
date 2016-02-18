@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,21 +17,9 @@ import android.widget.TextView;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.LogInCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
-import com.parse.ParseUser;
 
-import java.util.List;
-
-import Model.Apartment;
-import Model.Inventory;
-import Model.InventoryItem;
 import Model.Person;
 
 public class MainActivity extends AbstractActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnFragmentInteractionListener, ApartmentFragment.OnFragmentInteractionListener, InventoryFragment.OnFragmentInteractionListener {
@@ -48,14 +35,6 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         setContentView(R.layout.activity_main);
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Person person = Person.getCurrentPerson();
-
-        if (person == null) {
-            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         mTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -222,6 +201,11 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (Person.getCurrentPerson() == null) {
+            showLogin();
+        }
+
         updateMenu();
     }
 
@@ -288,30 +272,24 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         client.disconnect();
     }
 
-    public void logout() {
-        Person person = Person.getCurrentPerson();
-        TextView bye = (TextView) findViewById(R.id.textview_welcome);
+    public void showLogin() {
+        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
-        if (person != null) {
-            Snackbar.make(
-                    findViewById(android.R.id.content),
-                    "Goodbye, " + person.getString("name") + ".",
-                    Snackbar.LENGTH_LONG
-            ).show();
-            bye.setText("Goodbye");
-            Person.logoutPerson(new LogOutCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Log.d("LOGOUT", e.toString());
-                    }
+    public void logout() {
+        Person.getCurrentPerson().logoutPerson(new LogOutCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    showLogin();
+                    finish();
+                } else {
+                    Log.d("LOGOUT", e.toString());
                 }
-            });
-        }
+            }
+        });
     }
 
     public void onFragmentInteraction(Uri uri) {

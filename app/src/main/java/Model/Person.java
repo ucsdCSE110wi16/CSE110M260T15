@@ -53,7 +53,7 @@ public class Person extends ParseUser
      * @param username
      * @param password
      */
-    public static void loginPerson(String username, String password, LogInCallback callback) {
+    public static void loginPerson(String username, String password, final LogInCallback callback) {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
@@ -64,6 +64,10 @@ public class Person extends ParseUser
                         InventoryManager.inventoryManager.fetchInventory(null);
                     }
                 });
+
+                if (callback != null) {
+                    callback.done(user, e);
+                }
             }
         });
     }
