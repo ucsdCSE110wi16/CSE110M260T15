@@ -175,8 +175,7 @@ public class AddItemActivity extends AbstractActivity {
         } else {
 
             Log.d("AddItemActivity", "Creating a new inventory item");
-            //TODO: replace person with GetCurrentPerson()
-            Person person = (Person) ParseObject.createWithoutData(Person.className, "irp90BKjWw");
+            Person person = Person.getCurrentPerson();
             Inventory aptInventory = ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
             theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, person, aptInventory, new SaveCallback() {
                 @Override

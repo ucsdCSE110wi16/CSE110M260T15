@@ -4,7 +4,13 @@ package Model.Managers;
  * Created by satre on 1/31/16.
  */
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
+
 import Model.Apartment;
+import Model.Inventory;
 import Model.Person;
 
 /**
@@ -71,5 +77,27 @@ public class ApartmentManager {
 
         currentApartment.deleteInBackground();
         return true;
+    }
+
+    /**
+     * Fetches the apartment of the currently logged in user.
+     * If there is no logged in user, method does nothing.
+     */
+    public void fetchApartment(final SaveCallback saveCallback) {
+        Person user = Person.getCurrentPerson();
+
+        if( user == null ) {
+            return;
+        }
+
+        user.getApartment().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                currentApartment = (Apartment) object;
+                if (saveCallback != null) {
+                    saveCallback.done(e);
+                }
+            }
+        });
     }
 }
