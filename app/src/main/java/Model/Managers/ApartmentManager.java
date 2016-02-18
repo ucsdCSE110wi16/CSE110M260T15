@@ -30,6 +30,7 @@ public class ApartmentManager {
     private Apartment currentApartment;
 
     public final Apartment getCurrentApartment() {
+        //TODO: why is this here?
         fetchApartment(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -89,15 +90,15 @@ public class ApartmentManager {
      */
     public void fetchApartment(final SaveCallback saveCallback) {
         Person user = Person.getCurrentPerson();
-
+        //TODO: handle case when user has not joined an apartment.
         if( user == null ) {
             return;
         }
 
-        user.getApartment().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+        user.getApartment().fetchIfNeededInBackground(new GetCallback<Apartment>() {
             @Override
-            public void done(ParseObject object, ParseException e) {
-                currentApartment = (Apartment) object;
+            public void done(Apartment object, ParseException e) {
+                currentApartment = object;
                 if (saveCallback != null) {
                     saveCallback.done(e);
                 }
