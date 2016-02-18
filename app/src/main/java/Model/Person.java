@@ -56,18 +56,19 @@ public class Person extends ParseUser
     public static void loginPerson(String username, String password, final LogInCallback callback) {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
-            public void done(ParseUser user, ParseException e) {
-                Person person = (Person) user;
+            public void done(final ParseUser user, ParseException e) {
+                if (user == null || e != null) {
+                    callback.done(null, e);
+                }
                 ApartmentManager.apartmentManager.fetchApartment(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         InventoryManager.inventoryManager.fetchInventory(null);
+                        if (callback != null) {
+                            callback.done(user, e);
+                        }
                     }
                 });
-
-                if (callback != null) {
-                    callback.done(user, e);
-                }
             }
         });
     }
