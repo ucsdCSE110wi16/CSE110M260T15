@@ -7,7 +7,9 @@ package Model.Managers;
 import android.util.Log;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.SaveCallback;
@@ -33,13 +35,17 @@ public class InventoryManager {
      */
     private InventoryManager(){}
 
+    public Inventory getInventory() {
+        return ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
+    }
+
 
     /**
      * This method fetches the inventory and all of its items.
      * The result is stored in the run time variable and passed in the callback.
      * @param callback Function to call upon completion.
      */
-    public void fetchInventory(final FindCallback<InventoryItem> callback) {
+    public void fetchInventoryItems(final FindCallback<InventoryItem> callback) {
         Apartment currentApartment = ApartmentManager.apartmentManager.getCurrentApartment();
         if (currentApartment == null) {
             return;
@@ -61,6 +67,22 @@ public class InventoryManager {
                 if (callback != null) {
                     callback.done(objects, e);
                 }
+            }
+        });
+    }
+
+    public void fetchInventory( final GetCallback<Inventory> callback) {
+        Apartment currentApartment = ApartmentManager.apartmentManager.getCurrentApartment();
+        if( currentApartment == null) {
+            return;
+        }
+
+        Inventory inventory = currentApartment.getInventory();
+
+        inventory.fetchIfNeededInBackground(new GetCallback<Inventory>() {
+            @Override
+            public void done(Inventory object, ParseException e) {
+                callback.done(object, e);
             }
         });
     }

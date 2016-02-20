@@ -27,16 +27,10 @@ public class ApartmentManager {
      * The apartment that the user lives in. Note that it can be null if there is no logged in user, or if he/she has not been added to an apartment.
      * WARNING: This is the ONLY place that the current apartment should be stored. No other class should have an instance var that holds a copy.
      */
-    private Apartment currentApartment;
+//    private Apartment currentApartment;
 
     public final Apartment getCurrentApartment() {
-        //TODO: why is this here?
-        fetchApartment(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-            }
-        });
-        return currentApartment;
+        return Person.getCurrentPerson().getApartment();
     }
 
     /**
@@ -45,11 +39,11 @@ public class ApartmentManager {
      * @return True if the addition succeeds.
      */
     public boolean addPersonToCurrentApartment(Person newMate)  {
-        if (currentApartment == null ) {
+        if (getCurrentApartment() == null ) {
             return false;
         }
 
-        return currentApartment.addPersonToApartment(newMate);
+        return getCurrentApartment().addPersonToApartment(newMate);
     }
 
     /**
@@ -58,11 +52,11 @@ public class ApartmentManager {
      * @return True if the removal succeeds.
      */
     public boolean removePersonFromCurrentApartment( Person formerMate) {
-        if (currentApartment == null) {
+        if (getCurrentApartment() == null) {
             return false;
         }
 
-        return currentApartment.removePersonFromApartment(formerMate);
+        return getCurrentApartment().removePersonFromApartment(formerMate);
     }
 
 
@@ -72,15 +66,15 @@ public class ApartmentManager {
      * @return Indication of operation permissionc, boolean
      */
     public boolean deleteCurrentApartment() {
-        if( currentApartment == null ) {
+        if( getCurrentApartment() == null ) {
             return false;
         }
 
-        if (currentApartment.getMembers().size() > 1) {
+        if (getCurrentApartment().getMembers().size() > 1) {
             return false;
         }
 
-        currentApartment.deleteInBackground();
+        getCurrentApartment().deleteInBackground();
         return true;
     }
 
@@ -90,15 +84,17 @@ public class ApartmentManager {
      */
     public void fetchApartment(final SaveCallback saveCallback) {
         Person user = Person.getCurrentPerson();
-        //TODO: handle case when user has not joined an apartment.
         if( user == null ) {
+            return;
+        }
+
+        if (user.getApartment() == null) {
             return;
         }
 
         user.getApartment().fetchIfNeededInBackground(new GetCallback<Apartment>() {
             @Override
             public void done(Apartment object, ParseException e) {
-                currentApartment = object;
                 if (saveCallback != null) {
                     saveCallback.done(e);
                 }

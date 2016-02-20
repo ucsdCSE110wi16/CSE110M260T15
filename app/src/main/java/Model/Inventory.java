@@ -7,6 +7,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,8 +37,12 @@ public class Inventory extends ParseObject {
      * Note that when {@code this} object is fetched, the variable is not populated by default,
      * it must be fetched separately.
      */
-    public List<InventoryItem> items;
+    private ArrayList<InventoryItem>items = new ArrayList<InventoryItem>();
 
+
+    public ArrayList<InventoryItem> getItems() {
+        return items;
+    }
     /**
      * Getter for the name of this inventory list.
      * @return The name as a String.
@@ -76,7 +81,7 @@ public class Inventory extends ParseObject {
             @Override
             public void done(List<InventoryItem> objects, ParseException e) {
                 if (e == null && objects != null) {
-                    items =  objects;
+                    items = new ArrayList<InventoryItem>(objects);
                 }
 
                 callback.done(objects, e);

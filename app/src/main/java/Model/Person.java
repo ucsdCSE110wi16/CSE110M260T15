@@ -30,58 +30,14 @@ public class Person extends ParseUser
         return (Person)ParseUser.getCurrentUser();
     }
 
-    /**
-     * Convenience method to sign up a new Person.
-     */
-    public static Person createPerson(String name, String email, String password, SignUpCallback callback) {
-        Person.logoutPerson(null);
+    public static Person createnewPerson( String name, String email, String password) {
+        Person newPerson = new Person();
 
-        Person person = new Person();
-        person.setUsername(email);
-        person.setEmail(email);
-        person.setPassword(password);
-        person.put("name", name);
+        newPerson.put("name", name);
+        newPerson.put("email", email);
+        newPerson.put("password", password);
 
-        person.signUpInBackground(callback);
-
-        return person;
-    }
-
-    /**
-     * Convenience method to login a Person with the given username and password.
-     *
-     * @param username
-     * @param password
-     */
-    public static void loginPerson(String username, String password, final LogInCallback callback) {
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
-            @Override
-            public void done(final ParseUser user, ParseException e) {
-                if (user == null || e != null) {
-                    callback.done(null, e);
-                }
-                ApartmentManager.apartmentManager.fetchApartment(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        InventoryManager.inventoryManager.fetchInventory(null);
-                        if (callback != null) {
-                            callback.done(user, e);
-                        }
-                    }
-                });
-            }
-        });
-    }
-
-    /**
-     * Convenience method to logout a person
-     */
-    public static void logoutPerson(LogOutCallback callback) {
-        Person person = getCurrentPerson();
-
-        if (person != null) {
-            person.logOutInBackground(callback);
-        }
+        return newPerson;
     }
 
     /**
