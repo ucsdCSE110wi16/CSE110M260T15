@@ -65,7 +65,7 @@ public class AccountManager {
                         InventoryManager.inventoryManager.fetchInventory(new GetCallback<Inventory>() {
                             @Override
                             public void done(Inventory object, ParseException e) {
-
+                                callback.done(user, e);
                             }
                         });
                     }
