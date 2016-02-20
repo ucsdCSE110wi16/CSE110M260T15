@@ -94,6 +94,7 @@ public class ApartmentFragment extends Fragment {
 
         ((ListView) rootView.findViewById(R.id.aptListView)).setAdapter(mAdapter);
 
+        getActivity().setTitle("My Apartment");
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -103,7 +104,6 @@ public class ApartmentFragment extends Fragment {
         super.onResume();
 
         Person person = Person.getCurrentPerson();
-
 
         if (person != null && person.hasApartment()) {
             person.getApartment().findMembers(new FindCallback<Person>() {

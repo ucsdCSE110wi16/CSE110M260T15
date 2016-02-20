@@ -86,6 +86,7 @@ public class InventoryFragment extends Fragment {
         inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(view.getContext(), inventoryItems);
         theListView = (ListView) view.findViewById(R.id.inventoryListView);
         theListView.setAdapter(inventoryFoodAdapter);
+        getActivity().setTitle("Apartment Inventory");
 
         // Inflate the layout for this fragment
         return view;
