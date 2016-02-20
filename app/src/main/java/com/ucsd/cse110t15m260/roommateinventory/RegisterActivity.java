@@ -33,6 +33,7 @@ import com.parse.SignUpCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Managers.AccountManager;
 import Model.Person;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -199,7 +200,7 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
             // perform the user login attempt.
             showProgress(true);
 
-            Person.createPerson(name, email, password, new SignUpCallback() {
+            AccountManager.accountManager.signUpPerson(name, email, password, new SignUpCallback() {
                 public void done(ParseException e) {
                     showProgress(false);
 

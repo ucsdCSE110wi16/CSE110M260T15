@@ -4,7 +4,13 @@ package Model.Managers;
  * Created by satre on 1/31/16.
  */
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
+
 import Model.Apartment;
+import Model.Inventory;
 import Model.Person;
 
 /**
@@ -21,11 +27,10 @@ public class ApartmentManager {
      * The apartment that the user lives in. Note that it can be null if there is no logged in user, or if he/she has not been added to an apartment.
      * WARNING: This is the ONLY place that the current apartment should be stored. No other class should have an instance var that holds a copy.
      */
-    private Apartment currentApartment;
-
+//    private Apartment currentApartment;
 
     public final Apartment getCurrentApartment() {
-        return currentApartment;
+        return Person.getCurrentPerson().getApartment();
     }
 
     /**
@@ -34,11 +39,11 @@ public class ApartmentManager {
      * @return True if the addition succeeds.
      */
     public boolean addPersonToCurrentApartment(Person newMate)  {
-        if (currentApartment == null ) {
+        if (getCurrentApartment() == null ) {
             return false;
         }
 
-        return currentApartment.addPersonToApartment(newMate);
+        return getCurrentApartment().addPersonToApartment(newMate);
     }
 
     /**
@@ -47,11 +52,11 @@ public class ApartmentManager {
      * @return True if the removal succeeds.
      */
     public boolean removePersonFromCurrentApartment( Person formerMate) {
-        if (currentApartment == null) {
+        if (getCurrentApartment() == null) {
             return false;
         }
 
-        return currentApartment.removePersonFromApartment(formerMate);
+        return getCurrentApartment().removePersonFromApartment(formerMate);
     }
 
 
@@ -61,15 +66,39 @@ public class ApartmentManager {
      * @return Indication of operation permissionc, boolean
      */
     public boolean deleteCurrentApartment() {
-        if( currentApartment == null ) {
+        if( getCurrentApartment() == null ) {
             return false;
         }
 
-        if (currentApartment.getMembers().size() > 1) {
+        if (getCurrentApartment().getMembers().size() > 1) {
             return false;
         }
 
-        currentApartment.deleteInBackground();
+        getCurrentApartment().deleteInBackground();
         return true;
+    }
+
+    /**
+     * Fetches the apartment of the currently logged in user.
+     * If there is no logged in user, method does nothing.
+     */
+    public void fetchApartment(final SaveCallback saveCallback) {
+        Person user = Person.getCurrentPerson();
+        if( user == null ) {
+            return;
+        }
+
+        if (user.getApartment() == null) {
+            return;
+        }
+
+        user.getApartment().fetchIfNeededInBackground(new GetCallback<Apartment>() {
+            @Override
+            public void done(Apartment object, ParseException e) {
+                if (saveCallback != null) {
+                    saveCallback.done(e);
+                }
+            }
+        });
     }
 }

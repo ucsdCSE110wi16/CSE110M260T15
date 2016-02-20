@@ -22,7 +22,6 @@ public class JoinApartmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_apartment);
-
     }
 
     public void joinApartment(View view) {

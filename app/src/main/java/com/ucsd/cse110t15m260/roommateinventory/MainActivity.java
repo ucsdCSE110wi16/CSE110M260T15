@@ -1,118 +1,86 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.parse.GetCallback;
-import com.parse.LogInCallback;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
-import com.parse.ParseUser;
 import com.parse.LogOutCallback;
-import com.parse.SaveCallback;
+import com.parse.ParseException;
 
-import java.util.List;
-
-import Model.Apartment;
-import Model.Inventory;
-import Model.InventoryItem;
+import Model.Managers.AccountManager;
 import Model.Person;
 
-public class MainActivity extends AbstractActivity {
+public class MainActivity extends AbstractActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnFragmentInteractionListener, ApartmentFragment.OnFragmentInteractionListener, InventoryFragment.OnFragmentInteractionListener {
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mTitle;
     private GoogleApiClient client;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        MainFragment fragger = null;
+        Class<MainFragment> frag = MainFragment.class;
+        try {
+            fragger = frag.newInstance();
+        } catch (Exception e) {
+            Log.d("Exception", e.toString());
+        }
+        android.support.v4.app.FragmentTransaction fragManager = getSupportFragmentManager().beginTransaction();
+        fragManager.replace(R.id.content_frame, fragger);
+        fragManager.commit();
+        updateMenu();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-
-        ParseUser.getCurrentUser().logOut();
-        if(ParseUser.getCurrentUser() == null){
-            Person.loginPerson("leo@leo.com","leowong",new LogInCallback() {
-                public void done(ParseUser user, ParseException e) {
-                    if (e == null && user != null) {
-                        Apartment apartment = (Apartment)ParseUser.getCurrentUser().get("apartment");
-                        ParseRelation aRelation = (ParseRelation)apartment.getUserRelation();
-                        aRelation.add(ParseUser.getCurrentUser());
-                        apartment.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                            @Override
-                            public void done(ParseObject object, ParseException e) {
-                                Apartment apartment =(Apartment)ParseUser.getCurrentUser().get("apartment");
-                                final Inventory inventory = (Inventory) apartment.get("inventory");
-                                InventoryItem item = new InventoryItem();
-                                item.setName("Banana");
-                                item.setQuantity(5);
-
-                                try {
-                                    item.save();
-                                } catch (ParseException e1) {
-                                    e1.printStackTrace();
-                                }
-                                inventory.getInventoryItemsRelation().add(item);
-                                inventory.saveInBackground();
-                                ParseUser.getCurrentUser().saveInBackground();
-                                inventory.fetchIfNeededInBackground();
-                                ParseQuery<InventoryItem> itemQuery = inventory.getInventoryItemsRelation().getQuery();
-                                itemQuery.orderByAscending("quantity");
-
-                                itemQuery.findInBackground(new FindCallback<InventoryItem>() {
-                                    @Override
-                                    public void done(List<InventoryItem> objects, ParseException e) {
-                                        if (e == null && objects != null) {
-                                            inventory.items = objects;
-                                        }
-
-                                       // callback.done(objects, e);
-                                    }
-                                });
-
-                            }
-                        });
-
-                    } else if (user == null) {
-                        System.out.println("error" + e);
-                    } else {
-                        System.out.println("error");
-                    }
-                }
-            });
-        }
-
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        updateInfo();
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -123,11 +91,33 @@ public class MainActivity extends AbstractActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Log.d("ok", "right here");
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Log.d("ok", "case home");
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            Log.d("ok", "drawerToggle");
+            return true;
+        }
+        // Handle your other action bar items...
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -136,11 +126,109 @@ public class MainActivity extends AbstractActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void goToInventory(View view) {
-        Intent intent = new Intent(getBaseContext(), InventoryActivity.class);
-        startActivity(intent);
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-        finish();
+        android.support.v4.app.FragmentTransaction fragManager = getSupportFragmentManager().beginTransaction();
+
+        if (id == R.id.home_page) {
+            MainFragment mainFrag = null;
+            Class<MainFragment> frag = MainFragment.class;
+            try {
+                mainFrag = frag.newInstance();
+            } catch (Exception e) {
+                Log.d("Exception", e.toString());
+            }
+            fragManager.replace(R.id.content_frame, mainFrag);
+            fragManager.commit();
+        } else if (id == R.id.my_apt) {
+            ApartmentFragment aptFrag = null;
+            Class<ApartmentFragment> apt = ApartmentFragment.class;
+            try {
+                aptFrag = apt.newInstance();
+            } catch (Exception e) {
+                Log.d("Exception", e.toString());
+            }
+            fragManager.replace(R.id.content_frame, aptFrag);
+            fragManager.commit();
+        } else if (id == R.id.create_apt) {
+            Log.d("OnNavigation", "CREATE APARTMENT");
+        } else if (id == R.id.join_apt) {
+            Log.d("OnNavigation", "JOIN APARTMENT");
+        } else if (id == R.id.edit_inventory) {
+            Log.d("OnNavigation", "INVENTORY");
+            //TODO Create inventory fragment
+            InventoryFragment inventoryFrag = null;
+            Class<InventoryFragment> inv = InventoryFragment.class;
+            try {
+                inventoryFrag = inv.newInstance();
+            } catch (Exception e) {
+                Log.d("Exception", e.toString());
+            }
+            fragManager.replace(R.id.content_frame, inventoryFrag);
+            fragManager.commit();
+        } else if (id == R.id.nav_logout) {
+            Log.d("OnNavigation", "LOGOUT PRESSED");
+            logout();
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (Person.getCurrentPerson() == null) {
+            showLogin();
+        }
+
+        updateMenu();
+    }
+
+    private void updateMenu() {
+        Person person = Person.getCurrentPerson();
+
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
+
+        View header = navView.getHeaderView(0);
+        TextView headerTitle = (TextView) header.findViewById(R.id.nav_header_title);
+        TextView headerDescription = (TextView) header.findViewById(R.id.nav_header_description);
+
+        Log.d("UpdateMenu", "SETTING HEADER TITLE");
+
+        Menu menuNav = navView.getMenu();
+
+        if (person == null) {
+            headerTitle.setText("No user");
+            headerDescription.setText("Please login");
+        } else {
+            headerTitle.setText(person.getString("name"));
+            headerDescription.setText("User ID: " + person.getObjectId());
+        }
     }
 
     @Override
@@ -183,123 +271,28 @@ public class MainActivity extends AbstractActivity {
         client.disconnect();
     }
 
-    /**
-     * Updates the information on the screen
-     */
-    private void updateInfo() {
-        Person person = Person.getCurrentPerson();
-
-        TextView welcome = (TextView) findViewById(R.id.textview_welcome);
-        Button apt = (Button) findViewById(R.id.button_apartment);
-        Button createApt = (Button) findViewById(R.id.create_apartment);
-        Button joinApt = (Button) findViewById(R.id.button_join);
-        Button leave = (Button) findViewById(R.id.button_leave);
-        Button login = (Button) findViewById(R.id.login);
-        Button logout = (Button) findViewById(R.id.logout);
-
-        apt.setVisibility(View.GONE);
-        createApt.setVisibility(View.GONE);
-        joinApt.setVisibility(View.GONE);
-        leave.setVisibility(View.GONE);
-        login.setVisibility(View.GONE);
-        logout.setVisibility(View.GONE);
-
-
-        if (person == null) {
-            login.setVisibility(View.VISIBLE);
-            welcome.setText("Welcome, user! Please log in.");
-        } else {
-            logout.setVisibility(View.VISIBLE);
-
-            if (person.hasApartment()) {
-                leave.setVisibility(View.VISIBLE);
-                apt.setVisibility(View.VISIBLE);
-            } else {
-                createApt.setVisibility(View.VISIBLE);
-                joinApt.setVisibility(View.VISIBLE);
-            }
-
-            welcome.setText(
-                    "Welcome, " + person.getString("name") + "!\n" +
-                            "Your User ID is: " + person.getObjectId() + "\n" +
-                            "Your Apartment is: " + (person.hasApartment() ? person.getApartment().getObjectId() : null)
-            );
-        }
-    }
-
-    /**
-     * Logs out
-     */
-    public void logout(View view) {
-        Person person = Person.getCurrentPerson();
-        TextView bye = (TextView) findViewById(R.id.textview_welcome);
-        Button login = (Button) findViewById(R.id.login);
-        Button createApt = (Button) findViewById(R.id.create_apartment);
-        login.setVisibility(View.VISIBLE);
-        createApt.setVisibility(View.GONE);
-        if (person != null) {
-            Snackbar.make(
-                    findViewById(android.R.id.content),
-                    "Goodbye, " + person.getString("name") + ".",
-                    Snackbar.LENGTH_LONG
-            ).show();
-            bye.setText("Goodbye");
-            Person.logoutPerson(new LogOutCallback() {
-                @Override
-                public void done(ParseException e) {
-                    updateInfo();
-                }
-            });
-        }
-
-        onResume();
-    }
-
-    /**
-     * Removes the current user from his/her apartment
-     */
-    public void leaveApartment(View view) {
-        Person person = Person.getCurrentPerson();
-
-        if (person != null) {
-            person.leaveApartment(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    updateInfo();
-                }
-            });
-        }
-    }
-
-    /**
-     * Starts RegisterActivity
-     */
-    public void showLogin(View view) {
+    public void showLogin() {
         Intent intent = new Intent(getBaseContext(), LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
-    /**
-     * Starts ApartmentActivity
-     */
-    public void showApartment(View view) {
-        Intent intent = new Intent(getBaseContext(), ApartmentActivity.class);
-        startActivity(intent);
+    public void logout() {
+        AccountManager.accountManager.logoutPerson(new LogOutCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    showLogin();
+                    finish();
+                } else {
+                    Log.d("LOGOUT", e.toString());
+                }
+            }
+        });
+
     }
 
-    /**
-     * Starts CreateApartmentActivity
-     */
-    public void showCreateApartment(View view) {
-        Intent intent = new Intent(getBaseContext(), CreateApartmentActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Creates virtual apartment
-     */
-    public void showJoinApartment(View view) {
-        Intent intent = new Intent(getBaseContext(), JoinApartmentActivity.class);
-        startActivity(intent);
+    public void onFragmentInteraction(Uri uri) {
+        Log.d("Ok", "Wat is lyfe");
     }
 }

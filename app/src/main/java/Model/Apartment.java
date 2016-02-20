@@ -35,7 +35,6 @@ public class Apartment extends ParseObject {
         super();
     }
 
-
     public static Apartment createApartment(String apartment_name, String street_1, String street_2, String state, String city, String zip_code, SaveCallback sc) {
 
         Log.d("Apartment", "creating apartment");
@@ -48,6 +47,9 @@ public class Apartment extends ParseObject {
         apartment.put("state", state);
         apartment.put("city", city);
         apartment.put("zip_code", zip_code);
+
+        Inventory newInventory = Inventory.createNewInventoryWithName(apartment_name + "-inventory");
+        apartment.put("inventory", newInventory);
 
         apartment.saveInBackground(sc);
 
@@ -65,7 +67,6 @@ public class Apartment extends ParseObject {
     /***********************
      * Properties
      */
-
 
     /**
      * Fetches the name of this apartment
@@ -101,7 +102,7 @@ public class Apartment extends ParseObject {
      *
      * @param person
      */
-    public boolean addPersonToApartment( Person person) {
+    public boolean addPersonToApartment(Person person) {
         if (person == null) {
             return false;
         }
@@ -199,6 +200,7 @@ public class Apartment extends ParseObject {
      * @return
      */
     public Inventory getInventory() {
+
         return (Inventory) getParseObject("inventory");
     }
 
@@ -225,6 +227,5 @@ public class Apartment extends ParseObject {
     public String getStreet_2() {
         return getString("street_2");
     }
-
 
 }

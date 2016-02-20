@@ -27,7 +27,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -50,10 +49,8 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
         </activity>
+
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
@@ -62,10 +59,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.LoginActivity" />
         </activity>
+
         <activity
-            android:name=".InventoryActivity"
-            android:label="@string/title_activity_inventory"
+            android:name=".CreateApartmentActivity"
+            android:label="@string/title_activity_create_apartment"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".AddItemActivity"
             android:label="AddItemActivity"
@@ -79,11 +79,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
 
-
-        <activity
-            android:name=".CreateApartmentActivity"
-            android:label="@string/title_activity_create_apartment"
-            android:theme="@style/AppTheme.NoActionBar"> </activity>
         <activity
             android:name=".InvitationCodeActivity"
             android:label="@string/title_activity_invitation_code">
@@ -93,15 +88,8 @@
         </activity>
         <activity
             android:name=".JoinApartmentActivity"
-            android:label="@string/title_activity_join_apartment">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />
-        </activity>
-        <activity
-            android:name=".ApartmentActivity"
-            android:label="@string/title_activity_apartment">
-
+            android:label="@string/title_activity_join_apartment"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucsd.cse110t15m260.roommateinventory.MainActivity" />

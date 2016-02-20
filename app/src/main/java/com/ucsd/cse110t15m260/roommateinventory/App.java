@@ -8,6 +8,7 @@ import com.parse.ParseObject;
 import Model.Apartment;
 import Model.Inventory;
 import Model.InventoryItem;
+import Model.Managers.AccountManager;
 import Model.Person;
 
 /**
@@ -32,5 +33,7 @@ public class App extends Application {
 
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
+
+        AccountManager.accountManager.fetchAllData();
     }
 }

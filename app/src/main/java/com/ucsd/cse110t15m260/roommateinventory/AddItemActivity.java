@@ -32,6 +32,7 @@ import java.nio.ByteBuffer;
 import java.text.ParseException;
 
 import Model.Apartment;
+import Model.Inventory;
 import Model.InventoryItem;
 import Model.Managers.ApartmentManager;
 import Model.Managers.InventoryManager;
@@ -91,8 +92,7 @@ public class AddItemActivity extends AbstractActivity {
         TextView usernameTextView = (TextView) findViewById(R.id.text_username_created_by);
         if(item == null) {
             /* Creation Mode: New item needs to be created */
-            theItem = new InventoryItem();
-
+            theItem = InventoryItem.createEmptyInventoryItem(ApartmentManager.apartmentManager.getCurrentApartment().getInventory());
 
             fab.setOnClickListener(new OnClickListener() {
                 @Override
@@ -174,9 +174,9 @@ public class AddItemActivity extends AbstractActivity {
         } else {
 
             Log.d("AddItemActivity", "Creating a new inventory item");
-            //TODO: replace person with GetCurrentPerson()
-            Person person = (Person) ParseObject.createWithoutData(Person.className, "irp90BKjWw");
-            theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, person, new SaveCallback() {
+            Person person = Person.getCurrentPerson();
+            Inventory aptInventory = ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
+            theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, person, aptInventory, new SaveCallback() {
                 @Override
                 public void done(com.parse.ParseException e) {
                     if (e == null) {
@@ -272,8 +272,11 @@ public class AddItemActivity extends AbstractActivity {
         if (requestCode == CAMERA_ACTIVITY_INTENT_CODE) {
             if (resultCode == RESULT_OK) {
                 Bitmap image = processImageWithUri(data.getData());
-                updateImageButtonWithImage(image);
-                addImageToInventoryItem(image);
+                Bitmap scaledImage = scaleImageToResolution(2000, 2000, image);
+                updateImageButtonWithImage(scaledImage);
+
+                //save the image to the object.
+                theItem.setImage(scaledImage);
             } else if (resultCode == RESULT_CANCELED) {
                 //user cancelled image capture
             } else {
@@ -306,17 +309,13 @@ public class AddItemActivity extends AbstractActivity {
     }
 
     /**
-     * Updates the inventory item to have the given image.
-     * @param image the image to set.
+     * Scales the image to the given resolution and height
+     * @param resWidth The width to scale to
+     * @param resHeight The height to scale to.
+     * @param unscaledImage The image to scale
+     * @return The scaled image.
      */
-    private void addImageToInventoryItem( Bitmap image) {
-        //create a new ParseFile for the item
-        int byteCount = image.getByteCount();
-        ByteBuffer buffer = ByteBuffer.allocate(byteCount);
-        image.copyPixelsToBuffer(buffer);
-
-        byte[] bytes = buffer.array();
-        ParseFile imageFile = new ParseFile(theItem.getName(), bytes);
-        theItem.setImageFile(imageFile);
+    private Bitmap scaleImageToResolution(int resWidth, int resHeight, Bitmap unscaledImage) {
+        return Bitmap.createScaledBitmap(unscaledImage, resWidth, resHeight, true);
     }
 }

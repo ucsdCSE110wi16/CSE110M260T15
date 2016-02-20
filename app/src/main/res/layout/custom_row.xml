@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-    android:longClickable="true"
-    android:onClick="addItem">
+    android:longClickable="true">
 
 
     <ImageView
@@ -45,8 +44,7 @@ android:layout_height="wrap_content"
         android:layout_above="@+id/itemCount"
         android:layout_toRightOf="@+id/itemName"
         android:layout_toEndOf="@+id/itemName"
-        android:layout_marginLeft="20dp"
-        android:onClick="incrementInventoryItem" />
+        android:layout_marginLeft="20dp" />
 
     <Button
         android:layout_width="40dp"
@@ -56,7 +54,6 @@ android:layout_height="wrap_content"
         android:layout_below="@+id/incrementButton"
         android:layout_alignLeft="@+id/incrementButton"
         android:layout_alignStart="@+id/incrementButton"
-        android:onClick="decrementInventoryItem"
         android:nestedScrollingEnabled="true" />
 
 </RelativeLayout>
