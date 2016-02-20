@@ -46,6 +46,8 @@ public class InventoryFragment extends Fragment {
     public static Inventory currentInventory;
     public static ListView theListView;
 
+    private ListAdapter inventoryFoodAdapter;
+
     private OnFragmentInteractionListener mListener;
 
     public InventoryFragment() {
@@ -81,12 +83,9 @@ public class InventoryFragment extends Fragment {
         ArrayList<InventoryItem> inventoryItems = currentInventory.getItems();
 
 
-        ListAdapter inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(view.getContext(), inventoryItems);
+        inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(view.getContext(), inventoryItems);
         theListView = (ListView) view.findViewById(R.id.inventoryListView);
         theListView.setAdapter(inventoryFoodAdapter);
-
-
-
 
         // Inflate the layout for this fragment
         return view;
@@ -97,6 +96,11 @@ public class InventoryFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

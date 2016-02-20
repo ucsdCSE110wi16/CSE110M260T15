@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
 import Model.InventoryItem;
 
 
-public class InventoryCellAdapter<I> extends ArrayAdapter<InventoryItem>{
+public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
 
     Button incButton, decButton;
 
