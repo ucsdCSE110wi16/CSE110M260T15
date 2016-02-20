@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +18,8 @@ import Model.InventoryItem;
 
 
 public class InventoryCellAdapter<I> extends ArrayAdapter<InventoryItem>{
+
+    Button incButton, decButton;
 
     InventoryCellAdapter (Context context, InventoryItem[] inventoryitems){
         super(context, R.layout.custom_row,inventoryitems);
@@ -33,6 +37,30 @@ public class InventoryCellAdapter<I> extends ArrayAdapter<InventoryItem>{
 
         itemName.setText(itemNameString);
         itemCount.setText(getItem(position).getQuantity() + "");
+
+        incButton = (Button) customView.findViewById(R.id.incrementButton);
+        decButton = (Button) customView.findViewById(R.id.decrementButton);
+        final int pos = position;
+        incButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getItem(pos).setQuantity((int) getItem(pos).getQuantity() + 1);
+                getItem(pos).saveInBackground();
+                notifyDataSetChanged();
+
+            }
+        });
+        decButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getItem(pos).setQuantity((int) getItem(pos).getQuantity() - 1);
+                getItem(pos).saveInBackground();
+                notifyDataSetChanged();
+            }
+        });
+
+
         //if(getItem(position).getImage() != null)
             //imageView.setImageBitmap(getItem(position).getImage());
         //else
