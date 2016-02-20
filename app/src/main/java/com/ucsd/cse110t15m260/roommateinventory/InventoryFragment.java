@@ -42,6 +42,7 @@ import Model.Person;
  */
 public class InventoryFragment extends Fragment {
 
+    Button incButton, decButton;
     public static Inventory currentInventory;
     public static ListView theListView;
 
@@ -72,6 +73,7 @@ public class InventoryFragment extends Fragment {
         });
 
         Apartment apartment = ApartmentManager.apartmentManager.getCurrentApartment();
+
         Log.i("Current User:", Person.getCurrentPerson().toString());
         currentInventory = apartment.getInventory();
 
@@ -82,6 +84,9 @@ public class InventoryFragment extends Fragment {
         ListAdapter inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(view.getContext(), inventoryItems);
         theListView = (ListView) view.findViewById(R.id.inventoryListView);
         theListView.setAdapter(inventoryFoodAdapter);
+
+
+
 
         // Inflate the layout for this fragment
         return view;
@@ -127,31 +132,6 @@ public class InventoryFragment extends Fragment {
     }
 
 
-    public void incrementInventoryItem(View v)
-    {
-        RelativeLayout vwParentRow = (RelativeLayout)v.getParent();
-        int position = theListView.getPositionForView((View)v.getParent());
-        this.currentInventory.items.get(position).setQuantity((int) this.currentInventory.items.get(position).getQuantity() + 1);
-        this.currentInventory.items.get(position).saveInBackground();
-        theListView.refreshDrawableState();
-        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
-    }
 
-    public void decrementInventoryItem(View v)
-    {
-        RelativeLayout vwParentRow = (RelativeLayout)v.getParent();
-        int position = theListView.getPositionForView((View)v.getParent());
-        this.currentInventory.items.get(position).setQuantity((int) this.currentInventory.items.get(position).getQuantity() - 1);
-        this.currentInventory.items.get(position).saveInBackground();
-        theListView.refreshDrawableState();
-        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
-    }
-
-    public void addInventoryItem(InventoryItem item)
-    {
-        this.currentInventory.items.add(item);
-        theListView.refreshDrawableState();
-        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
-    }
 
 }
