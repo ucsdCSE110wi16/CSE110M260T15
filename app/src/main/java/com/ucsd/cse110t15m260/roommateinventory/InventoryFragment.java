@@ -22,6 +22,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Model.Person;
@@ -53,15 +54,6 @@ public class InventoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        InventoryManager.inventoryManager.fetchInventory(new FindCallback<InventoryItem>() {
-            @Override
-            public void done(List<InventoryItem> objects, ParseException e) {
-                if (e != null) {
-                    System.out.println("error" + e);
-                }
-            }
-        });
     }
 
     @Override
@@ -79,18 +71,12 @@ public class InventoryFragment extends Fragment {
             }
         });
 
-        Apartment sampleApartment = ApartmentManager.apartmentManager.getCurrentApartment();
+        Apartment apartment = ApartmentManager.apartmentManager.getCurrentApartment();
         Log.i("Current User:", Person.getCurrentPerson().toString());
-        currentInventory = (Inventory) sampleApartment.getInventory();
+        currentInventory = apartment.getInventory();
 
         //getActionBar().setTitle(this.currentInventory.getName());
-        InventoryItem[] inventoryItems = new InventoryItem[currentInventory.items.size()];
-
-
-        for(int i = 0; i < this.currentInventory.items.size();i++)
-        {
-            inventoryItems[i] = (InventoryItem) this.currentInventory.items.get(i);
-        }
+        ArrayList<InventoryItem> inventoryItems = currentInventory.getItems();
 
 
         ListAdapter inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(view.getContext(), inventoryItems);

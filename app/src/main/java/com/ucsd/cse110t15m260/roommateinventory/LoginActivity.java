@@ -38,6 +38,7 @@ import java.util.List;
 import Model.Apartment;
 import Model.Inventory;
 import Model.InventoryItem;
+import Model.Managers.AccountManager;
 import Model.Person;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -178,7 +179,7 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
             // perform the user login attempt.
             showProgress(true);
 
-            Person.loginPerson(email, password, new LogInCallback() {
+            AccountManager.accountManager.loginPerson(email, password, new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
                     showProgress(false);
 

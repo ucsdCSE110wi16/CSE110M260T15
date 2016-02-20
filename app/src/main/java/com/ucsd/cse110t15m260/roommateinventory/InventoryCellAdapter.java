@@ -12,12 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import Model.InventoryItem;
 
 
 public class InventoryCellAdapter<I> extends ArrayAdapter<InventoryItem>{
 
-    InventoryCellAdapter (Context context, InventoryItem[] inventoryitems){
+    InventoryCellAdapter (Context context, List<InventoryItem> inventoryitems){
         super(context, R.layout.custom_row,inventoryitems);
     }
 

@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 
+import Model.Managers.AccountManager;
 import Model.Person;
 
 public class MainActivity extends AbstractActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnFragmentInteractionListener, ApartmentFragment.OnFragmentInteractionListener, InventoryFragment.OnFragmentInteractionListener {
@@ -279,7 +280,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
     }
 
     public void logout() {
-        Person.getCurrentPerson().logoutPerson(new LogOutCallback() {
+        AccountManager.accountManager.logoutPerson(new LogOutCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
@@ -290,6 +291,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
                 }
             }
         });
+
     }
 
     public void onFragmentInteraction(Uri uri) {
