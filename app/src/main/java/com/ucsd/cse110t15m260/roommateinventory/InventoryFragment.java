@@ -8,10 +8,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -20,12 +22,16 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import Model.Person;
 import Model.Apartment;
 import Model.Inventory;
 import Model.InventoryItem;
+import Model.Managers.ApartmentManager;
 import Model.Managers.InventoryManager;
+import Model.Person;
 
 
 /**
@@ -33,21 +39,14 @@ import Model.Managers.InventoryManager;
  * Activities that contain this fragment must implement the
  * {@link InventoryFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link InventoryFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class InventoryFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    Button incButton, decButton;
     public static Inventory currentInventory;
     public static ListView theListView;
+
+    private ListAdapter inventoryFoodAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -55,73 +54,42 @@ public class InventoryFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InventoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static InventoryFragment newInstance(String param1, String param2) {
-        InventoryFragment fragment = new InventoryFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        InventoryManager.inventoryManager.fetchInventory(new FindCallback<InventoryItem>() {
-            @Override
-            public void done(List<InventoryItem> objects, ParseException e) {
-                if (e != null) {
-                    System.out.println("error" + e);
-                }
-            }
-        });
-
-        Apartment sampleApartment = (Apartment ) ParseUser.getCurrentUser().get("apartment");
-        this.currentInventory = (Inventory)sampleApartment.getInventory();
-
-        //getActionBar().setTitle(this.currentInventory.getName());
-        InventoryItem[] inventoryItems = new InventoryItem[currentInventory.items.size()];
-
-
-        for(int i = 0; i < this.currentInventory.items.size();i++)
-        {
-            inventoryItems[i] = (InventoryItem) this.currentInventory.items.get(i);
-        }
-
-
-        ListAdapter inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(getView().getContext(), inventoryItems);
-        theListView = (ListView) getView().findViewById(R.id.inventoryListView);
-        theListView.setAdapter(inventoryFoodAdapter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.activity_inventory, container, false);
+
+        FloatingActionButton b = (FloatingActionButton) view.findViewById(R.id.addfab);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), AddItemActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Apartment apartment = ApartmentManager.apartmentManager.getCurrentApartment();
+
+        Log.i("Current User:", Person.getCurrentPerson().toString());
+        currentInventory = apartment.getInventory();
+
+        //getActionBar().setTitle(this.currentInventory.getName());
+        ArrayList<InventoryItem> inventoryItems = currentInventory.getItems();
+
+
+        inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(view.getContext(), inventoryItems);
+        theListView = (ListView) view.findViewById(R.id.inventoryListView);
+        theListView.setAdapter(inventoryFoodAdapter);
+        getActivity().setTitle("Apartment Inventory");
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_inventory, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -129,6 +97,11 @@ public class InventoryFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -164,41 +137,6 @@ public class InventoryFragment extends Fragment {
     }
 
 
-    public void incrementInventoryItem(View v)
-    {
-        RelativeLayout vwParentRow = (RelativeLayout)v.getParent();
-        int position = theListView.getPositionForView((View)v.getParent());
-        this.currentInventory.items.get(position).setQuantity((int) this.currentInventory.items.get(position).getQuantity() + 1);
-        this.currentInventory.items.get(position).saveInBackground();
-        theListView.refreshDrawableState();
-        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
-
-    }
-
-    public void decrementInventoryItem(View v)
-    {
-        RelativeLayout vwParentRow = (RelativeLayout)v.getParent();
-        int position = theListView.getPositionForView((View)v.getParent());
-        this.currentInventory.items.get(position).setQuantity((int) this.currentInventory.items.get(position).getQuantity() - 1);
-        this.currentInventory.items.get(position).saveInBackground();
-        theListView.refreshDrawableState();
-        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
-    }
-
-    public void addInventoryItem(InventoryItem item)
-    {
-        this.currentInventory.items.add(item);
-        theListView.refreshDrawableState();
-        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
-    }
-
-    /**
-     * Starts addItemActivity
-     */
-    public void addItem(View view) {
-        Intent intent = new Intent(getView().getContext(), AddItemActivity.class);
-        startActivity(intent);
-    }
 
 
 }

@@ -38,6 +38,7 @@ import java.util.List;
 import Model.Apartment;
 import Model.Inventory;
 import Model.InventoryItem;
+import Model.Managers.AccountManager;
 import Model.Person;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -62,7 +63,8 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setupActionBar();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -89,44 +91,13 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        ParseUser.getCurrentUser().logOut();
-        if(ParseUser.getCurrentUser() == null){
-                Person.loginPerson("leo","leowong",new LogInCallback() {
-                    public void done(ParseUser user, ParseException e) {
-                        if (e == null && user != null) {
-                            Apartment apartment = (Apartment)ParseUser.getCurrentUser().get("apartment");
-                            ParseRelation aRelation = (ParseRelation)apartment.getUserRelation();
-                            aRelation.add(ParseUser.getCurrentUser());
-                            Inventory inventory = (Inventory)apartment.get("inventory");
-                            InventoryItem item = new InventoryItem();
-                            item.setName("Banana");
-                            item.setQuantity(5);
-                            inventory.getInventoryItemsRelation().add(item);
-                        } else if (user == null) {
-                            System.out.println("error" + e);
-                        } else {
-                            System.out.println("error");
-                        }
-                    }
-                });
-            }
-
     }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
         }
-
         getLoaderManager().initLoader(0, null, this);
-    }
-
-    public void goToInventory(View view) {
-        Intent intent = new Intent(getBaseContext(), InventoryActivity.class);
-        startActivity(intent);
-
-        finish();
     }
 
     private boolean mayRequestContacts() {
@@ -161,17 +132,6 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
             }
-        }
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -219,12 +179,14 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
             // perform the user login attempt.
             showProgress(true);
 
-            Person.loginPerson(email, password, new LogInCallback() {
+            AccountManager.accountManager.loginPerson(email, password, new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
                     showProgress(false);
 
-                    if (user != null) {
+                    if (user != null && e == null) {
                         // Hooray! The user is logged in.
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(intent);
                         finish();
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));

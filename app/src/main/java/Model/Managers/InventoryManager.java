@@ -4,12 +4,17 @@ package Model.Managers;
  * Created by satre on 1/31/16.
  */
 
+import android.util.Log;
+
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.SaveCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Model.Apartment;
@@ -31,17 +36,22 @@ public class InventoryManager {
      */
     private InventoryManager(){}
 
+    public Inventory getInventory() {
+        return ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
+    }
+
 
     /**
      * This method fetches the inventory and all of its items.
      * The result is stored in the run time variable and passed in the callback.
      * @param callback Function to call upon completion.
      */
-    public void fetchInventory(final FindCallback<InventoryItem> callback) {
+    public void fetchInventoryItems(final FindCallback<InventoryItem> callback) {
         Apartment currentApartment = ApartmentManager.apartmentManager.getCurrentApartment();
         if (currentApartment == null) {
             return;
         }
+
         //get the inventory from the apartment
         final Inventory inventory = currentApartment.getInventory();
         //get the relation to InventoryItem
@@ -53,9 +63,27 @@ public class InventoryManager {
             @Override
             public void done(List<InventoryItem> objects, ParseException e) {
                 if (e == null && objects != null) {
-                    inventory.items = objects;
+                    inventory.setItems(new ArrayList<InventoryItem>(objects));
                 }
-                callback.done(objects, e);
+                if (callback != null) {
+                    callback.done(objects, e);
+                }
+            }
+        });
+    }
+
+    public void fetchInventory( final GetCallback<Inventory> callback) {
+        Apartment currentApartment = ApartmentManager.apartmentManager.getCurrentApartment();
+        if( currentApartment == null) {
+            return;
+        }
+
+        Inventory inventory = currentApartment.getInventory();
+
+        inventory.fetchIfNeededInBackground(new GetCallback<Inventory>() {
+            @Override
+            public void done(Inventory object, ParseException e) {
+                callback.done(object, e);
             }
         });
     }
