@@ -43,6 +43,11 @@ public class Inventory extends ParseObject {
     public ArrayList<InventoryItem> getItems() {
         return items;
     }
+
+    public void setItems(ArrayList<InventoryItem> items ) {
+        this.items = items;
+    }
+
     /**
      * Getter for the name of this inventory list.
      * @return The name as a String.

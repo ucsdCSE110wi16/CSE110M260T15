@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Model.InventoryItem;
@@ -23,7 +24,7 @@ public class InventoryCellAdapter<I> extends ArrayAdapter<InventoryItem>{
 
     Button incButton, decButton;
 
-    InventoryCellAdapter (Context context, InventoryItem[] inventoryitems){
+    InventoryCellAdapter (Context context, ArrayList<InventoryItem> inventoryitems){
         super(context, R.layout.custom_row,inventoryitems);
     }
 

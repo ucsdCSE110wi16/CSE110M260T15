@@ -14,6 +14,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.SaveCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Model.Apartment;
@@ -62,7 +63,7 @@ public class InventoryManager {
             @Override
             public void done(List<InventoryItem> objects, ParseException e) {
                 if (e == null && objects != null) {
-                    inventory.items = objects;
+                    inventory.setItems(new ArrayList<InventoryItem>(objects));
                 }
                 if (callback != null) {
                     callback.done(objects, e);
