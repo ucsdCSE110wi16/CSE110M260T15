@@ -44,13 +44,11 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle("Home Page");
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Home Page");
                 invalidateOptionsMenu();
             }
         };
