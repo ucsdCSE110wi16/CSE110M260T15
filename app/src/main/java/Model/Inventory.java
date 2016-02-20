@@ -89,7 +89,9 @@ public class Inventory extends ParseObject {
                     items = new ArrayList<InventoryItem>(objects);
                 }
 
-                callback.done(objects, e);
+                if(callback != null) {
+                    callback.done(objects, e);
+                }
             }
         });
 

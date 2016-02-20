@@ -117,6 +117,8 @@ public class AccountManager {
                                 if(invError != null) {
                                     Log.e("Fetch Inventory", invError.getLocalizedMessage());
                                 }
+
+                                person.getApartment().getInventory().fetchInventoryItems(null);
                             }
                         });
                     }
