@@ -5,7 +5,10 @@ package com.ucsd.cse110t15m260.roommateinventory;
  */
 
 import android.content.Context;
+<<<<<<< HEAD
 import android.content.Intent;
+=======
+>>>>>>> negative decrementing fixed, item image stuff added, and table now updates when item is added
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
