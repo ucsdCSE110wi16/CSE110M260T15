@@ -33,6 +33,7 @@ public class Person extends ParseUser
     public static Person createnewPerson( String name, String email, String password) {
         Person newPerson = new Person();
 
+        newPerson.setUsername(email);
         newPerson.put("name", name);
         newPerson.put("email", email);
         newPerson.put("password", password);
