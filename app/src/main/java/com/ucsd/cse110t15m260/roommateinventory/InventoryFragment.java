@@ -102,6 +102,7 @@ public class InventoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
     }
 
     @Override

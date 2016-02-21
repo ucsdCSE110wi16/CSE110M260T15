@@ -96,7 +96,7 @@ public class InventoryManager {
      */
     public void addItemToInventory( InventoryItem item, Inventory inventory, final SaveCallback callback) {
         ParseRelation<InventoryItem> itemsRelation = inventory.getInventoryItemsRelation();
-
+        inventory.getItems().add(item);
         itemsRelation.add(item);
         inventory.saveInBackground(new SaveCallback() {
             @Override
