@@ -59,6 +59,7 @@ public class AccountManager {
                     callback.done(user, loginError);
                     return;
                 }
+                PushNotifsManager.getInstance().subscribeToUser(Person.getCurrentPerson());
                 ApartmentManager.apartmentManager.fetchApartment(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -82,6 +83,7 @@ public class AccountManager {
 
         if (person != null) {
             person.logOutInBackground(callback);
+            PushNotifsManager.getInstance().unsubscribeFromUser();
         }
     }
 

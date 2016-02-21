@@ -3,6 +3,7 @@ package Model.Managers;
 import com.parse.ParsePush;
 
 import Model.Apartment;
+import Model.InventoryItem;
 import Model.Person;
 
 /**
@@ -28,19 +29,34 @@ public class PushNotifsManager {
         ParsePush.subscribeInBackground(apt.getObjectId());
     }
 
+    public void unsubscribeFromApartment() {
+        ParsePush.unsubscribeInBackground(this.apartmentChannel);
+        this.apartmentChannel = null;
+    }
+
     public void subscribeToUser(Person person) {
         this.userChannel = person.getObjectId();
         ParsePush.subscribeInBackground(person.getObjectId());
     }
 
-    public void sendOutOfItem(String message) {
+    public void unsubscribeFromUser() {
+        ParsePush.unsubscribeInBackground(this.userChannel);
+        this.userChannel = null;
+    }
+    public void sendOutOfItem(InventoryItem item) {
+        if (item == null)
+            return;
+
         ParsePush push = new ParsePush();
         push.setChannel(this.apartmentChannel);
-        push.setMessage(outOfItem + message);
+        push.setMessage(outOfItem + item.getName());
         push.sendInBackground();
     }
 
     public void sendPushToUser(Person person, String message) {
+        if (person == null)
+                return;
+
         ParsePush push = new ParsePush();
         push.setChannel(person.getObjectId());
         push.setMessage(message);

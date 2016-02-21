@@ -148,12 +148,12 @@ public class InventoryItem extends ParseObject implements Serializable {
         put("quantity", newQuantity);
     }
 
-    public void incrimentQuanitiy() {
+    public void incrimentQuanitity() {
         int newQuanitiy = (int)this.getQuantity() + 1;
         this.setQuantity(newQuanitiy);
     }
 
-    public void decrimentQuanity() {
+    public void decrimentQuantity() {
         int newQuanity = (int)this.getQuantity() - 1;
 
         if (newQuanity > 0)
