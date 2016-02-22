@@ -55,6 +55,7 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private View focusView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,7 +166,6 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
         Log.d("REGISTER", "Password: " + password);
 
         boolean cancel = false;
-        View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
@@ -214,6 +214,17 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
                         Log.e("REGISTER", e.toString());
                         // Sign up didn't succeed. Look at the ParseException
                         // to figure out what went wrong
+                        mEmailView.requestFocus();
+
+                        if (e.getCode() == ParseException.USERNAME_TAKEN || e.getCode() == ParseException.EMAIL_TAKEN) {
+                            mEmailView.setError("Email already taken");
+                        }
+                        else if (e.getCode() == ParseException.INVALID_EMAIL_ADDRESS) {
+                            mEmailView.setError("Invalid email address");
+                        }
+                        else {
+                            mEmailView.setError("Something went wrong. Please try again later!");
+                        }
                     }
                 }
             });
