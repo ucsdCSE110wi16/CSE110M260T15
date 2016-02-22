@@ -7,11 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.util.List;
+
 import Model.Apartment;
+import Model.Managers.ApartmentManager;
 import Model.Person;
 
 public class JoinApartmentActivity extends AppCompatActivity {
@@ -31,8 +35,7 @@ public class JoinApartmentActivity extends AppCompatActivity {
         mApartmentIdView = (EditText) findViewById(R.id.join_apartment_id);
         String apartmentId = mApartmentIdView.getText().toString();
 
-        /* TODO: remove log statements (for debugging) */
-        ParseQuery<Apartment> query = ParseQuery.getQuery("Apartment");
+        ParseQuery<Apartment> query = ParseQuery.getQuery(Apartment.className);
         query.getInBackground(apartmentId, new GetCallback<Apartment>() {
             @Override
             public void done(Apartment apartment, ParseException e) {
@@ -40,16 +43,18 @@ public class JoinApartmentActivity extends AppCompatActivity {
 
                 if (!person.hasApartment()) {
                     if (e == null && apartment != null) {
-                        Log.d("JoinApartmentActivity", "Apartment attempted to join (name): " + apartment.getName());
-
-                        /* Person doesn't already have apartment */
-
                         // Set person's apartment to be apartment queried
                         person.setApartment(apartment);
 
                         // Set apartment to contain person
-                        apartment.addPersonToApartment(person);
-                        finish();
+                        ApartmentManager.apartmentManager.addPersonToCurrentApartment(person);
+                        ApartmentManager.apartmentManager.fetchMembersOfApartment(new FindCallback<Person>() {
+                            @Override
+                            public void done(List<Person> objects, ParseException e) {
+                                finish();
+                            }
+                        });
+
                     } else {
                         mApartmentIdView.setError("Incorrect PIN!");
                         mApartmentIdView.requestFocus();

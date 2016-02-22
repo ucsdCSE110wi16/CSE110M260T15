@@ -137,6 +137,7 @@ public class AccountManager {
                                 }
 
                                 person.getApartment().getInventory().fetchInventoryItems(null);
+                                ApartmentManager.apartmentManager.fetchMembersOfApartment(null);
                             }
                         });
                     }

@@ -114,23 +114,29 @@ public class Apartment extends ParseObject {
         ParseRelation<Person> relation = getUserRelation();
         relation.add(person);
         incrementNumberOfResidents();
+        members.add(person);
         saveInBackground();
         return true;
     }
 
-    public boolean removePersonFromApartment( Person person) {
+    public void removePersonFromApartment( Person person, final SaveCallback callback) {
         if (person == null) {
-            return false;
+            return;
         }
 
         if(!members.contains(person)) {
-            return false;
+            return;
         }
         ParseRelation<Person> relation = getUserRelation();
         relation.remove(person);
         decrementNumberOfResidents();
-        saveInBackground();
-        return true;
+        members.remove(person);
+        saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                callback.done(e);
+            }
+        });
     }
 
     public void fetchMembersOfApartment(final FindCallback<Person> callback) {
