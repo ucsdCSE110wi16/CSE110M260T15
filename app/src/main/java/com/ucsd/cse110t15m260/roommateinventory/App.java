@@ -34,7 +34,7 @@ public class App extends Application {
 
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
-        AccountManager.accountManager.fetchAllData();
         ParseInstallation.getCurrentInstallation().saveInBackground();
+        AccountManager.accountManager.fetchAllData();
     }
 }

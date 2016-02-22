@@ -5,10 +5,7 @@ package com.ucsd.cse110t15m260.roommateinventory;
  */
 
 import android.content.Context;
-<<<<<<< HEAD
 import android.content.Intent;
-=======
->>>>>>> negative decrementing fixed, item image stuff added, and table now updates when item is added
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +59,7 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         incButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getItem(pos).incrimentQuanitity();
+                getItem(pos).incrementQuantity();
                 getItem(pos).saveInBackground();
                 notifyDataSetChanged();
             }
@@ -70,7 +67,7 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         decButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getItem(pos).decrimentQuantity();
+                getItem(pos).decrementQuantity();
                 getItem(pos).saveInBackground();
                 notifyDataSetChanged();
             }

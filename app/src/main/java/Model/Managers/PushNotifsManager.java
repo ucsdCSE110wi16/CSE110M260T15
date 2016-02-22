@@ -1,6 +1,10 @@
 package Model.Managers;
 
+import android.util.Log;
+
+import com.parse.ParseException;
 import com.parse.ParsePush;
+import com.parse.SaveCallback;
 
 import Model.Apartment;
 import Model.InventoryItem;
@@ -25,8 +29,17 @@ public class PushNotifsManager {
     }
 
     public void subscribeToApartment(Apartment apt) {
-        this.apartmentChannel = apt.getObjectId();
-        ParsePush.subscribeInBackground(apt.getObjectId());
+        this.apartmentChannel = "CSE110" + apt.getObjectId();
+        Log.d("Channel","Subscribing to channel: " + this.apartmentChannel);
+        ParsePush.subscribeInBackground(this.apartmentChannel, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null)
+                    Log.d("Subscribe error", "Subscription failed: " + e.getMessage());
+
+                return;
+            }
+        });
     }
 
     public void unsubscribeFromApartment() {
@@ -35,8 +48,16 @@ public class PushNotifsManager {
     }
 
     public void subscribeToUser(Person person) {
-        this.userChannel = person.getObjectId();
-        ParsePush.subscribeInBackground(person.getObjectId());
+        this.userChannel = "CSE110" + person.getObjectId();
+        ParsePush.subscribeInBackground(this.userChannel, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null)
+                    Log.d("Subscribe error", "Subscription failed: " + e.getMessage());
+
+                return;
+            }
+        });
     }
 
     public void unsubscribeFromUser() {
@@ -48,9 +69,18 @@ public class PushNotifsManager {
             return;
 
         ParsePush push = new ParsePush();
+
+        Log.d("Channel", "Issuing notif to channel: " + this.apartmentChannel);
+
         push.setChannel(this.apartmentChannel);
-        push.setMessage(outOfItem + item.getName());
-        push.sendInBackground();
+        //try {
+            push.setMessage(outOfItem + item.getName());
+            push.sendInBackground();
+        //}
+
+        //catch(Exception e) {
+        //    Log.d("Push Failed", e.getMessage());
+        //}
     }
 
     public void sendPushToUser(Person person, String message) {

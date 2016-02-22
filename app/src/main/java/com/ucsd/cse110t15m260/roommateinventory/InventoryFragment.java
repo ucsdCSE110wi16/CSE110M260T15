@@ -89,7 +89,7 @@ public class InventoryFragment extends Fragment {
         theListView.setAdapter(inventoryFoodAdapter);
         getActivity().setTitle("Apartment Inventory");
 
-g        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment
         return view;
     }
 
