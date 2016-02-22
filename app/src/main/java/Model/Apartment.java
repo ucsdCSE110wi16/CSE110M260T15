@@ -114,6 +114,7 @@ public class Apartment extends ParseObject {
         ParseRelation<Person> relation = getUserRelation();
         relation.add(person);
         incrementNumberOfResidents();
+        members.add(person);
         saveInBackground();
         return true;
     }
@@ -129,6 +130,7 @@ public class Apartment extends ParseObject {
         ParseRelation<Person> relation = getUserRelation();
         relation.remove(person);
         decrementNumberOfResidents();
+        members.remove(person);
         saveInBackground();
         return true;
     }
