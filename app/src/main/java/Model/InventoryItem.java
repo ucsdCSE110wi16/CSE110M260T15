@@ -156,13 +156,13 @@ public class InventoryItem extends ParseObject implements Serializable {
     public void decrimentQuantity() {
         int newQuanity = (int)this.getQuantity() - 1;
 
-        if (newQuanity > 0)
-            this.setQuantity(newQuanity);
-
         if (newQuanity == 0)
             PushNotifsManager
                     .getInstance()
                     .sendOutOfItem(this);
+
+        if (newQuanity >= 0)
+            this.setQuantity(newQuanity);
     }
 
     /**
