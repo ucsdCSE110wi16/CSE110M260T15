@@ -59,6 +59,7 @@ public class AccountManager {
                     callback.done(user, loginError);
                     return;
                 }
+                PushNotifsManager.getInstance().subscribeToUser(Person.getCurrentPerson());
                 ApartmentManager.apartmentManager.fetchApartment(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -82,6 +83,7 @@ public class AccountManager {
 
         if (person != null) {
             person.logOutInBackground(callback);
+            PushNotifsManager.getInstance().unsubscribeFromUser();
         }
     }
 
@@ -90,9 +92,12 @@ public class AccountManager {
      */
     public void fetchAllData() {
         final Person person = Person.getCurrentPerson();
+
         if(person == null) {
             return;
         }
+
+        PushNotifsManager.getInstance().subscribeToUser(person);
 
         person.fetchInBackground(new GetCallback<Person>() {
             @Override
@@ -107,6 +112,11 @@ public class AccountManager {
                     return;
                 }
                 //refresh the apartment info.
+
+                if (person.getApartment() == null) {
+                    return;
+                }
+
                 person.getApartment().fetchInBackground(new GetCallback<Apartment>() {
                     @Override
                     public void done(Apartment object, ParseException aptError) {
@@ -114,6 +124,9 @@ public class AccountManager {
                             Log.e("Fetch Apartment", aptError.getLocalizedMessage());
                             return;
                         }
+
+                        PushNotifsManager.getInstance().subscribeToApartment(person.getApartment());
+
                         //refresh the inventory info.
                         person.getApartment().getInventory().fetchInBackground(new GetCallback<Inventory>() {
                             @Override

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ParseInstallation;
 
 import Model.Apartment;
 import Model.Inventory;
@@ -33,7 +34,7 @@ public class App extends Application {
 
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
-
+        ParseInstallation.getCurrentInstallation().saveInBackground();
         AccountManager.accountManager.fetchAllData();
     }
 }
