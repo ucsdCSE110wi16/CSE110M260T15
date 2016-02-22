@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -56,6 +57,8 @@ public class AddItemActivity extends AbstractActivity {
     private EditText mQuantityView;
     private EditText mDescriptionView;
     private int CAMERA_ACTIVITY_INTENT_CODE = 100;
+    private Button mDeleteButtonView;
+
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 
@@ -81,14 +84,13 @@ public class AddItemActivity extends AbstractActivity {
         mCategoryView = (EditText) findViewById(R.id.text_item_category);
         mQuantityView = (EditText) findViewById(R.id.text_item_count);
         mDescriptionView = (EditText) findViewById(R.id.text_description);
-
         mUserName = (TextView) findViewById(R.id.text_username_created_by);
 
         /* TODO: Make sure it's passed on the other end as InventoryItem  */
         Serializable item =  getIntent().getSerializableExtra("InventoryItem");
         TextView createdByTextView = (TextView) findViewById(R.id.text_created_by);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
+        Button deleteItemButton = (Button) findViewById(R.id.delete_item_button);
         TextView usernameTextView = (TextView) findViewById(R.id.text_username_created_by);
         if(item == null) {
             /* Creation Mode: New item needs to be created */
@@ -101,16 +103,20 @@ public class AddItemActivity extends AbstractActivity {
                 }
             });
 
+            fab.setVisibility(VISIBLE);
             createdByTextView.setVisibility(GONE);
             usernameTextView.setVisibility(GONE);
-            fab.setVisibility(VISIBLE);
+            deleteItemButton.setVisibility(GONE);
 
         } else {
             /* Viewing Mode: item already exists. */
             theItem = (InventoryItem) item;
+
             fab.setVisibility(GONE);
             createdByTextView.setVisibility(VISIBLE);
             usernameTextView.setVisibility(VISIBLE);
+            deleteItemButton.setVisibility(VISIBLE);
+
 
             if(theItem.getCreator() != null) {
                 usernameTextView.setText(theItem.getCreator().getUsername());
