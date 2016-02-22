@@ -7,9 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+
+import java.util.List;
 
 import Model.Apartment;
 import Model.Managers.ApartmentManager;
@@ -43,7 +46,13 @@ public class JoinApartmentActivity extends AppCompatActivity {
 
                         // Set apartment to contain person
                         ApartmentManager.apartmentManager.addPersonToCurrentApartment(person);
-                        finish();
+                        ApartmentManager.apartmentManager.fetchMembersOfApartment(new FindCallback<Person>() {
+                            @Override
+                            public void done(List<Person> objects, ParseException e) {
+                                finish();
+                            }
+                        });
+
                     } else {
                         mApartmentIdView.setError("Incorrect PIN!");
                         mApartmentIdView.requestFocus();

@@ -20,6 +20,9 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Apartment;
+import Model.Managers.AccountManager;
+import Model.Managers.ApartmentManager;
 import Model.Person;
 
 
@@ -78,7 +81,7 @@ public class ApartmentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Person person = Person.getCurrentPerson();
-                person.leaveApartment(new SaveCallback() {
+                ApartmentManager.apartmentManager.removePersonFromCurrentApartment(person, new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         mPeople.clear();
@@ -103,9 +106,14 @@ public class ApartmentFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Person person = Person.getCurrentPerson();
-
+        Person person = AccountManager.accountManager.getCurrentUser();
+        Apartment currApt = ApartmentManager.apartmentManager.getCurrentApartment();
         if (person != null && person.hasApartment()) {
+
+            for(Person mate: currApt.getMembers()) {
+                mPeople.add(mate.getName());
+            }
+            /*
             person.getApartment().findMembers(new FindCallback<Person>() {
                 @Override
                 public void done(List<Person> objects, ParseException e) {
@@ -120,6 +128,7 @@ public class ApartmentFragment extends Fragment {
                     }
                 }
             });
+            */
         };
         //Manage UI for Apartment Page
         if(person.hasApartment())

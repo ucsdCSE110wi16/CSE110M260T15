@@ -4,10 +4,14 @@ package Model.Managers;
  * Created by satre on 1/31/16.
  */
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
+
+import java.util.List;
 
 import Model.Apartment;
 import Model.Inventory;
@@ -51,12 +55,24 @@ public class ApartmentManager {
      * @param formerMate The person who is moving out.
      * @return True if the removal succeeds.
      */
-    public boolean removePersonFromCurrentApartment( Person formerMate) {
+    public void removePersonFromCurrentApartment( Person formerMate, SaveCallback callback) {
         if (getCurrentApartment() == null) {
-            return false;
+            return;
         }
 
-        return getCurrentApartment().removePersonFromApartment(formerMate);
+        getCurrentApartment().removePersonFromApartment(formerMate, callback);
+    }
+
+    public void fetchMembersOfApartment( final FindCallback<Person> callback) {
+        Apartment apt = getCurrentApartment();
+        apt.fetchMembersOfApartment(new FindCallback<Person>() {
+            @Override
+            public void done(List<Person> objects, ParseException e) {
+                if (callback != null) {
+                    callback.done(objects, e);
+                }
+            }
+        });
     }
 
 
