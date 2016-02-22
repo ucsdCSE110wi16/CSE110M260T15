@@ -69,18 +69,15 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         decButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
                 if((int) getItem(pos).getQuantity()  == 0)
                     return;
 
                 getItem(pos).setQuantity((int) getItem(pos).getQuantity() - 1);
-=======
                 if(getItem(pos).getQuantity().intValue() == 0) {
                     return;
                 }
 
                 getItem(pos).decrement();
->>>>>>> 8792b7ba3a12dfdae2b1c25bf7bb763fcf1bf5e8
                 getItem(pos).saveInBackground();
                 notifyDataSetChanged();
             }
