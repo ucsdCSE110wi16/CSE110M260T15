@@ -127,10 +127,12 @@ public class Apartment extends ParseObject {
         if(!members.contains(person)) {
             return;
         }
+
         ParseRelation<Person> relation = getUserRelation();
         relation.remove(person);
         decrementNumberOfResidents();
         members.remove(person);
+        person.leaveApartment(null);
         saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
