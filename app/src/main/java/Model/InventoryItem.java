@@ -15,6 +15,8 @@ import com.parse.SaveCallback;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
+import Model.Managers.PushNotifsManager;
+
 /**
  * Created by satre on 1/31/16.
  */
@@ -140,7 +142,27 @@ public class InventoryItem extends ParseObject implements Serializable {
      * @param newQuantity The updated quantity to add to this item.
      */
     public void setQuantity(Number newQuantity) {
+        if (newQuantity.doubleValue() <= 0) {
+            newQuantity = new Integer(0);
+        }
         put("quantity", newQuantity);
+    }
+
+    public void incrementQuantity() {
+        int newQuantity = (int)this.getQuantity() + 1;
+        this.setQuantity(newQuantity);
+    }
+
+    public void decrementQuantity() {
+        int newQuantity = (int)this.getQuantity() - 1;
+
+        if (newQuantity == 0)
+            PushNotifsManager
+                    .getInstance()
+                    .sendOutOfItem(this);
+
+        if (newQuantity >= 0)
+            this.setQuantity(newQuantity);
     }
 
     /**

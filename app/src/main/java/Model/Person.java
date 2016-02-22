@@ -13,6 +13,7 @@ import com.parse.SignUpCallback;
 import Model.Apartment;
 import Model.Managers.ApartmentManager;
 import Model.Managers.InventoryManager;
+import Model.Managers.PushNotifsManager;
 
 /**
  * Created by saiteja64 on 1/23/16.
@@ -58,6 +59,7 @@ public class Person extends ParseUser
     public void setApartment(Apartment apartment) {
         if (getParseObject("apartment") == null) {
             Log.d("Person", "Apartment is null! User doesn't have an apartment yet.");
+            PushNotifsManager.getInstance().subscribeToApartment(apartment);
             put("apartment", apartment);
             saveInBackground();
         }
@@ -66,6 +68,7 @@ public class Person extends ParseUser
     public void leaveApartment(SaveCallback callback) {
         remove("apartment");
         saveInBackground(callback);
+        PushNotifsManager.getInstance().unsubscribeFromApartment();
     }
 
     public boolean hasApartment() {

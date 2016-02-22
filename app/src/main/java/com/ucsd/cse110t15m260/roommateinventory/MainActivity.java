@@ -158,7 +158,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
             Log.d("OnNavigation", "CREATE APARTMENT");
         } else if (id == R.id.join_apt) {
             Log.d("OnNavigation", "JOIN APARTMENT");
-        } else if (id == R.id.edit_inventory) {
+        } else if (id == R.id.apt_inventory) {
             Log.d("OnNavigation", "INVENTORY");
             //TODO Create inventory fragment
             InventoryFragment inventoryFrag = null;
@@ -204,7 +204,6 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         if (Person.getCurrentPerson() == null) {
             showLogin();
         }
-
         updateMenu();
     }
 
@@ -221,11 +220,15 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         Log.d("UpdateMenu", "SETTING HEADER TITLE");
 
         Menu menuNav = navView.getMenu();
-
+        MenuItem aptInventory = menuNav.findItem(R.id.apt_inventory);
         if (person == null) {
             headerTitle.setText("No user");
             headerDescription.setText("Please login");
         } else {
+            if(person.getApartment() == null)
+                aptInventory.setVisible(false);
+            else
+                aptInventory.setVisible(true);
             headerTitle.setText(person.getString("name"));
             headerDescription.setText("User ID: " + person.getObjectId());
         }

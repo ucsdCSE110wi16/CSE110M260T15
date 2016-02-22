@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -40,6 +41,7 @@ public class ApartmentFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     Button mLeaveApt, mCreateApt, mJoinApt;
+    TextView mAptName, mAptID;
 
     public ApartmentFragment() {
         // Required empty public constructor
@@ -61,7 +63,20 @@ public class ApartmentFragment extends Fragment {
         mLeaveApt = (Button) rootView.findViewById(R.id.leave_apt);
         mCreateApt = (Button) rootView.findViewById(R.id.create_apt);
         mJoinApt = (Button) rootView.findViewById(R.id.join_apt);
+        mAptName = (TextView) rootView.findViewById(R.id.apt_name);
+        mAptID = (TextView) rootView.findViewById(R.id.apt_id);
 
+        Person person =Person.getCurrentPerson();
+        if(person.hasApartment())
+        {
+            mAptID.setText("ID: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
+            mAptName.setText("Apartment Name: " + person.getApartment().getName());
+        }
+        else
+        {
+            mAptID.setText("No Apartment");
+            mAptName.setText("Click the buttons below to create/join an apartment!");
+        }
         mJoinApt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
