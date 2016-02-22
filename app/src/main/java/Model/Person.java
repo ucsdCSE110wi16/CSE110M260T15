@@ -67,7 +67,10 @@ public class Person extends ParseUser
 
     public void leaveApartment(SaveCallback callback) {
         remove("apartment");
-        saveInBackground(callback);
+        if(callback == null)
+            saveInBackground();
+        else
+            saveInBackground(callback);
         PushNotifsManager.getInstance().unsubscribeFromApartment();
     }
 

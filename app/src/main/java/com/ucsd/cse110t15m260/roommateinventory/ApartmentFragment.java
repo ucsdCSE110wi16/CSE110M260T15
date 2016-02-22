@@ -66,7 +66,7 @@ public class ApartmentFragment extends Fragment {
         mAptName = (TextView) rootView.findViewById(R.id.apt_name);
         mAptID = (TextView) rootView.findViewById(R.id.apt_id);
 
-        Person person =Person.getCurrentPerson();
+        Person person = Person.getCurrentPerson();
         if(person.hasApartment())
         {
             mAptID.setText("ID: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
@@ -101,6 +101,8 @@ public class ApartmentFragment extends Fragment {
                     public void done(ParseException e) {
                         mPeople.clear();
                         mAdapter.notifyDataSetChanged();
+                        mAptID.setText("No Apartment");
+                        mAptName.setText("Click the buttons below to create/join an apartment!");
 
                         mJoinApt.setVisibility(View.VISIBLE);
                         mCreateApt.setVisibility(View.VISIBLE);
