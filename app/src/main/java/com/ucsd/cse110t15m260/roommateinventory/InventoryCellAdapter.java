@@ -5,6 +5,7 @@ package com.ucsd.cse110t15m260.roommateinventory;
  */
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.InventoryItem;
+
+import static com.ucsd.cse110t15m260.roommateinventory.R.drawable.cow;
 
 
 public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
@@ -37,10 +40,15 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         String itemNameString = getItem(position).getName();
         TextView itemName = (TextView) customView.findViewById(R.id.itemName);
         TextView itemCount = (TextView) customView.findViewById(R.id.itemCount);
-        //ImageView imageView = (ImageView) customView.findViewById(R.id.itemPicture);
+        ImageView imageView = (ImageView) customView.findViewById(R.id.itemPicture);
 
         itemName.setText(itemNameString);
         itemCount.setText(getItem(position).getQuantity() + "");
+        Bitmap image = getItem(position).getImage();
+        if(image != null)
+            imageView.setImageBitmap(image);
+        else
+            imageView.setImageResource(R.drawable.cow);
 
         incButton = (Button) customView.findViewById(R.id.incrementButton);
         decButton = (Button) customView.findViewById(R.id.decrementButton);
@@ -58,17 +66,14 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         decButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(getItem(pos).getQuantity()  == 0)
+                    return;
                 getItem(pos).setQuantity((int) getItem(pos).getQuantity() - 1);
                 getItem(pos).saveInBackground();
                 notifyDataSetChanged();
             }
         });
 
-
-        //if(getItem(position).getImage() != null)
-            //imageView.setImageBitmap(getItem(position).getImage());
-        //else
-            //imageView.setImageResource(R.drawable.carrot);
         return customView;
     }
 }
