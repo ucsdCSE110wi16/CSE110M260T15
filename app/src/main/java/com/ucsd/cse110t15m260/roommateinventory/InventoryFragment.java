@@ -70,6 +70,7 @@ public class InventoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddItemActivity.class);
+                intent.putExtra("index", -1);
                 startActivity(intent);
             }
         });
@@ -102,6 +103,7 @@ public class InventoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
     }
 
     @Override

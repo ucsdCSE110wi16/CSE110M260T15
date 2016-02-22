@@ -96,7 +96,7 @@ public class InventoryManager {
      */
     public void addItemToInventory( InventoryItem item, Inventory inventory, final SaveCallback callback) {
         ParseRelation<InventoryItem> itemsRelation = inventory.getInventoryItemsRelation();
-
+        inventory.getItems().add(item);
         itemsRelation.add(item);
         inventory.saveInBackground(new SaveCallback() {
             @Override
@@ -112,6 +112,9 @@ public class InventoryManager {
      */
     public void deleteItem(InventoryItem item) {
         item.deleteInBackground();
+        getInventory().getItems().remove(item);
+        ParseRelation<InventoryItem> itemsRelation = getInventory().getInventoryItemsRelation();
+        itemsRelation.remove(item);
+        getInventory().saveInBackground();
     }
-
 }

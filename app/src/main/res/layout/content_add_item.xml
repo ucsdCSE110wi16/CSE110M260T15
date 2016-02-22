@@ -57,8 +57,8 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
-            android:id="@+id/text_item_count"
-            android:hint="Count"
+            android:id="@+id/text_item_quantity"
+            android:hint="Quantity"
             android:enabled="true" />
     </LinearLayout>
 
@@ -132,5 +132,15 @@
         android:layout_alignBottom="@+id/image_item"
         android:layout_alignRight="@+id/image_item"
         android:layout_alignEnd="@+id/image_item" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Item"
+        android:id="@+id/delete_item_button"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="37dp" />
 
 </RelativeLayout>
