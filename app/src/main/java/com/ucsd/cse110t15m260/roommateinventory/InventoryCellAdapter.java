@@ -5,6 +5,7 @@ package com.ucsd.cse110t15m260.roommateinventory;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-
+import android.app.Activity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +28,15 @@ import static com.ucsd.cse110t15m260.roommateinventory.R.drawable.cow;
 public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
 
     Button incButton, decButton;
+    Context activity;
 
-    InventoryCellAdapter (Context context, ArrayList<InventoryItem> inventoryitems){
-        super(context, R.layout.custom_row,inventoryitems);
+    InventoryCellAdapter (Context context, ArrayList<InventoryItem> inventoryitems) {
+        super(context, R.layout.custom_row, inventoryitems);
+        activity = context;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater imageInflator = LayoutInflater.from(getContext());
         View customView = imageInflator.inflate(R.layout.custom_row, parent, false);
 
@@ -71,6 +74,16 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
                 getItem(pos).setQuantity((int) getItem(pos).getQuantity() - 1);
                 getItem(pos).saveInBackground();
                 notifyDataSetChanged();
+            }
+        });
+
+        customView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(v.getContext(), AddItemActivity.class);
+                intent.putExtra("index",position);
+                activity.startActivity(intent);
             }
         });
 
