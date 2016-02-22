@@ -112,6 +112,9 @@ public class InventoryManager {
      */
     public void deleteItem(InventoryItem item) {
         item.deleteInBackground();
+        getInventory().getItems().remove(item);
+        ParseRelation<InventoryItem> itemsRelation = getInventory().getInventoryItemsRelation();
+        itemsRelation.remove(item);
+        getInventory().saveInBackground();
     }
-
 }

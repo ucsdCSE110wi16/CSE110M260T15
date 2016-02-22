@@ -22,6 +22,8 @@ public class JoinApartmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_apartment);
+
+        this.setTitle("Join an Apartment");
     }
 
     public void joinApartment(View view) {
