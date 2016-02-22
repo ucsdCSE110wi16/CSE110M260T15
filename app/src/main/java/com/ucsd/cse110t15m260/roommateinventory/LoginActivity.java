@@ -203,7 +203,6 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
     public void goToRegistration(View view) {
         Intent intent = new Intent(getBaseContext(), RegisterActivity.class);
         startActivity(intent);
-
         finish();
     }
 

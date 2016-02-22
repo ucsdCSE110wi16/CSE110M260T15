@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -206,6 +207,8 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
 
                     if (e == null) {
                         // Hooray! Let them use the app now.
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(intent);
                         finish();
                     } else {
                         Log.e("REGISTER", e.toString());
