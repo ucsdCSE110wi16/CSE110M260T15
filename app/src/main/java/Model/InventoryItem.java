@@ -140,7 +140,18 @@ public class InventoryItem extends ParseObject implements Serializable {
      * @param newQuantity The updated quantity to add to this item.
      */
     public void setQuantity(Number newQuantity) {
+        if (newQuantity.doubleValue() <= 0) {
+            newQuantity = new Integer(0);
+        }
         put("quantity", newQuantity);
+    }
+
+    public void decrement () {
+        setQuantity(getQuantity().doubleValue() - 1);
+    }
+
+    public void increment () {
+        setQuantity(getQuantity().doubleValue() + 1);
     }
 
     /**
