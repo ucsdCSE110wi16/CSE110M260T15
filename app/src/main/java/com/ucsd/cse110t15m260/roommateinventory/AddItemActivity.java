@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Camera;
+import android.graphics.Typeface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,18 +52,15 @@ import static android.view.View.*;
 public class AddItemActivity extends AbstractActivity {
 
     // UI references
-    private ImageView mItemImageView;
     private EditText mNameView;
     private EditText mCategoryView;
     private EditText mQuantityView;
     private EditText mDescriptionView;
     private int CAMERA_ACTIVITY_INTENT_CODE = 100;
-    private Button mDeleteButtonView;
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 
-    private TextView mUserName;
     private Uri imageFileUri;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -81,54 +79,23 @@ public class AddItemActivity extends AbstractActivity {
 
         mNameView = (EditText) findViewById(R.id.text_item_name);
         mCategoryView = (EditText) findViewById(R.id.text_item_category);
-        mQuantityView = (EditText) findViewById(R.id.text_item_count);
+        mQuantityView = (EditText) findViewById(R.id.text_item_quantity);
         mDescriptionView = (EditText) findViewById(R.id.text_description);
-        mUserName = (TextView) findViewById(R.id.text_username_created_by);
 
-        /* TODO: Make sure it's passed on the other end as InventoryItem  */
-        Serializable item =  getIntent().getSerializableExtra("InventoryItem");
+        int index =  getIntent().getIntExtra("index", -1);
+
+        Log.d("AddItemActivity", "The intent passed " + index);
         TextView createdByTextView = (TextView) findViewById(R.id.text_created_by);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        Button deleteItemButton = (Button) findViewById(R.id.delete_item_button);
+
         TextView usernameTextView = (TextView) findViewById(R.id.text_username_created_by);
-        if(item == null) {
-            /* Creation Mode: New item needs to be created */
-            theItem = InventoryItem.createEmptyInventoryItem(ApartmentManager.apartmentManager.getCurrentApartment().getInventory());
 
-            fab.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    attemptToCreateNewItem();
-                }
-            });
+        EditText itemName = (EditText) findViewById(R.id.text_item_name);
+        EditText itemCategory = (EditText) findViewById(R.id.text_item_category);
+        EditText itemQuantity = (EditText) findViewById(R.id.text_item_quantity);
+        EditText itemDescription = (EditText) findViewById(R.id.text_description);
 
-            fab.setVisibility(VISIBLE);
-            createdByTextView.setVisibility(GONE);
-            usernameTextView.setVisibility(GONE);
-            deleteItemButton.setVisibility(GONE);
-
-        } else {
-            /* Viewing Mode: item already exists. */
-            theItem = (InventoryItem) item;
-
-            fab.setVisibility(GONE);
-            createdByTextView.setVisibility(VISIBLE);
-            usernameTextView.setVisibility(VISIBLE);
-            deleteItemButton.setVisibility(VISIBLE);
-
-
-            if(theItem.getCreator() != null) {
-                usernameTextView.setText(theItem.getCreator().getUsername());
-            }
-
-        }
-
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-        //Register the listener for the captuer image button
+        //Register the listener for the capture image button
         ImageButton imageButton = (ImageButton) findViewById(R.id.image_button);
         imageButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -136,6 +103,102 @@ public class AddItemActivity extends AbstractActivity {
                 launchCamera();
             }
         });
+
+        Button deleteItemButton = (Button) findViewById(R.id.delete_item_button);
+        deleteItemButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(theItem != null)
+                InventoryManager.inventoryManager.deleteItem(theItem);
+                finish();
+            }
+        });
+
+
+
+        if(index == -1) {
+            /* Creation Mode: New item needs to be created */
+            theItem = InventoryItem.createEmptyInventoryItem(ApartmentManager.apartmentManager.getCurrentApartment().getInventory());
+
+            itemName.setFocusable(true);
+            itemName.setEnabled(true);
+            itemCategory.setFocusable(true);
+            itemCategory.setEnabled(true);
+            itemDescription.setFocusable(true);
+            itemDescription.setEnabled(true);
+            itemQuantity.setFocusable(true);
+            itemQuantity.setEnabled(true);
+
+            fab.setVisibility(VISIBLE);
+            createdByTextView.setVisibility(GONE);
+            usernameTextView.setVisibility(GONE);
+            deleteItemButton.setVisibility(GONE);
+
+            /* Create item button on click listener */
+            fab.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    attemptToCreateNewItem();
+                }
+            });
+
+            this.setTitle("Create New Item");
+
+        } else {
+
+            /* Viewing Mode: item already exists. */
+            theItem = InventoryManager.inventoryManager.getInventory().getItems().get(index);
+
+            /* Make the EditTexts appear to be TextViews */
+            itemName.setInputType(0);
+            itemName.getBackground().clearColorFilter();
+            itemName.setFocusable(false);
+            itemName.setClickable(false);
+
+            itemCategory.setInputType(0);
+            itemCategory.getBackground().clearColorFilter();
+            itemCategory.setFocusable(false);
+            itemCategory.setClickable(false);
+
+            itemQuantity.setInputType(0);
+            itemQuantity.getBackground().clearColorFilter();
+            itemQuantity.setFocusable(false);
+            itemQuantity.setClickable(false);
+
+            itemDescription.setInputType(0);
+            itemDescription.getBackground().clearColorFilter();
+            itemDescription.setFocusable(false);
+            itemDescription.setClickable(false);
+
+            /* Set the items text fields */
+            itemName.setText(theItem.getName());
+            itemCategory.setText(theItem.getCategory());
+            itemQuantity.setText(theItem.getQuantity().toString());
+            itemDescription.setText(theItem.getDescription());
+
+            /* Set image of item */
+            if(theItem.getImage() != null) {
+                updateImageButtonWithImage(theItem.getImage());
+            }
+
+            /* Hide fab, show created by, username, and delete button */
+            fab.setVisibility(GONE);
+            createdByTextView.setVisibility(VISIBLE);
+            usernameTextView.setVisibility(VISIBLE);
+            deleteItemButton.setVisibility(VISIBLE);
+
+            if(theItem.getCreator() != null) {
+                usernameTextView.setText(theItem.getCreator().getUsername());
+            }
+
+            this.setTitle("Add an Item");
+        }
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
     }
 
     public void attemptToCreateNewItem() {
