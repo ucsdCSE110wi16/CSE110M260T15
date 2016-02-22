@@ -212,8 +212,10 @@ public class AddItemActivity extends AbstractActivity {
 
         String itemName = mNameView.getText().toString();
         String category = mCategoryView.getText().toString();
-        Number quantity = Integer.parseInt(mQuantityView.getText().toString());
+        String quantityString = mQuantityView.getText().toString();
+        Number quantity;
         String description = mDescriptionView.getText().toString();
+
 
         Log.d("AddItemActivity", "Before checking fields");
         if (TextUtils.isEmpty(itemName)) {
@@ -226,10 +228,13 @@ public class AddItemActivity extends AbstractActivity {
             focusView = mCategoryView;
             cancel = true;
         }
-        if (quantity == null) {
+        if ( TextUtils.isEmpty(quantityString)) {
             mQuantityView.setError("This field is required");
             focusView = mQuantityView;
             cancel = true;
+            quantity = new Integer(0);
+        } else {
+            quantity = Integer.parseInt(quantityString);
         }
 
         if (cancel) {
@@ -256,7 +261,6 @@ public class AddItemActivity extends AbstractActivity {
     }
 
     private void finishCreateInventoryItem() {
-        // TODO: Set inventory item to be in current Inventory
         Apartment apartment = ApartmentManager.apartmentManager.getCurrentApartment();
         InventoryManager.inventoryManager.addItemToInventory(theItem, apartment.getInventory(), new SaveCallback() {
             @Override
