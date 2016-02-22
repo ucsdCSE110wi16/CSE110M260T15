@@ -68,13 +68,6 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
             @Override
             public void onClick(View v) {
                 //If there's nothing
-                if(getItem(pos).getQuantity().intValue()  == 0)
-                    return;
-
-                getItem(pos).setQuantity(getItem(pos).getQuantity().intValue() - 1);
-                if(getItem(pos).getQuantity().intValue() == 0) {
-                    return;
-                }
                 getItem(pos).decrementQuantity();
                 getItem(pos).saveInBackground();
                 notifyDataSetChanged();
