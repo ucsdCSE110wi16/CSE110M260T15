@@ -14,7 +14,6 @@
 
     <uses-feature android:name="android.hardware.camera2"
                   android:required="true"/>
-    <uses-permission android:name="com.ucsd.cse110t15m260.roommateinventory.permission.C2D_MESSAGE" />
     
     <uses-feature android:name="android.hardware.camera2" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -30,6 +29,7 @@
     -->
     <permission android:protectionLevel="signature"
         android:name="com.ucsd.cse110t15m260.roommateinventory.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.ucsd.cse110t15m260.roommateinventory.permission.C2D_MESSAGE" />
 
     <application
         android:name=".App"
