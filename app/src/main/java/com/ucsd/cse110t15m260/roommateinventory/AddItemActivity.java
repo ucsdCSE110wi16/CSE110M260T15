@@ -62,7 +62,6 @@ public class AddItemActivity extends AbstractActivity {
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 
-
     private TextView mUserName;
     private Uri imageFileUri;
     /**
@@ -137,17 +136,13 @@ public class AddItemActivity extends AbstractActivity {
                 launchCamera();
             }
         });
-
-
     }
-
 
     public void attemptToCreateNewItem() {
         mNameView.setError(null);
         mCategoryView.setError(null);
         mQuantityView.setError(null);
         mDescriptionView.setError(null);
-
 
         boolean cancel = false;
         View focusView = null;
@@ -198,7 +193,6 @@ public class AddItemActivity extends AbstractActivity {
     }
 
     private void finishCreateInventoryItem() {
-
         // TODO: Set inventory item to be in current Inventory
         Apartment apartment = ApartmentManager.apartmentManager.getCurrentApartment();
         InventoryManager.inventoryManager.addItemToInventory(theItem, apartment.getInventory(), new SaveCallback() {
@@ -213,9 +207,7 @@ public class AddItemActivity extends AbstractActivity {
                 }
             }
         });
-
     }
-
 
     private void launchCamera() {
         Intent cameraIntent = new Intent();
@@ -224,7 +216,6 @@ public class AddItemActivity extends AbstractActivity {
         imageFileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
         //tell the activity where to store the image via the intent
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
-
         startActivityForResult(cameraIntent, CAMERA_ACTIVITY_INTENT_CODE);
     }
 
@@ -275,6 +266,7 @@ public class AddItemActivity extends AbstractActivity {
 
         if (requestCode == CAMERA_ACTIVITY_INTENT_CODE) {
             if (resultCode == RESULT_OK) {
+                Intent i;
                 Bitmap image = processImageWithUri(data.getData());
                 Bitmap scaledImage = scaleImageToResolution(2000, 2000, image);
                 updateImageButtonWithImage(scaledImage);
@@ -287,7 +279,6 @@ public class AddItemActivity extends AbstractActivity {
                 //image capture failed.
                 Toast.makeText(AddItemActivity.this, "Error with image. Please try again.", Toast.LENGTH_SHORT).show();
             }
-
         }
     }
 

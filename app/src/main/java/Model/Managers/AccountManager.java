@@ -101,6 +101,11 @@ public class AccountManager {
                     Log.e("Fetch Person Info", personError.getLocalizedMessage());
                     return;
                 }
+                //Return if no apartment
+                if(person.hasApartment() == false)
+                {
+                    return;
+                }
                 //refresh the apartment info.
                 person.getApartment().fetchInBackground(new GetCallback<Apartment>() {
                     @Override
