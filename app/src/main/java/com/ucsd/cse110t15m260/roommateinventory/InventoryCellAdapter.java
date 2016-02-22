@@ -46,7 +46,7 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         ImageView imageView = (ImageView) customView.findViewById(R.id.itemPicture);
 
         itemName.setText(itemNameString);
-        itemCount.setText(getItem(position).getQuantity() + "");
+        itemCount.setText(getItem(position).getQuantity().intValue() + "");
         Bitmap image = getItem(position).getImage();
         if(image != null)
             imageView.setImageBitmap(image);
@@ -67,14 +67,16 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         decButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if((int) getItem(pos).getQuantity()  == 0)
+                //If there's nothing
+                if(getItem(pos).getQuantity().intValue()  == 0)
                     return;
 
-                getItem(pos).setQuantity((int) getItem(pos).getQuantity() - 1);
+                getItem(pos).setQuantity(getItem(pos).getQuantity().intValue() - 1);
                 if(getItem(pos).getQuantity().intValue() == 0) {
                     return;
                 }
                 getItem(pos).decrement();
+                getItem(pos).saveInBackground();
                 getItem(pos).saveInBackground();
                 notifyDataSetChanged();
             }
@@ -83,7 +85,6 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         customView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(v.getContext(), AddItemActivity.class);
                 intent.putExtra("index",position);
                 activity.startActivity(intent);
