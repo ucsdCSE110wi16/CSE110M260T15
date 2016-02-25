@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -25,7 +26,10 @@ import Model.Person;
 
 public class MainActivity extends AbstractActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnFragmentInteractionListener, ApartmentFragment.OnFragmentInteractionListener, InventoryFragment.OnFragmentInteractionListener {
 
-    private DrawerLayout mDrawerLayout;
+    public DrawerLayout mDrawerLayout;
+    public NavigationView navView;
+    public Menu menuNav;
+    public MenuItem aptInventory;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mTitle;
     private GoogleApiClient client;
@@ -66,7 +70,6 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         android.support.v4.app.FragmentTransaction fragManager = getSupportFragmentManager().beginTransaction();
         fragManager.replace(R.id.content_frame, fragger);
         fragManager.commit();
-        updateMenu();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -93,7 +96,33 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+
+        Log.d("OnPrepareOptionsMenu", "Preparing Menu");
+
+        navView = (NavigationView) findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
+
+        Person person = Person.getCurrentPerson();
+
+        Log.d("OnPrepareOptionsMenu", "SETTING HEADER TITLE");
+
+        View header = navView.getHeaderView(0);
+        TextView headerTitle = (TextView) header.findViewById(R.id.nav_header_title);
+        TextView headerDescription = (TextView) header.findViewById(R.id.nav_header_description);
+        menuNav = navView.getMenu();
+        aptInventory = menuNav.findItem(R.id.apt_inventory);
+
+        if(person != null) {
+            headerTitle.setText(person.getString("name"));
+            headerDescription.setText("User ID: " + person.getObjectId());
+
+            //Hide the apt inventory if no apartment
+            if (person.getApartment() == null)
+                aptInventory.setVisible(false);
+            else
+                aptInventory.setVisible(true);
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -132,6 +161,8 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        Person person = Person.getCurrentPerson();
+
         android.support.v4.app.FragmentTransaction fragManager = getSupportFragmentManager().beginTransaction();
 
         if (id == R.id.home_page) {
@@ -154,22 +185,22 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
             }
             fragManager.replace(R.id.content_frame, aptFrag);
             fragManager.commit();
-        } else if (id == R.id.create_apt) {
-            Log.d("OnNavigation", "CREATE APARTMENT");
-        } else if (id == R.id.join_apt) {
-            Log.d("OnNavigation", "JOIN APARTMENT");
         } else if (id == R.id.apt_inventory) {
             Log.d("OnNavigation", "INVENTORY");
-            //TODO Create inventory fragment
-            InventoryFragment inventoryFrag = null;
-            Class<InventoryFragment> inv = InventoryFragment.class;
-            try {
-                inventoryFrag = inv.newInstance();
-            } catch (Exception e) {
-                Log.d("Exception", e.toString());
+            if (person.hasApartment()) {
+                InventoryFragment inventoryFrag = null;
+                Class<InventoryFragment> inv = InventoryFragment.class;
+                try {
+                    inventoryFrag = inv.newInstance();
+                } catch (Exception e) {
+                    Log.d("Exception", e.toString());
+                }
+                fragManager.replace(R.id.content_frame, inventoryFrag);
+                fragManager.commit();
+            } else {
+                Toast.makeText(MainActivity.this, "You are not in an apartment!", Toast.LENGTH_SHORT).show();
+                aptInventory.setChecked(false);
             }
-            fragManager.replace(R.id.content_frame, inventoryFrag);
-            fragManager.commit();
         } else if (id == R.id.nav_logout) {
             Log.d("OnNavigation", "LOGOUT PRESSED");
             logout();
@@ -203,34 +234,6 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
 
         if (Person.getCurrentPerson() == null) {
             showLogin();
-        }
-        updateMenu();
-    }
-
-    private void updateMenu() {
-        Person person = Person.getCurrentPerson();
-
-        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
-        navView.setNavigationItemSelectedListener(this);
-
-        View header = navView.getHeaderView(0);
-        TextView headerTitle = (TextView) header.findViewById(R.id.nav_header_title);
-        TextView headerDescription = (TextView) header.findViewById(R.id.nav_header_description);
-
-        Log.d("UpdateMenu", "SETTING HEADER TITLE");
-
-        Menu menuNav = navView.getMenu();
-        MenuItem aptInventory = menuNav.findItem(R.id.apt_inventory);
-        if (person == null) {
-            headerTitle.setText("No user");
-            headerDescription.setText("Please login");
-        } else {
-            if(person.getApartment() == null)
-                aptInventory.setVisible(false);
-            else
-                aptInventory.setVisible(true);
-            headerTitle.setText(person.getString("name"));
-            headerDescription.setText("User ID: " + person.getObjectId());
         }
     }
 
