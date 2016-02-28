@@ -1,6 +1,9 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +34,7 @@ import Model.Managers.AccountManager;
 import Model.Managers.ApartmentManager;
 import Model.Inventory;
 import Model.InventoryItem;
+import Model.Managers.PushNotifsManager;
 import Model.Person;
 
 
@@ -56,6 +61,10 @@ public class ApartmentFragment extends Fragment {
     private TextView mAptName, mAptID;
     private ListView mAptMates;
 
+    /**
+     * Used to signify the position of the selected person in the list.
+     */
+    int personPosition = -1;
     public ApartmentFragment() {
         // Required empty public constructor
     }
@@ -131,10 +140,46 @@ public class ApartmentFragment extends Fragment {
 
         mAptMates.setAdapter(mAdapter);
         mAptMates.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public final String [] options = {"Select Item", "Create Item"};
+            public final String dialogTitle = "Request item from user";
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String aptMate = (String) mAdapter.getItem(position);
+                //String aptMate = (String) mAdapter.getItem(position);
+                personPosition = position;
+                ListAdapter optionsListAdapter = new ArrayAdapter<>(
+                        view.getContext(),
+                        android.R.layout.simple_list_item_single_choice,
+                        options
+                );
 
+                AlertDialog.Builder b = new AlertDialog.Builder(view.getContext());
+
+                b.setTitle(dialogTitle);
+                b.setSingleChoiceItems(optionsListAdapter, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Context c = ((Dialog) dialog).getContext();
+                        Intent i = new Intent();
+
+                        switch (which) {
+                            case 0:
+                                i.setClass(c, InventoryFragment.class);
+                                break;
+                            case 1:
+                                i.setClass(c, AddItemActivity.class);
+                                break;
+                            default:
+                                throw new IllegalStateException();
+                        }
+
+                        startActivityForResult(i, REQUEST_ITEM_CODE);
+                        dialog.dismiss();
+                    }
+                });
+
+                b.show();
 
             }
         });
@@ -155,6 +200,10 @@ public class ApartmentFragment extends Fragment {
 
             }
         }
+    }
+
+    private void sendNotificationForItem(InventoryItem item) {
+//        PushNotifsManager.getInstance().sendToUser(mPeople.get(personPosition), item);
     }
 
     @Override
