@@ -114,8 +114,6 @@ public class AddItemActivity extends AbstractActivity {
             }
         });
 
-
-
         if(index == -1) {
             /* Creation Mode: New item needs to be created */
             theItem = InventoryItem.createEmptyInventoryItem(ApartmentManager.apartmentManager.getCurrentApartment().getInventory());

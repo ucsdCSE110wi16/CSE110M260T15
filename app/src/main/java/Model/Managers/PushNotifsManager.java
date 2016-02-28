@@ -20,6 +20,7 @@ public class PushNotifsManager {
     private String userChannel;
 
     private static final String outOfItem = "Your apartment has run out of ";
+    private static final String replenishedItem = " has been restocked.";
 
     private PushNotifsManager() {
     }
@@ -73,17 +74,36 @@ public class PushNotifsManager {
         Log.d("Channel", "Issuing notif to channel: " + this.apartmentChannel);
 
         push.setChannel(this.apartmentChannel);
-        //try {
+        try {
             push.setMessage(outOfItem + item.getName());
             push.sendInBackground();
-        //}
+        }
 
-        //catch(Exception e) {
-        //    Log.d("Push Failed", e.getMessage());
-        //}
+        catch(Exception e) {
+            Log.d("Push Failed", e.getMessage());
+        }
     }
 
-    public void sendPushToUser(Person person, String message) {
+    public void sendReplenishedItem(InventoryItem item) {
+        if (item == null)
+            return;
+
+        ParsePush push = new ParsePush();
+        Log.d("Channel", "Issuing notif to channel: " + this.apartmentChannel);
+
+        push.setChannel(this.apartmentChannel);
+        try {
+            push.setMessage(item.getName() + replenishedItem);
+            push.sendInBackground();
+        }
+
+        catch(Exception e) {
+            Log.d("Push Failed", e.getMessage());
+        }
+
+    }
+
+    public void sendToUser(Person person, String message) {
         if (person == null)
                 return;
 

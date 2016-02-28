@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -50,6 +51,7 @@ public class ApartmentFragment extends Fragment {
     private Button mLeaveApt, mCreateApt, mJoinApt;
     //Textviews to display apartment info.
     private TextView mAptName, mAptID;
+    private ListView mAptMates;
 
     public ApartmentFragment() {
         // Required empty public constructor
@@ -78,10 +80,18 @@ public class ApartmentFragment extends Fragment {
         //For apt text
         mAptName = (TextView) rootView.findViewById(R.id.apt_name);
         mAptID = (TextView) rootView.findViewById(R.id.apt_id);
+        mAptMates = (ListView) rootView.findViewById(R.id.aptListView);
 
         Person person = Person.getCurrentPerson();
         updateUI(person);
-
+        if(person.hasApartment()) {
+            mAptID.setText("ID: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
+            mAptName.setText("Apartment Name: " + person.getApartment().getName());
+        }
+        else {
+            mAptID.setText("No Apartment");
+            mAptName.setText("Click the buttons below to create/join an apartment!");
+        }
         mJoinApt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,6 +99,7 @@ public class ApartmentFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         mCreateApt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +126,18 @@ public class ApartmentFragment extends Fragment {
             }
         });
 
-        ((ListView) rootView.findViewById(R.id.aptListView)).setAdapter(mAdapter);
+        mAptMates.setAdapter(mAdapter);
+        mAptMates.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String aptMate = (String) mAdapter.getItem(position);
+
+                Intent intent = new Intent(view.getContext(), AddItemA
+                        ctivity.class);
+                intent.putExtra("index", -1);
+                startActivity(intent);
+            }
+        });
 
         getActivity().setTitle("My Apartment");
         // Inflate the layout for this fragment

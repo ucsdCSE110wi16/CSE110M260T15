@@ -151,6 +151,12 @@ public class InventoryItem extends ParseObject implements Serializable {
     public void incrementQuantity() {
         int newQuantity = (int)this.getQuantity() + 1;
         this.setQuantity(newQuantity);
+
+        // TODO: Refactor this into the controller to decouple the Notifs and the Item model
+        if (newQuantity == 1)
+            PushNotifsManager
+                    .getInstance()
+                    .sendReplenishedItem(this);
     }
 
     public void decrementQuantity() {
