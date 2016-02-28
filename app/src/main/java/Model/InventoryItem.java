@@ -286,6 +286,8 @@ public class InventoryItem extends ParseObject implements Serializable {
     }
 
 
-
-
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

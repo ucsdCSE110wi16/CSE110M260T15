@@ -105,6 +105,7 @@ public class PushNotifsManager {
     }
 
     public void sendToUser(Person person, InventoryItem item){
+        //TODO: Display alert to user to notify of success/fail
         if (person == null || item == null)
             return;
 

@@ -7,12 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,9 +29,10 @@ import java.util.List;
 import Model.Apartment;
 import Model.Managers.AccountManager;
 import Model.Managers.ApartmentManager;
-import Model.Inventory;
 import Model.InventoryItem;
 import Model.Managers.PushNotifsManager;
+
+import Model.Managers.InventoryManager;
 import Model.Person;
 
 
@@ -46,12 +44,9 @@ import Model.Person;
  */
 public class ApartmentFragment extends Fragment {
 
-    //People in apartment
     List<String> mPeople;
-    //Array for holding ppl in apt
     ArrayAdapter<String> mAdapter;
 
-    //For listener (not used)
     private OnFragmentInteractionListener mListener;
     private static final int REQUEST_ITEM_CODE = 5;
 
@@ -72,31 +67,28 @@ public class ApartmentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
 
         mPeople = new ArrayList<>();
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, mPeople);
+        mAdapter = new ArrayAdapter<>(
+                getContext(),
+                android.R.layout.simple_list_item_1,
+                mPeople
+        );
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Get the fragment_apartment view
         View rootView = inflater.inflate(R.layout.fragment_apartment, container, false);
 
-        //For leave, create, and join buttons
         mLeaveApt = (Button) rootView.findViewById(R.id.leave_apt);
         mCreateApt = (Button) rootView.findViewById(R.id.create_apt);
         mJoinApt = (Button) rootView.findViewById(R.id.join_apt);
-
-        //For apt text
         mAptName = (TextView) rootView.findViewById(R.id.apt_name);
         mAptID = (TextView) rootView.findViewById(R.id.apt_id);
         mAptMates = (ListView) rootView.findViewById(R.id.aptListView);
 
         Person person = Person.getCurrentPerson();
-
-        updateUI(person);
         if(person.hasApartment()) {
             mAptID.setText("ID: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
             mAptName.setText("Apartment Name: " + person.getApartment().getName());
@@ -122,7 +114,6 @@ public class ApartmentFragment extends Fragment {
             }
         });
 
-        //Actions after pressing leave apartment
         mLeaveApt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,8 +124,11 @@ public class ApartmentFragment extends Fragment {
                     @Override
                     public void done(ParseException e) {
                         mPeople.clear();
-                        updateUI(person);
-                        Log.d("Test", "LEFT APARTMENT");
+                        mAdapter.notifyDataSetChanged();
+
+                        mJoinApt.setVisibility(View.VISIBLE);
+                        mCreateApt.setVisibility(View.VISIBLE);
+                        mLeaveApt.setVisibility(View.GONE);
                     }
                 });
             }
@@ -150,6 +144,7 @@ public class ApartmentFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //String aptMate = (String) mAdapter.getItem(position);
                 personPosition = position;
+
                 ListAdapter optionsListAdapter = new ArrayAdapter<>(
                         view.getContext(),
                         android.R.layout.simple_list_item_single_choice,
@@ -163,26 +158,52 @@ public class ApartmentFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Context c = ((Dialog) dialog).getContext();
-                        Intent i = new Intent();
 
                         switch (which) {
-                            case 0:
-                                i.setClass(c, InventoryFragment.class);
-                                break;
                             case 1:
-                                i.setClass(c, AddItemActivity.class);
+                                Intent i = new Intent(c, AddItemActivity.class);
+                                startActivityForResult(i, REQUEST_ITEM_CODE);
+                                break;
+
+                            case 0:
+                                AlertDialog.Builder b = new AlertDialog.Builder(c);
+                                //TODO: Add code to handled empty set of items.
+                                final ListAdapter itemAdapter = new ArrayAdapter<InventoryItem>(
+                                        c,
+                                        android.R.layout.simple_list_item_single_choice,
+                                        InventoryManager.inventoryManager.getInventory().getItems()
+                                );
+
+                                b.setTitle(dialogTitle);
+                                b.setAdapter(itemAdapter, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        InventoryItem item
+                                                = (InventoryItem) itemAdapter.getItem(which);
+                                        PushNotifsManager
+                                                .getInstance()
+                                                .sendToUser(
+                                                        AccountManager
+                                                                .accountManager
+                                                                .getCurrentUser(),
+                                                        item
+                                                );
+
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                b.show();
                                 break;
                             default:
                                 throw new IllegalStateException();
                         }
 
-                        startActivityForResult(i, REQUEST_ITEM_CODE);
                         dialog.dismiss();
                     }
                 });
 
                 b.show();
-
             }
         });
 
@@ -198,23 +219,22 @@ public class ApartmentFragment extends Fragment {
         if (REQUEST_ITEM_CODE == requestCode) {
             if(resultCode == AddItemActivity.RESULT_OK); {
                 //get the item
-                InventoryItem item = (InventoryItem) data.getSerializableExtra("item");
-
+                Bundle itemBundle = data.getExtras();
+                //TODO: Figure out why item is null when passed back.
+                InventoryItem item = (InventoryItem) itemBundle.getSerializable("item");
+                Person person = ApartmentManager.apartmentManager.getCurrentApartment().getMembers().get(personPosition);
+                PushNotifsManager.getInstance().sendToUser(person, item);
             }
         }
-    }
-
-    private void sendNotificationForItem(InventoryItem item) {
-//        PushNotifsManager.getInstance().sendToUser(mPeople.get(personPosition), item);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Person person = AccountManager.accountManager.getCurrentUser();
-        Apartment currApt = ApartmentManager.apartmentManager.getCurrentApartment();
-
+        Person person = Person.getCurrentPerson();
+        Apartment currApt = person.getApartment();
+        mPeople.clear();
         if (person != null && person.hasApartment()) {
             for(Person mate: currApt.getMembers()) {
                 mPeople.add(mate.getName());
@@ -223,31 +243,42 @@ public class ApartmentFragment extends Fragment {
         updateUI(person);
     }
 
-    void updateUI(Person person)
-    {
+    void updateUI(Person person) {
+        Apartment currApt = ApartmentManager.apartmentManager.getCurrentApartment();
+        currApt.fetchMembersOfApartment(null);
         Log.d("Test", "UPDATING UI");
+
+        person.getApartment().findMembers(new FindCallback<Person>() {
+            @Override
+            public void done(List<Person> objects, ParseException e) {
+                if (e == null) {
+                    mPeople.clear();
+                    for (Person p : objects) {
+                        mPeople.add(p.toString());
+                    }
+                    Log.d("PEOPLE_LIST", mPeople.toString());
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    Log.d("PEOPLE_LIST", e.toString());
+                }
+            }
+        });
+        //Manage UI for Apartment Page
         if(person.hasApartment())
         {
-            mAptID.setText("ID: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
-            mAptName.setText("Apartment Name: " + person.getApartment().getName());
-
             mLeaveApt.setVisibility(View.VISIBLE);
             mCreateApt.setVisibility(View.GONE);
             mJoinApt.setVisibility(View.GONE);
+            mAptMates.setVisibility(View.VISIBLE);
         }
         else
         {
-            mAptID.setText("No Apartment");
-            mAptName.setText("Click the buttons below to create/join an apartment!");
-
             mLeaveApt.setVisibility(View.GONE);
             mCreateApt.setVisibility(View.VISIBLE);
             mJoinApt.setVisibility(View.VISIBLE);
+            mAptMates.setVisibility(View.GONE);
         }
-        //Update apartment people list
-        mAdapter.notifyDataSetChanged();
     }
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
