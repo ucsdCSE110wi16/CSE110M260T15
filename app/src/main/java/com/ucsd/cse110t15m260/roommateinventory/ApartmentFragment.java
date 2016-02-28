@@ -95,6 +95,7 @@ public class ApartmentFragment extends Fragment {
         mAptMates = (ListView) rootView.findViewById(R.id.aptListView);
 
         Person person = Person.getCurrentPerson();
+
         updateUI(person);
         if(person.hasApartment()) {
             mAptID.setText("ID: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
@@ -104,6 +105,7 @@ public class ApartmentFragment extends Fragment {
             mAptID.setText("No Apartment");
             mAptName.setText("Click the buttons below to create/join an apartment!");
         }
+
         mJoinApt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
