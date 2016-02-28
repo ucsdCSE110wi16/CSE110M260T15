@@ -147,7 +147,7 @@ public class ApartmentFragment extends Fragment {
 
                 ListAdapter optionsListAdapter = new ArrayAdapter<>(
                         view.getContext(),
-                        android.R.layout.simple_list_item_single_choice,
+                        android.R.layout.simple_selectable_list_item,
                         options
                 );
 
