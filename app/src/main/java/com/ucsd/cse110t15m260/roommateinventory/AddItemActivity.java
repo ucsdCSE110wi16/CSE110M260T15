@@ -60,6 +60,7 @@ public class AddItemActivity extends AbstractActivity {
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final int RESULT_OK = 9;
 
     private Uri imageFileUri;
     /**
@@ -110,6 +111,7 @@ public class AddItemActivity extends AbstractActivity {
             public void onClick(View v) {
                 if(theItem != null)
                 InventoryManager.inventoryManager.deleteItem(theItem);
+                passItemBackToCallingActivity();
                 finish();
             }
         });
@@ -199,6 +201,12 @@ public class AddItemActivity extends AbstractActivity {
 
     }
 
+    private void passItemBackToCallingActivity() {
+        Intent passDataBack = new Intent();
+        passDataBack.putExtra("item", theItem);
+        setResult(RESULT_OK, passDataBack);
+    }
+
     public void attemptToCreateNewItem() {
         mNameView.setError(null);
         mCategoryView.setError(null);
@@ -265,6 +273,7 @@ public class AddItemActivity extends AbstractActivity {
             public void done(com.parse.ParseException e) {
                 if (e == null) {
                     Toast.makeText(AddItemActivity.this, "New Item Created", Toast.LENGTH_SHORT).show();
+                    passItemBackToCallingActivity();
                     finish();
                 } else {
                     Toast.makeText(AddItemActivity.this, "Error Occured: please try again.", Toast.LENGTH_SHORT).show();

@@ -28,6 +28,8 @@ import java.util.List;
 import Model.Apartment;
 import Model.Managers.AccountManager;
 import Model.Managers.ApartmentManager;
+import Model.Inventory;
+import Model.InventoryItem;
 import Model.Person;
 
 
@@ -46,6 +48,7 @@ public class ApartmentFragment extends Fragment {
 
     //For listener (not used)
     private OnFragmentInteractionListener mListener;
+    private static final int REQUEST_ITEM_CODE = 5;
 
     //Buttons for apartment control
     private Button mLeaveApt, mCreateApt, mJoinApt;
@@ -132,16 +135,26 @@ public class ApartmentFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String aptMate = (String) mAdapter.getItem(position);
 
-                Intent intent = new Intent(view.getContext(), AddItemA
-                        ctivity.class);
-                intent.putExtra("index", -1);
-                startActivity(intent);
+
             }
         });
 
         getActivity().setTitle("My Apartment");
         // Inflate the layout for this fragment
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (REQUEST_ITEM_CODE == requestCode) {
+            if(resultCode == AddItemActivity.RESULT_OK); {
+                //get the item
+                InventoryItem item = (InventoryItem) data.getSerializableExtra("item");
+
+            }
+        }
     }
 
     @Override
