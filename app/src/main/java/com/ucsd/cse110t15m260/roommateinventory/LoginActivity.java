@@ -30,10 +30,15 @@ import android.widget.TextView;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.ParseRelation;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Apartment;
+import Model.Inventory;
+import Model.InventoryItem;
+import Model.Managers.AccountManager;
 import Model.Person;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -41,7 +46,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AbstractActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -58,7 +63,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setupActionBar();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -91,7 +97,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!mayRequestContacts()) {
             return;
         }
-
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -127,17 +132,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
             }
-        }
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -185,12 +179,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // perform the user login attempt.
             showProgress(true);
 
-            Person.loginPerson(email, password, new LogInCallback() {
+            AccountManager.accountManager.loginPerson(email, password, new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
                     showProgress(false);
 
-                    if (user != null) {
+                    if (user != null && e == null) {
                         // Hooray! The user is logged in.
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(intent);
                         finish();
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -207,7 +203,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void goToRegistration(View view) {
         Intent intent = new Intent(getBaseContext(), RegisterActivity.class);
         startActivity(intent);
-
         finish();
     }
 

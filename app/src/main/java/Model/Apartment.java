@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.parse.FindCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
@@ -14,6 +15,10 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by satre on 1/23/16.
  */
@@ -21,13 +26,14 @@ import java.util.List;
 public class Apartment extends ParseObject {
     public final static String className = "Apartment";
 
+    private ArrayList<Person> members = new ArrayList<Person>();
+
     /**
      * Default Constructor
      */
     public Apartment() {
         super();
     }
-
 
     public static Apartment createApartment(String apartment_name, String street_1, String street_2, String state, String city, String zip_code, SaveCallback sc) {
 
@@ -41,6 +47,9 @@ public class Apartment extends ParseObject {
         apartment.put("state", state);
         apartment.put("city", city);
         apartment.put("zip_code", zip_code);
+
+        Inventory newInventory = Inventory.createNewInventoryWithName(apartment_name + "-inventory");
+        apartment.put("inventory", newInventory);
 
         apartment.saveInBackground(sc);
 
@@ -58,7 +67,6 @@ public class Apartment extends ParseObject {
     /***********************
      * Properties
      */
-
 
     /**
      * Fetches the name of this apartment
@@ -94,26 +102,62 @@ public class Apartment extends ParseObject {
      *
      * @param person
      */
-    public void addPersonToApartment(Person person) {
+    public boolean addPersonToApartment(Person person) {
         if (person == null) {
-            return;
+            return false;
+        }
+
+        if (members.contains(person)) {
+            return false;
         }
 
         ParseRelation<Person> relation = getUserRelation();
         relation.add(person);
         incrementNumberOfResidents();
+        members.add(person);
         saveInBackground();
+        return true;
     }
 
-    public void removePersonFromApartment(Person person) {
+    public void removePersonFromApartment( Person person, final SaveCallback callback) {
         if (person == null) {
+            return;
+        }
+
+        if(!members.contains(person)) {
             return;
         }
 
         ParseRelation<Person> relation = getUserRelation();
         relation.remove(person);
         decrementNumberOfResidents();
-        saveInBackground();
+        members.remove(person);
+        person.leaveApartment(null);
+        saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                callback.done(e);
+            }
+        });
+    }
+
+    public void fetchMembersOfApartment(final FindCallback<Person> callback) {
+        final ParseRelation<Person> memberRelation = getUserRelation();
+        ParseQuery<Person> memberQuery = memberRelation.getQuery();
+
+        memberQuery.findInBackground(new FindCallback<Model.Person>() {
+            @Override
+            public void done(List<Person> objects, ParseException e) {
+                if (objects != null) {
+                    members = new ArrayList<>(objects.size());
+                    for (Person aPerson : objects) members.add(aPerson);
+                }
+
+                if (callback != null) {
+                    callback.done(objects, e);
+                }
+            }
+        });
     }
 
     public void findMembers(FindCallback<Person> callback) {
@@ -156,8 +200,40 @@ public class Apartment extends ParseObject {
         return getNumberOfResidents();
     }
 
-
     /**
      * Sets address fields for the apartment
      */
+    /**
+     * Accessor for the inventory of this apartment.
+     * @return
+     */
+    public Inventory getInventory() {
+
+        return (Inventory) getParseObject("inventory");
+    }
+
+    /**
+     * Getter for the people who live here.
+     * @return The list of people who live in this apartment.
+     */
+    public ArrayList<Person> getMembers() {
+        return members;
+    }
+
+    public void setStreet_1( String street_1) {
+        put("street_1", street_1);
+    }
+
+    public String getStreet_1() {
+        return getString("street_1");
+    }
+
+    public void setStreet_2(String street_2) {
+        put("street_2", street_2);
+    }
+
+    public String getStreet_2() {
+        return getString("street_2");
+    }
+
 }

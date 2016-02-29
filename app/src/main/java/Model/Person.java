@@ -3,60 +3,43 @@ package Model;
 import android.util.Log;
 
 import com.parse.LogInCallback;
+import com.parse.ParseClassName;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.LogOutCallback;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
+import Model.Apartment;
+import Model.Managers.ApartmentManager;
+import Model.Managers.InventoryManager;
+import Model.Managers.PushNotifsManager;
 
 /**
  * Created by saiteja64 on 1/23/16.
  */
-public class Person extends ParseUser {
+//@ParseClassName(Person.className)
+public class Person extends ParseUser
+{
+    public final static String className = "_User";
 
     public Person() {
         super();
     }
 
     public static Person getCurrentPerson() {
-        return (Person) ParseUser.getCurrentUser();
+        return (Person)ParseUser.getCurrentUser();
     }
 
-    /**
-     * Convenience method to sign up a new Person.
-     */
-    public static Person createPerson(String name, String email, String password, SignUpCallback callback) {
-        Person.logoutPerson(null);
+    public static Person createnewPerson( String name, String email, String password) {
+        Person newPerson = new Person();
 
-        Person person = new Person();
-        person.setUsername(email);
-        person.setEmail(email);
-        person.setPassword(password);
-        person.put("name", name);
+        newPerson.setUsername(email);
+        newPerson.put("name", name);
+        newPerson.put("email", email);
+        newPerson.put("password", password);
 
-        person.signUpInBackground(callback);
-
-        return person;
-    }
-
-    /**
-     * Convenience method to login a Person with the given username and password.
-     *
-     * @param username
-     * @param password
-     */
-    public static void loginPerson(String username, String password, LogInCallback callback) {
-        ParseUser.logInInBackground(username, password, callback);
-    }
-
-    /**
-     * Convenience method to logout a person
-     */
-    public static void logoutPerson(LogOutCallback callback) {
-        Person person = getCurrentPerson();
-
-        if (person != null) {
-            person.logOutInBackground(callback);
-        }
+        return newPerson;
     }
 
     /**
@@ -76,6 +59,7 @@ public class Person extends ParseUser {
     public void setApartment(Apartment apartment) {
         if (getParseObject("apartment") == null) {
             Log.d("Person", "Apartment is null! User doesn't have an apartment yet.");
+            PushNotifsManager.getInstance().subscribeToApartment(apartment);
             put("apartment", apartment);
             saveInBackground();
         }
@@ -83,7 +67,11 @@ public class Person extends ParseUser {
 
     public void leaveApartment(SaveCallback callback) {
         remove("apartment");
-        saveInBackground(callback);
+        if(callback == null)
+            saveInBackground();
+        else
+            saveInBackground(callback);
+        PushNotifsManager.getInstance().unsubscribeFromApartment();
     }
 
     public boolean hasApartment() {
@@ -91,22 +79,15 @@ public class Person extends ParseUser {
     }
 
     /**
-     * Get this person's first name
+     * Get this person's name
      *
-     * @return Their first name
+     * @return Their name
      */
-    public String getFirstName() {
-        return getString("firstName");
+    public String getName() {
+        return getString("name");
     }
 
-    /**
-     * Get this person's last name
-     *
-     * @return Their last name
-     */
-    public String getLastName() {
-        return getString("lastName");
-    }
+    //public String getEmail() { return getString("email"); }
 
     @Override
     public String toString() {

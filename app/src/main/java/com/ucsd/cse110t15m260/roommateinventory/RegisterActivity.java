@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -33,6 +34,7 @@ import com.parse.SignUpCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Managers.AccountManager;
 import Model.Person;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -40,7 +42,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class RegisterActivity extends AbstractActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -53,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private View focusView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +166,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         Log.d("REGISTER", "Password: " + password);
 
         boolean cancel = false;
-        View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
@@ -199,17 +201,30 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // perform the user login attempt.
             showProgress(true);
 
-            Person.createPerson(name, email, password, new SignUpCallback() {
+            AccountManager.accountManager.signUpPerson(name, email, password, new SignUpCallback() {
                 public void done(ParseException e) {
                     showProgress(false);
 
                     if (e == null) {
                         // Hooray! Let them use the app now.
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(intent);
                         finish();
                     } else {
                         Log.e("REGISTER", e.toString());
                         // Sign up didn't succeed. Look at the ParseException
                         // to figure out what went wrong
+                        mEmailView.requestFocus();
+
+                        if (e.getCode() == ParseException.USERNAME_TAKEN || e.getCode() == ParseException.EMAIL_TAKEN) {
+                            mEmailView.setError("Email already taken");
+                        }
+                        else if (e.getCode() == ParseException.INVALID_EMAIL_ADDRESS) {
+                            mEmailView.setError("Invalid email address");
+                        }
+                        else {
+                            mEmailView.setError("Something went wrong. Please try again later!");
+                        }
                     }
                 }
             });

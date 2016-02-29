@@ -4,8 +4,12 @@ import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ParseInstallation;
 
 import Model.Apartment;
+import Model.Inventory;
+import Model.InventoryItem;
+import Model.Managers.AccountManager;
 import Model.Person;
 
 /**
@@ -25,8 +29,12 @@ public class App extends Application {
 
         ParseObject.registerSubclass(Person.class);
         ParseObject.registerSubclass(Apartment.class);
+        ParseObject.registerSubclass(InventoryItem.class);
+        ParseObject.registerSubclass(Inventory.class);
 
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+        AccountManager.accountManager.fetchAllData();
     }
 }
