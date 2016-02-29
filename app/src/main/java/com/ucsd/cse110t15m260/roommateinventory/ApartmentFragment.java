@@ -283,17 +283,16 @@ public class ApartmentFragment extends Fragment {
                         for (Person p : objects) {
                             mPeople.add(p.toString());
                         }
+
                         Log.d("PEOPLE_LIST", mPeople.toString());
                         mAdapter.notifyDataSetChanged();
                     } else {
                         Log.d("PEOPLE_LIST", e.toString());
                     }
+
                     Log.d("PEOPLE_LIST", mPeople.toString());
                     mAdapter.notifyDataSetChanged();
-                } else {
-                    Log.d("PEOPLE_LIST", e.toString());
                 }
-            }
         });
         //Manage UI for Apartment Page
         if(person.hasApartment())
