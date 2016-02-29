@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+    android:longClickable="true"
+    android:clickable="true">
+
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="125dp"
+        android:id="@+id/itemPicture"
+        android:src="@drawable/cow"
+        android:layout_alignParentStart="false"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="ItemName"
+        android:id="@+id/itemName"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/itemPicture"
+        android:layout_toEndOf="@+id/itemPicture"
+        android:layout_marginTop="45dp"
+        android:layout_marginLeft="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="ItemCount"
+        android:id="@+id/itemCount"
+        android:layout_below="@+id/itemName"
+        android:layout_alignLeft="@+id/itemName"
+        android:layout_alignStart="@+id/itemName"
+        android:layout_marginTop="15dp" />
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:id="@+id/incrementButton"
+        android:layout_above="@+id/itemCount"
+        android:layout_toRightOf="@+id/itemName"
+        android:layout_toEndOf="@+id/itemName"
+        android:layout_marginLeft="20dp" />
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:id="@+id/decrementButton"
+        android:layout_below="@+id/incrementButton"
+        android:layout_alignLeft="@+id/incrementButton"
+        android:layout_alignStart="@+id/incrementButton"
+        android:nestedScrollingEnabled="true" />
+
+</RelativeLayout>
+

@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- activity_main_drawer.xml -->
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home_page"
+            android:checked="true"
+            android:title="Home Page" />
+
+        <item
+            android:id="@+id/my_apt"
+            android:title="My Apartment" />
+
+        <item
+            android:id="@+id/apt_inventory"
+            android:title="Apartment Inventory" />
+    </group>
+
+    <item android:title="Account">
+        <menu>
+
+            <item
+                android:id="@+id/nav_logout"
+                android:title="Logout" />
+
+        </menu>
+    </item>
+
+</menu>
