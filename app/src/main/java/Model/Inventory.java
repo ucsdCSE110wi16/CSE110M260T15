@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 @ParseClassName(Inventory.className)
-public class Inventory extends ParseObject  implements Serializable {
+public class Inventory extends ParseObject  {
     public final static String className = "Inventory";
 
     public Inventory() {
