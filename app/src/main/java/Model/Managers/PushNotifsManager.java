@@ -23,6 +23,8 @@ public class PushNotifsManager {
     private static final String replenishedItem = "%s has been restocked.";
     private static final String itemRequest = "%s has requested that you purchase %s";
 
+    private static final String channelPrefix = "CSE110";
+
     private PushNotifsManager() {
     }
 
@@ -31,7 +33,7 @@ public class PushNotifsManager {
     }
 
     public void subscribeToApartment(Apartment apt) {
-        this.apartmentChannel = "CSE110" + apt.getObjectId();
+        this.apartmentChannel = channelPrefix + apt.getObjectId();
         Log.d("Channel","Subscribing to channel: " + this.apartmentChannel);
         ParsePush.subscribeInBackground(this.apartmentChannel, new SaveCallback() {
             @Override
@@ -50,7 +52,7 @@ public class PushNotifsManager {
     }
 
     public void subscribeToUser(Person person) {
-        this.userChannel = "CSE110" + person.getObjectId();
+        this.userChannel = channelPrefix + person.getObjectId();
         ParsePush.subscribeInBackground(this.userChannel, new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -74,7 +76,7 @@ public class PushNotifsManager {
 
         Log.d("Channel", "Issuing notif to channel: " + this.apartmentChannel);
 
-        push.setChannel(this.apartmentChannel);
+        push.setChannel(channelPrefix + this.apartmentChannel);
         try {
             push.setMessage(String.format(outOfItem,item.getName()));
             push.sendInBackground();
@@ -92,7 +94,7 @@ public class PushNotifsManager {
         ParsePush push = new ParsePush();
         Log.d("Channel", "Issuing notif to channel: " + this.apartmentChannel);
 
-        push.setChannel(this.apartmentChannel);
+        push.setChannel(channelPrefix + this.apartmentChannel);
         try {
             push.setMessage(String.format(replenishedItem, item.getName()));
             push.sendInBackground();
@@ -110,11 +112,16 @@ public class PushNotifsManager {
             return;
 
         ParsePush push = new ParsePush();
-        Log.d("Channel", "Issuing notif to channel: " + this.apartmentChannel);
+        Log.d("Channel", "Issuing notif to channel: " + person.getObjectId());
 
-        push.setChannel(person.getObjectId());
+        push.setChannel(channelPrefix + person.getObjectId());
         try {
-            push.setMessage(String.format(itemRequest, person.getName(), item.getName()));
+            push.setMessage(String.format(
+                    itemRequest,
+                    AccountManager.accountManager.getCurrentUser(),
+                    item.getName()
+            ));
+
             push.sendInBackground();
         }
 

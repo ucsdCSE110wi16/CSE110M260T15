@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -151,6 +152,12 @@ public class ApartmentFragment extends Fragment {
                         options
                 );
 
+                final Person person = (Person) ApartmentManager
+                        .apartmentManager
+                        .getCurrentApartment()
+                        .getMembers()
+                        .get(position);
+
                 AlertDialog.Builder b = new AlertDialog.Builder(view.getContext());
 
                 b.setTitle(dialogTitle);
@@ -167,12 +174,18 @@ public class ApartmentFragment extends Fragment {
 
                             case 0:
                                 AlertDialog.Builder b = new AlertDialog.Builder(c);
-                                //TODO: Add code to handled empty set of items.
+
                                 final ListAdapter itemAdapter = new ArrayAdapter<InventoryItem>(
                                         c,
-                                        android.R.layout.simple_list_item_single_choice,
+                                        android.R.layout.simple_selectable_list_item,
                                         InventoryManager.inventoryManager.getInventory().getItems()
                                 );
+
+                                if (itemAdapter.isEmpty()) {
+                                    b.setMessage("Your inventory has no items");
+                                    b.show();
+                                    break;
+                                }
 
                                 b.setTitle(dialogTitle);
                                 b.setAdapter(itemAdapter, new DialogInterface.OnClickListener() {
@@ -180,14 +193,15 @@ public class ApartmentFragment extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         InventoryItem item
                                                 = (InventoryItem) itemAdapter.getItem(which);
+
                                         PushNotifsManager
                                                 .getInstance()
                                                 .sendToUser(
-                                                        AccountManager
-                                                                .accountManager
-                                                                .getCurrentUser(),
+                                                        person,
                                                         item
                                                 );
+
+                                        showCompletedNotif(person);
 
                                         dialog.dismiss();
                                     }
@@ -219,13 +233,27 @@ public class ApartmentFragment extends Fragment {
         if (REQUEST_ITEM_CODE == requestCode) {
             if(resultCode == AddItemActivity.RESULT_OK); {
                 //get the item
-                Bundle itemBundle = data.getExtras();
-                //TODO: Figure out why item is null when passed back.
-                InventoryItem item = (InventoryItem) itemBundle.getSerializable("item");
+                String itemId = (String) data.getCharSequenceExtra("item");
+                InventoryItem item = InventoryItem.getInventoryItemById(itemId);
+
+                if (item == null) {
+                    Log.d("Failed to send notif", "Item creation failed");
+                    return;
+                }
+
                 Person person = ApartmentManager.apartmentManager.getCurrentApartment().getMembers().get(personPosition);
                 PushNotifsManager.getInstance().sendToUser(person, item);
+                showCompletedNotif(person);
             }
         }
+    }
+
+    public void showCompletedNotif(Person person) {
+        Toast.makeText(
+                this.getContext(),
+                "Notification sent to " + person.getName(),
+                Toast.LENGTH_SHORT
+        ).show();
     }
 
     @Override
@@ -239,22 +267,26 @@ public class ApartmentFragment extends Fragment {
             for(Person mate: currApt.getMembers()) {
                 mPeople.add(mate.getName());
             }
+
+            updateUI(person);
         }
-        updateUI(person);
     }
 
     void updateUI(Person person) {
         Apartment currApt = ApartmentManager.apartmentManager.getCurrentApartment();
         currApt.fetchMembersOfApartment(null);
         Log.d("Test", "UPDATING UI");
-
-        person.getApartment().findMembers(new FindCallback<Person>() {
-            @Override
-            public void done(List<Person> objects, ParseException e) {
-                if (e == null) {
-                    mPeople.clear();
-                    for (Person p : objects) {
-                        mPeople.add(p.toString());
+            person.getApartment().findMembers(new FindCallback<Person>() {
+                @Override
+                public void done(List<Person> objects, ParseException e) {
+                    if (e == null) {
+                        for (Person p : objects) {
+                            mPeople.add(p.toString());
+                        }
+                        Log.d("PEOPLE_LIST", mPeople.toString());
+                        mAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.d("PEOPLE_LIST", e.toString());
                     }
                     Log.d("PEOPLE_LIST", mPeople.toString());
                     mAdapter.notifyDataSetChanged();

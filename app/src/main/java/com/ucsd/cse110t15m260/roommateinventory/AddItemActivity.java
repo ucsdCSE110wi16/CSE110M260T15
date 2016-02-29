@@ -203,9 +203,7 @@ public class AddItemActivity extends AbstractActivity {
 
     private void passItemBackToCallingActivity() {
         Intent passDataBack = new Intent();
-        Bundle itemBundle = new Bundle();
-        itemBundle.putSerializable("item", theItem);
-        passDataBack.putExtras(itemBundle);
+        passDataBack.putExtra("item", theItem.getObjectId());
         setResult(RESULT_OK, passDataBack);
     }
 

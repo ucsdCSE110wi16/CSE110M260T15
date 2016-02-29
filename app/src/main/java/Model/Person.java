@@ -66,6 +66,9 @@ public class Person extends ParseUser
     }
 
     public void leaveApartment(SaveCallback callback) {
+        if (!this.hasApartment())
+            return;
+
         remove("apartment");
         if(callback == null)
             saveInBackground();

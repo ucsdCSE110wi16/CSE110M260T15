@@ -10,6 +10,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import java.io.Serializable;
@@ -21,7 +22,7 @@ import Model.Managers.PushNotifsManager;
  * Created by satre on 1/31/16.
  */
 @ParseClassName(InventoryItem.className)
-public class InventoryItem extends ParseObject implements Serializable {
+public class InventoryItem extends ParseObject {
     public final static String className = "InventoryItem";
 
     private Bitmap image;
@@ -55,6 +56,20 @@ public class InventoryItem extends ParseObject implements Serializable {
         item.saveInBackground(sc);
 
         return item;
+    }
+
+    public static InventoryItem getInventoryItemById(String oid) {
+        ParseQuery q = new ParseQuery(InventoryItem.class);
+
+        try {
+            return (InventoryItem) q.get(oid);
+        }
+
+        catch(Exception e) {
+            Log.d("ParseException", e.getMessage());
+        }
+
+        return null;
     }
 
 
