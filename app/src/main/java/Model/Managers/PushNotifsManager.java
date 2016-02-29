@@ -76,7 +76,7 @@ public class PushNotifsManager {
 
         Log.d("Channel", "Issuing notif to channel: " + this.apartmentChannel);
 
-        push.setChannel(channelPrefix + this.apartmentChannel);
+        push.setChannel(this.apartmentChannel);
         try {
             push.setMessage(String.format(outOfItem,item.getName()));
             push.sendInBackground();
@@ -94,7 +94,7 @@ public class PushNotifsManager {
         ParsePush push = new ParsePush();
         Log.d("Channel", "Issuing notif to channel: " + this.apartmentChannel);
 
-        push.setChannel(channelPrefix + this.apartmentChannel);
+        push.setChannel(this.apartmentChannel);
         try {
             push.setMessage(String.format(replenishedItem, item.getName()));
             push.sendInBackground();
