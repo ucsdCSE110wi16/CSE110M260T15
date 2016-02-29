@@ -7,7 +7,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  */
 
 @ParseClassName(Inventory.className)
-public class Inventory extends ParseObject  {
+public class Inventory extends ParseObject {
     public final static String className = "Inventory";
 
     public Inventory() {
