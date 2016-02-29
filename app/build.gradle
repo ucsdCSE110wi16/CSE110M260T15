@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
 
+        // The test runner to use when running the tests
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
