@@ -280,6 +280,8 @@ public class ApartmentFragment extends Fragment {
                 @Override
                 public void done(List<Person> objects, ParseException e) {
                     if (e == null) {
+                        mPeople.clear();
+
                         for (Person p : objects) {
                             mPeople.add(p.toString());
                         }
