@@ -102,11 +102,12 @@ public class ApartmentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("Test", "onClick: LEAVE APT");
-                final Person person = Person.getCurrentPerson();
+                Person person = Person.getCurrentPerson();
                 ApartmentManager.apartmentManager.removePersonFromCurrentApartment(person, new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         mPeople.clear();
+                        Person person = Person.getCurrentPerson();
                         updateUI(person);
                         Log.d("Test", "LEFT APARTMENT");
                     }

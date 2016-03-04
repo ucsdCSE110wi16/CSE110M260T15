@@ -39,6 +39,7 @@ import Model.Apartment;
 import Model.Inventory;
 import Model.InventoryItem;
 import Model.Managers.AccountManager;
+import Model.Managers.ApartmentManager;
 import Model.Person;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -187,6 +188,7 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
                         // Hooray! The user is logged in.
                         Intent intent = new Intent(getBaseContext(), MainActivity.class);
                         startActivity(intent);
+                        AccountManager.accountManager.fetchAllData();
                         finish();
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));

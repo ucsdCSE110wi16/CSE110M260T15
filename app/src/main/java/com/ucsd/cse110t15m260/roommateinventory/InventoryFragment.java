@@ -42,7 +42,6 @@ import Model.Person;
  */
 public class InventoryFragment extends Fragment {
 
-    Button incButton, decButton;
     public static Inventory currentInventory;
     public static ListView theListView;
 
@@ -60,13 +59,12 @@ public class InventoryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.activity_inventory, container, false);
 
-        FloatingActionButton b = (FloatingActionButton) view.findViewById(R.id.addfab);
-        b.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.addfab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddItemActivity.class);
@@ -80,9 +78,12 @@ public class InventoryFragment extends Fragment {
         Log.i("Current User:", Person.getCurrentPerson().toString());
         currentInventory = apartment.getInventory();
 
-        //getActionBar().setTitle(this.currentInventory.getName());
+
         ArrayList<InventoryItem> inventoryItems = currentInventory.getItems();
 
+        //TODO FETCH IMAGE FILES
+        for(InventoryItem item : inventoryItems)
+            item.fetchImageFile(null);
 
         inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(view.getContext(), inventoryItems);
         theListView = (ListView) view.findViewById(R.id.inventoryListView);
@@ -103,6 +104,7 @@ public class InventoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        //TODO FETCH INVENTORY ITEM IMAGES AND THEN UPDATE SCREEN
         ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
     }
 
@@ -137,8 +139,4 @@ public class InventoryFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-
-
-
 }

@@ -83,6 +83,7 @@ public class InventoryManager {
         inventory.fetchIfNeededInBackground(new GetCallback<Inventory>() {
             @Override
             public void done(Inventory object, ParseException e) {
+
                 callback.done(object, e);
             }
         });
