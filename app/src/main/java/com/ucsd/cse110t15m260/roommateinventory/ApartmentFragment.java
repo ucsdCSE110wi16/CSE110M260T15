@@ -61,6 +61,7 @@ public class ApartmentFragment extends Fragment {
      * Used to signify the position of the selected person in the list.
      */
     int personPosition = -1;
+
     public ApartmentFragment() {
         // Required empty public constructor
     }
@@ -90,14 +91,7 @@ public class ApartmentFragment extends Fragment {
         mAptMates = (ListView) rootView.findViewById(R.id.aptListView);
 
         Person person = Person.getCurrentPerson();
-        if(person.hasApartment()) {
-            mAptID.setText("ID: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
-            mAptName.setText("Apartment Name: " + person.getApartment().getName());
-        }
-        else {
-            mAptID.setText("No Apartment");
-            mAptName.setText("Click the buttons below to create/join an apartment!");
-        }
+        updateUI(person);
 
         mJoinApt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,17 +113,13 @@ public class ApartmentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("Test", "onClick: LEAVE APT");
-                final Person person = Person.getCurrentPerson();
 
+                final Person person = Person.getCurrentPerson();
                 ApartmentManager.apartmentManager.removePersonFromCurrentApartment(person, new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         mPeople.clear();
-                        mAdapter.notifyDataSetChanged();
-
-                        mJoinApt.setVisibility(View.VISIBLE);
-                        mCreateApt.setVisibility(View.VISIBLE);
-                        mLeaveApt.setVisibility(View.GONE);
+                        updateUI(person);
                     }
                 });
             }
@@ -138,7 +128,7 @@ public class ApartmentFragment extends Fragment {
         mAptMates.setAdapter(mAdapter);
         mAptMates.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            public final String [] options = {"Select Item", "Create Item"};
+            public final String[] options = {"Select Item", "Create Item"};
             public final String dialogTitle = "Request item from user";
 
             @Override
@@ -206,17 +196,14 @@ public class ApartmentFragment extends Fragment {
                                         dialog.dismiss();
                                     }
                                 });
-
                                 b.show();
                                 break;
                             default:
                                 throw new IllegalStateException();
                         }
-
                         dialog.dismiss();
                     }
                 });
-
                 b.show();
             }
         });
@@ -231,16 +218,15 @@ public class ApartmentFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (REQUEST_ITEM_CODE == requestCode) {
-            if(resultCode == AddItemActivity.RESULT_OK); {
+            if (resultCode == AddItemActivity.RESULT_OK) ;
+            {
                 //get the item
                 String itemId = (String) data.getCharSequenceExtra("item");
                 InventoryItem item = InventoryItem.getInventoryItemById(itemId);
-
                 if (item == null) {
                     Log.d("Failed to send notif", "Item creation failed");
                     return;
                 }
-
                 Person person = ApartmentManager.apartmentManager.getCurrentApartment().getMembers().get(personPosition);
                 PushNotifsManager.getInstance().sendToUser(person, item);
                 showCompletedNotif(person);
@@ -259,57 +245,48 @@ public class ApartmentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         Person person = Person.getCurrentPerson();
-        Apartment currApt = person.getApartment();
-        mPeople.clear();
-        if (person != null && person.hasApartment()) {
-            for(Person mate: currApt.getMembers()) {
-                mPeople.add(mate.getName());
-            }
-
-            updateUI(person);
-        }
+        updateUI(person);
     }
 
+    //Manage UI for Apartment Page
     void updateUI(Person person) {
-        Apartment currApt = ApartmentManager.apartmentManager.getCurrentApartment();
-        currApt.fetchMembersOfApartment(null);
-        Log.d("Test", "UPDATING UI");
-            person.getApartment().findMembers(new FindCallback<Person>() {
-                @Override
-                public void done(List<Person> objects, ParseException e) {
-                    if (e == null) {
-                        mPeople.clear();
+        if (person != null) {
+            if (person.hasApartment()) {
+                mLeaveApt.setVisibility(View.VISIBLE);
+                mCreateApt.setVisibility(View.GONE);
+                mJoinApt.setVisibility(View.GONE);
+                mAptMates.setVisibility(View.VISIBLE);
+                mAptID.setText("ID: " + (person.hasApartment() ? person.getApartment().getObjectId() : null));
+                mAptName.setText("Apartment Name: " + person.getApartment().getName());
 
-                        for (Person p : objects) {
-                            mPeople.add(p.toString());
+                Apartment currApt = ApartmentManager.apartmentManager.getCurrentApartment();
+                currApt.fetchMembersOfApartment(null);
+                Log.d("Test", "UPDATING UI");
+                person.getApartment().findMembers(new FindCallback<Person>() {
+                    @Override
+                    public void done(List<Person> objects, ParseException e) {
+                        if (e == null) {
+                            mPeople.clear();
+                            for (Person p : objects) {
+                                mPeople.add(p.toString());
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.d("PEOPLE_LIST", e.toString());
                         }
-
                         Log.d("PEOPLE_LIST", mPeople.toString());
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.d("PEOPLE_LIST", e.toString());
                     }
-
-                    Log.d("PEOPLE_LIST", mPeople.toString());
-                    mAdapter.notifyDataSetChanged();
-                }
-        });
-        //Manage UI for Apartment Page
-        if(person.hasApartment())
-        {
-            mLeaveApt.setVisibility(View.VISIBLE);
-            mCreateApt.setVisibility(View.GONE);
-            mJoinApt.setVisibility(View.GONE);
-            mAptMates.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            mLeaveApt.setVisibility(View.GONE);
-            mCreateApt.setVisibility(View.VISIBLE);
-            mJoinApt.setVisibility(View.VISIBLE);
-            mAptMates.setVisibility(View.GONE);
+                });
+                mAdapter.notifyDataSetChanged();
+            } else {
+                mLeaveApt.setVisibility(View.GONE);
+                mCreateApt.setVisibility(View.VISIBLE);
+                mJoinApt.setVisibility(View.VISIBLE);
+                mAptMates.setVisibility(View.GONE);
+                mAptID.setText("No Apartment");
+                mAptName.setText("Click the buttons below to create/join an apartment!");
+            }
         }
     }
 

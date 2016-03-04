@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Camera;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -56,13 +57,15 @@ public class AddItemActivity extends AbstractActivity {
     private EditText mCategoryView;
     private EditText mQuantityView;
     private EditText mDescriptionView;
-    private int CAMERA_ACTIVITY_INTENT_CODE = 100;
+
+    //Camera
+    private ImageButton inv_img_button = null;
+    private Bitmap bitmap = null;
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
-    public static final int RESULT_OK = 9;
+    public static final int REQ_IMAGE_CAP = 1;
 
-    private Uri imageFileUri;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -83,6 +86,9 @@ public class AddItemActivity extends AbstractActivity {
         mQuantityView = (EditText) findViewById(R.id.text_item_quantity);
         mDescriptionView = (EditText) findViewById(R.id.text_description);
 
+        //Inventory picture
+        inv_img_button = (ImageButton) findViewById(R.id.image_button);
+
         int index =  getIntent().getIntExtra("index", -1);
 
         Log.d("AddItemActivity", "The intent passed " + index);
@@ -95,15 +101,6 @@ public class AddItemActivity extends AbstractActivity {
         EditText itemCategory = (EditText) findViewById(R.id.text_item_category);
         EditText itemQuantity = (EditText) findViewById(R.id.text_item_quantity);
         EditText itemDescription = (EditText) findViewById(R.id.text_description);
-
-        //Register the listener for the capture image button
-        ImageButton imageButton = (ImageButton) findViewById(R.id.image_button);
-        imageButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchCamera();
-            }
-        });
 
         Button deleteItemButton = (Button) findViewById(R.id.delete_item_button);
         deleteItemButton.setOnClickListener(new OnClickListener() {
@@ -194,11 +191,20 @@ public class AddItemActivity extends AbstractActivity {
             this.setTitle("Add an Item");
         }
 
+        //Open camera app on img button click
+        inv_img_button.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (camIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(camIntent,REQ_IMAGE_CAP);
+                }
+            }
+        });
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-
     }
 
     private void passItemBackToCallingActivity() {
@@ -221,7 +227,6 @@ public class AddItemActivity extends AbstractActivity {
         String quantityString = mQuantityView.getText().toString();
         Number quantity;
         String description = mDescriptionView.getText().toString();
-
 
         Log.d("AddItemActivity", "Before checking fields");
         if (TextUtils.isEmpty(itemName)) {
@@ -247,22 +252,41 @@ public class AddItemActivity extends AbstractActivity {
             // One of the required fields wasn't entered
             focusView.requestFocus();
         } else {
-
             Log.d("AddItemActivity", "Creating a new inventory item");
             Person person = Person.getCurrentPerson();
             Inventory aptInventory = ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
-            theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, person, aptInventory, new SaveCallback() {
-                @Override
-                public void done(com.parse.ParseException e) {
-                    if (e == null) {
-                        Log.d("AddItemActivity", "Finishing creating item");
-                        //Hooray! Inventory item has been successfully created
-                        finishCreateInventoryItem();
-                    } else {
-                        Log.e("createInventoryItem", e.toString());
+            if(bitmap == null)
+            {
+                theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, person, aptInventory, new SaveCallback() {
+                    @Override
+                    public void done(com.parse.ParseException e) {
+                        if (e == null) {
+                            Log.d("AddItemActivity", "Finishing creating item");
+                            //Hooray! Inventory item has been successfully created
+                            finishCreateInventoryItem();
+                        } else {
+                            Log.e("createInventoryItem", e.toString());
+                        }
                     }
-                }
-            });
+                });
+            }
+            else
+            {
+                Log.d("AddItemActivity", "CREATING WITH IMAGE");
+                theItem = InventoryItem.createInventoryItemWithImage(itemName, category, quantity, description, person, aptInventory, bitmap, new SaveCallback() {
+                    @Override
+                    public void done(com.parse.ParseException e) {
+                        if (e == null) {
+                            Log.d("AddItemActivity", "Finishing creating item");
+                            //Hooray! Inventory item has been successfully created
+                            finishCreateInventoryItem();
+                        } else {
+                            Log.e("createInventoryItem", e.toString());
+                        }
+                    }
+                });
+            }
+
         }
     }
 
@@ -277,20 +301,9 @@ public class AddItemActivity extends AbstractActivity {
                     finish();
                 } else {
                     Toast.makeText(AddItemActivity.this, "Error Occured: please try again.", Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
-    }
-
-    private void launchCamera() {
-        Intent cameraIntent = new Intent();
-        cameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        //create a file to save the image result in
-        imageFileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-        //tell the activity where to store the image via the intent
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
-        startActivityForResult(cameraIntent, CAMERA_ACTIVITY_INTENT_CODE);
     }
 
     /** Create a file Uri for saving an image or video */
@@ -303,11 +316,6 @@ public class AddItemActivity extends AbstractActivity {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
         File mediaStorageDir = new File(String.valueOf(getBaseContext().getCacheDir()));
-
-//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-//                Environment.DIRECTORY_PICTURES), "MyCameraApp");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){
@@ -333,48 +341,29 @@ public class AddItemActivity extends AbstractActivity {
         return mediaFile;
     }
 
-
+    //When camera activity finishes
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CAMERA_ACTIVITY_INTENT_CODE) {
-            if (resultCode == RESULT_OK) {
-                Intent i;
-                Bitmap image = processImageWithUri(data.getData());
-                Bitmap scaledImage = scaleImageToResolution(2000, 2000, image);
-                updateImageButtonWithImage(scaledImage);
-
-                //save the image to the object.
-                theItem.setImage(scaledImage);
-            } else if (resultCode == RESULT_CANCELED) {
-                //user cancelled image capture
-            } else {
-                //image capture failed.
-                Toast.makeText(AddItemActivity.this, "Error with image. Please try again.", Toast.LENGTH_SHORT).show();
-            }
+        if(requestCode == REQ_IMAGE_CAP && resultCode == RESULT_OK)
+        {
+            Bundle extras = data.getExtras();
+            //Get the original image
+            bitmap = (Bitmap) extras.get("data");
+            //Update the image in the image button/view in this activity with the scaled image
+            updateImageButtonWithImage(bitmap);
+            theItem.setImage(bitmap);
         }
-    }
-
-    /**
-     * Loads the image from the given file path and returns it.
-     * @param imageUri The location of the file on disk.
-     * @return The image bitmap.
-     */
-    private Bitmap processImageWithUri( Uri imageUri) {
-        File imageFile = new File(imageUri.toString());
-        Bitmap image = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-        return image;
     }
 
     /**
      * Sets the image of the image button.
      * @param image
      */
-    private void updateImageButtonWithImage( Bitmap image) {
+    private void updateImageButtonWithImage(Bitmap image) {
         ImageButton imageButton = (ImageButton) findViewById(R.id.image_button);
-        Bitmap scaledImage = Bitmap.createScaledBitmap(image, imageButton.getWidth(), imageButton.getHeight(), true);
-        imageButton.setImageBitmap(scaledImage);
+        imageButton.setImageBitmap(image);
     }
 
     /**

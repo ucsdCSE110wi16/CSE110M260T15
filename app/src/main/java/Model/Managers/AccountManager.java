@@ -66,6 +66,7 @@ public class AccountManager {
                         InventoryManager.inventoryManager.fetchInventory(new GetCallback<Inventory>() {
                             @Override
                             public void done(Inventory object, ParseException e) {
+
                                 callback.done(user, e);
                             }
                         });
@@ -93,9 +94,7 @@ public class AccountManager {
     public void fetchAllData() {
         final Person person = Person.getCurrentPerson();
 
-        if(person == null) {
-            return;
-        }
+        if(person == null) { return; }
 
         PushNotifsManager.getInstance().subscribeToUser(person);
 
@@ -135,8 +134,16 @@ public class AccountManager {
                                 if(invError != null) {
                                     Log.e("Fetch Inventory", invError.getLocalizedMessage());
                                 }
-
-                                person.getApartment().getInventory().fetchInventoryItems(null);
+                                //CALLBACK
+                                person.getApartment().getInventory().fetchInventoryItems(new FindCallback<InventoryItem>() {
+                                    @Override
+                                    public void done(List<InventoryItem> objects, ParseException e) {
+                                        for(InventoryItem item : InventoryManager.inventoryManager.getInventory().getItems())
+                                        {
+                                            item.fetchImageFile(null);
+                                        }
+                                    }
+                                });
                                 ApartmentManager.apartmentManager.fetchMembersOfApartment(null);
                             }
                         });

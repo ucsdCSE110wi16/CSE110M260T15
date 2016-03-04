@@ -3,6 +3,7 @@ package Model;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.parse.GetDataCallback;
 import com.parse.Parse;
@@ -13,6 +14,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
@@ -26,7 +28,6 @@ public class InventoryItem extends ParseObject {
     public final static String className = "InventoryItem";
 
     private Bitmap image;
-
 
     public InventoryItem() {
         super();
@@ -44,6 +45,7 @@ public class InventoryItem extends ParseObject {
      * @return The constructed object.
      */
     public static InventoryItem createInventoryItem(String itemName, String category, Number quantity, String description, Person person, Inventory inventory, SaveCallback sc) {
+
         InventoryItem item = new InventoryItem();
 
         item.setName(itemName);
@@ -52,9 +54,22 @@ public class InventoryItem extends ParseObject {
         item.setDescription(description);
         item.setCreator(person);
         item.setInventory(inventory);
-
         item.saveInBackground(sc);
 
+        return item;
+    }
+
+    public static InventoryItem createInventoryItemWithImage(String itemName, String category, Number quantity, String description, Person person, Inventory inventory, Bitmap image, SaveCallback sc) {
+        InventoryItem item = new InventoryItem();
+
+        item.setName(itemName);
+        item.setCategory(category);
+        item.setQuantity(quantity);
+        item.setDescription(description);
+        item.setCreator(person);
+        item.setInventory(inventory);
+        item.setImage(image);
+        item.saveInBackground(sc);
         return item;
     }
 
@@ -72,7 +87,6 @@ public class InventoryItem extends ParseObject {
         return null;
     }
 
-
     /**
      * Creates an empty item.
      * **Note** This method DOES NOT save the empty object. This is to prevent empty objects from accumulating in the database.
@@ -86,7 +100,6 @@ public class InventoryItem extends ParseObject {
         inventoryItem.setInventory(inventory);
         return inventoryItem;
     }
-
 
     /*****************************
      * Properties
@@ -204,11 +217,9 @@ public class InventoryItem extends ParseObject {
      *
      * @return The description of this item
      */
-
     public String getDescription() {
         return getString("description");
     }
-
 
     /**
      * Sets the creator of the item.
@@ -236,44 +247,52 @@ public class InventoryItem extends ParseObject {
     }
 
     /**
+     * Sets the image for this item. Also updates the bitmap property and saves the object back to parse.
+     * @param image The image to assign to this item.
+     */
+    public void setImage(Bitmap image) {
+        this.image = image;
+        ParseFile pf = convertBitmapToParseFile(image);
+        setImageFile(pf);
+    }
+
+    //Creates a ParseFile to hold the image
+    private ParseFile convertBitmapToParseFile( Bitmap image ) {
+
+        //create a new ParseFile for the item
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG,100,stream);
+        byte[] byteArray = stream.toByteArray();
+        this.image = image;
+        if(byteArray != null) {
+            ParseFile pf = new ParseFile("photo.jpg",byteArray);
+            setImageFile(pf);
+            return pf;
+        }
+        return null;
+    }
+
+    /**
      * Sets the image for this item. Also updates the run time image bitmap property and saves the object back to parse.
      * @param imageFile The image wrapped in a ParseFile object.
      */
     public void setImageFile(ParseFile imageFile) {
-
         put("image", imageFile);
         imageFile.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
+                Log.d("SETIMAGEFILE: ", "IMAGE SAVED");
                 saveInBackground();
             }
         });
+        //Makes the image not square and blocky
         try {
             byte[] data = imageFile.getData();
+            //decodeByteArray(data(byte array of compressed image data),offset into data, # of bytes to parse))
             image = BitmapFactory.decodeByteArray(data, 0, data.length);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Sets the image for this item. Also updates the bitmap property and saves the object back to parse.
-     * @param image The image to assign to this item.
-     */
-    public void setImage( Bitmap image) {
-        ParseFile imageFile = convertBitmapToParseFile(image);
-        setImageFile(imageFile);
-    }
-
-    private ParseFile convertBitmapToParseFile( Bitmap image ) {
-        //create a new ParseFile for the item
-        int byteCount = image.getByteCount();
-        ByteBuffer buffer = ByteBuffer.allocate(byteCount);
-        image.copyPixelsToBuffer(buffer);
-
-        byte[] bytes = buffer.array();
-        ParseFile imageFile = new ParseFile(getName(), bytes);
-        return imageFile;
     }
 
     /**
@@ -283,13 +302,19 @@ public class InventoryItem extends ParseObject {
     public void fetchImageFile(final GetImageFromParseCallback callback) {
         ParseFile imageFile = getImageFile();
 
-        imageFile.getDataInBackground(new GetDataCallback() {
-            @Override
-            public void done(byte[] data, ParseException e) {
-                image = BitmapFactory.decodeByteArray(data, 0, data.length);
-                callback.done(image, e);
-            }
-        });
+        if(imageFile != null) {
+            imageFile.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    image = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    if(callback != null)
+                        callback.done(image, e);
+                }
+            });
+        } else {
+            Log.d("fetchImageFile:","No Image");
+        }
+
     }
 
     /**
@@ -299,7 +324,6 @@ public class InventoryItem extends ParseObject {
     public Bitmap getImage() {
         return image;
     }
-
 
     @Override
     public String toString() {

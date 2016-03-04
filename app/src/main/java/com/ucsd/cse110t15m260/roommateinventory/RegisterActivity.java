@@ -209,6 +209,7 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
                         // Hooray! Let them use the app now.
                         Intent intent = new Intent(getBaseContext(), MainActivity.class);
                         startActivity(intent);
+                        AccountManager.accountManager.fetchAllData();
                         finish();
                     } else {
                         Log.e("REGISTER", e.toString());

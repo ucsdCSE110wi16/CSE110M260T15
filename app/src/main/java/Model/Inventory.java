@@ -22,13 +22,11 @@ public class Inventory extends ParseObject {
         super();
     }
 
+    //Inventory "Factory" constructor
     public static Inventory createNewInventoryWithName(String name) {
         Inventory inventory = new Inventory();
-
         inventory.setName(name);
-
         inventory.saveInBackground();
-
         return inventory;
     }
 
@@ -37,8 +35,7 @@ public class Inventory extends ParseObject {
      * Note that when {@code this} object is fetched, the variable is not populated by default,
      * it must be fetched separately.
      */
-    private ArrayList<InventoryItem>items = new ArrayList<InventoryItem>();
-
+    private ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 
     public ArrayList<InventoryItem> getItems() {
         return items;
@@ -78,7 +75,7 @@ public class Inventory extends ParseObject {
      * Upon completion, the callback is called. The items and error (if existent) are delivered via the callback.
      * @param callback {@code FindCallback<InventoryItem>}
      */
-    /*protected*/public void fetchInventoryItems(final FindCallback<InventoryItem> callback) {
+    public void fetchInventoryItems(final FindCallback<InventoryItem> callback) {
         ParseQuery<InventoryItem> itemQuery = getInventoryItemsRelation().getQuery();
         itemQuery.orderByAscending("quantity");
 
@@ -88,7 +85,6 @@ public class Inventory extends ParseObject {
                 if (e == null && objects != null) {
                     items = new ArrayList<InventoryItem>(objects);
                 }
-
                 if(callback != null) {
                     callback.done(objects, e);
                 }

@@ -24,7 +24,7 @@ import Model.InventoryItem;
 
 import static com.ucsd.cse110t15m260.roommateinventory.R.drawable.cow;
 
-
+//For each "cell" in the inventory
 public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
 
     Button incButton, decButton;
@@ -48,6 +48,8 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         itemName.setText(itemNameString);
         itemCount.setText(getItem(position).getQuantity().intValue() + "");
         Bitmap image = getItem(position).getImage();
+
+        //If there's an image, set it, otherwise set it to cow
         if(image != null)
             imageView.setImageBitmap(image);
         else
@@ -56,6 +58,7 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         incButton = (Button) customView.findViewById(R.id.incrementButton);
         decButton = (Button) customView.findViewById(R.id.decrementButton);
         final int pos = position;
+
         incButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +67,7 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
                 notifyDataSetChanged();
             }
         });
+
         decButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses_feature android:name="android.hardware.camera"></uses_feature>
     <uses-feature android:name="android.hardware.camera2"
                   android:required="true"/>
     
