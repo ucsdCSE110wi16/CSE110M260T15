@@ -11,6 +11,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
@@ -23,7 +24,7 @@ import Model.Managers.PushNotifsManager;
  * Created by satre on 1/31/16.
  */
 @ParseClassName(InventoryItem.className)
-public class InventoryItem extends ParseObject implements Serializable {
+public class InventoryItem extends ParseObject {
     public final static String className = "InventoryItem";
 
     private Bitmap image;
@@ -72,6 +73,19 @@ public class InventoryItem extends ParseObject implements Serializable {
         return item;
     }
 
+    public static InventoryItem getInventoryItemById(String oid) {
+        ParseQuery q = new ParseQuery(InventoryItem.class);
+
+        try {
+            return (InventoryItem) q.get(oid);
+        }
+
+        catch(Exception e) {
+            Log.d("ParseException", e.getMessage());
+        }
+
+        return null;
+    }
 
     /**
      * Creates an empty item.
@@ -165,6 +179,12 @@ public class InventoryItem extends ParseObject implements Serializable {
     public void incrementQuantity() {
         int newQuantity = (int)this.getQuantity() + 1;
         this.setQuantity(newQuantity);
+
+        // TODO: Refactor this into the controller to decouple the Notifs and the Item model
+        if (newQuantity == 1)
+            PushNotifsManager
+                    .getInstance()
+                    .sendReplenishedItem(this);
     }
 
     public void decrementQuantity() {
@@ -303,5 +323,10 @@ public class InventoryItem extends ParseObject implements Serializable {
      */
     public Bitmap getImage() {
         return image;
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }

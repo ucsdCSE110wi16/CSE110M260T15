@@ -57,7 +57,6 @@ public class AddItemActivity extends AbstractActivity {
     private EditText mCategoryView;
     private EditText mQuantityView;
     private EditText mDescriptionView;
-    private int CAMERA_ACTIVITY_INTENT_CODE = 100;
 
     //Camera
     private ImageButton inv_img_button = null;
@@ -67,7 +66,6 @@ public class AddItemActivity extends AbstractActivity {
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int REQ_IMAGE_CAP = 1;
 
-    private Uri imageFileUri;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -110,6 +108,7 @@ public class AddItemActivity extends AbstractActivity {
             public void onClick(View v) {
                 if(theItem != null)
                 InventoryManager.inventoryManager.deleteItem(theItem);
+                passItemBackToCallingActivity();
                 finish();
             }
         });
@@ -208,6 +207,12 @@ public class AddItemActivity extends AbstractActivity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    private void passItemBackToCallingActivity() {
+        Intent passDataBack = new Intent();
+        passDataBack.putExtra("item", theItem.getObjectId());
+        setResult(RESULT_OK, passDataBack);
+    }
+
     public void attemptToCreateNewItem() {
         mNameView.setError(null);
         mCategoryView.setError(null);
@@ -292,6 +297,7 @@ public class AddItemActivity extends AbstractActivity {
             public void done(com.parse.ParseException e) {
                 if (e == null) {
                     Toast.makeText(AddItemActivity.this, "New Item Created", Toast.LENGTH_SHORT).show();
+                    passItemBackToCallingActivity();
                     finish();
                 } else {
                     Toast.makeText(AddItemActivity.this, "Error Occured: please try again.", Toast.LENGTH_SHORT).show();
@@ -310,11 +316,6 @@ public class AddItemActivity extends AbstractActivity {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
         File mediaStorageDir = new File(String.valueOf(getBaseContext().getCacheDir()));
-
-//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-//                Environment.DIRECTORY_PICTURES), "MyCameraApp");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){
@@ -357,23 +358,11 @@ public class AddItemActivity extends AbstractActivity {
     }
 
     /**
-     * Loads the image from the given file path and returns it.
-     * @param imageUri The location of the file on disk.
-     * @return The image bitmap.
-     */
-    private Bitmap processImageWithUri(Uri imageUri) {
-        File imageFile = new File(imageUri.toString());
-        Bitmap image = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-        return image;
-    }
-
-    /**
      * Sets the image of the image button.
      * @param image
      */
     private void updateImageButtonWithImage(Bitmap image) {
         ImageButton imageButton = (ImageButton) findViewById(R.id.image_button);
-        //Bitmap scaledImage = Bitmap.createScaledBitmap(image, imageButton.getWidth(), imageButton.getHeight(), true);
         imageButton.setImageBitmap(image);
     }
 

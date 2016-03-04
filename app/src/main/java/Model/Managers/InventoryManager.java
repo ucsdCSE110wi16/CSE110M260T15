@@ -118,4 +118,5 @@ public class InventoryManager {
         itemsRelation.remove(item);
         getInventory().saveInBackground();
     }
+
 }
