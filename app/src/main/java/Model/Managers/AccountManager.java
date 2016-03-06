@@ -59,7 +59,12 @@ public class AccountManager {
                     callback.done(user, loginError);
                     return;
                 }
-                PushNotifsManager.getInstance().subscribeToUser(Person.getCurrentPerson());
+                Person person = Person.getCurrentPerson();
+                PushNotifsManager.getInstance().subscribeToUser(person);
+                if (person.getApartment() == null) {
+                    callback.done(user,loginError);
+                    return;
+                }
                 ApartmentManager.apartmentManager.fetchApartment(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -105,17 +110,12 @@ public class AccountManager {
                     Log.e("Fetch Person Info", personError.getLocalizedMessage());
                     return;
                 }
-                //Return if no apartment
-                if(person.hasApartment() == false)
-                {
-                    return;
-                }
-                //refresh the apartment info.
 
+                //Return if no apartment
                 if (person.getApartment() == null) {
                     return;
                 }
-
+                //refresh the apartment info.
                 person.getApartment().fetchInBackground(new GetCallback<Apartment>() {
                     @Override
                     public void done(Apartment object, ParseException aptError) {
