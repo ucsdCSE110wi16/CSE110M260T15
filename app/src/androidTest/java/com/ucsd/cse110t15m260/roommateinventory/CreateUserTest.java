@@ -97,15 +97,6 @@ public class CreateUserTest {
 
         Thread.sleep(1000);
 
-        /*
-        mAptName = "apt";
-        mStreet1 = "street1";
-        mStreet2 = "street2";
-        mCity = "city";
-        mState = "state";
-        mZipCode = "123";
-        */
-
         //Enter the create apartment activity
         onView(withId(R.id.create_apt)).perform(click());
 
@@ -127,9 +118,7 @@ public class CreateUserTest {
         onView(withId(R.id.zip_code)).check(matches(withText(mZipCode)));
 
         onView(withId(R.id.create_apt_btn)).perform(click());
-
-
-
+        
         Thread.sleep(1000);
     }
 

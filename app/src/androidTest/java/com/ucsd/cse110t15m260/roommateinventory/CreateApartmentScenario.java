@@ -43,17 +43,6 @@ public class CreateApartmentScenario {
     private String mState;
     private String mZipCode;
 
-    /*public LoginTest() {
-        super(LoginActivity.class);
-    }
-    */
-
-    /* @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        getActivity();
-    }*/
-
     @Before
     public void initValidString() {
         mName = "newUser";

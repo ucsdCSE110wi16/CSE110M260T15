@@ -13,6 +13,7 @@ public class InvitationCodeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invitation_code);
 
@@ -24,6 +25,5 @@ public class InvitationCodeActivity extends AppCompatActivity {
 
         Log.d("InvitationCode", "Invitation Code is: " + apartment.getObjectId());
         apartmentInvitationId.setText(apartment.getObjectId());
-
     }
 }
