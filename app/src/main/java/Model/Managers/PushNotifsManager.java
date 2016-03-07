@@ -14,16 +14,13 @@ import Model.Person;
  * Created by Isaac on 2/13/2016.
  */
 public class PushNotifsManager {
-    private static PushNotifsManager ourInstance = new PushNotifsManager();
-
-    private String apartmentChannel;
-    private String userChannel;
-
     private static final String outOfItem = "Your apartment has run out of %s";
     private static final String replenishedItem = "%s has been restocked.";
     private static final String itemRequest = "%s has requested that you purchase %s";
-
     private static final String channelPrefix = "CSE110";
+    private static PushNotifsManager ourInstance = new PushNotifsManager();
+    private String apartmentChannel;
+    private String userChannel;
 
     private PushNotifsManager() {
     }
@@ -34,7 +31,7 @@ public class PushNotifsManager {
 
     public void subscribeToApartment(Apartment apt) {
         this.apartmentChannel = channelPrefix + apt.getObjectId();
-        Log.d("Channel","Subscribing to channel: " + this.apartmentChannel);
+        Log.d("Channel", "Subscribing to channel: " + this.apartmentChannel);
         ParsePush.subscribeInBackground(this.apartmentChannel, new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -68,6 +65,7 @@ public class PushNotifsManager {
         ParsePush.unsubscribeInBackground(this.userChannel);
         this.userChannel = null;
     }
+
     public void sendOutOfItem(InventoryItem item) {
         if (item == null)
             return;
@@ -78,11 +76,9 @@ public class PushNotifsManager {
 
         push.setChannel(this.apartmentChannel);
         try {
-            push.setMessage(String.format(outOfItem,item.getName()));
+            push.setMessage(String.format(outOfItem, item.getName()));
             push.sendInBackground();
-        }
-
-        catch(Exception e) {
+        } catch (Exception e) {
             Log.d("Push Failed", e.getMessage());
         }
     }
@@ -98,15 +94,13 @@ public class PushNotifsManager {
         try {
             push.setMessage(String.format(replenishedItem, item.getName()));
             push.sendInBackground();
-        }
-
-        catch(Exception e) {
+        } catch (Exception e) {
             Log.d("Push Failed", e.getMessage());
         }
 
     }
 
-    public void sendToUser(Person person, InventoryItem item){
+    public void sendToUser(Person person, InventoryItem item) {
         //TODO: Display alert to user to notify of success/fail
         if (person == null || item == null)
             return;
@@ -123,9 +117,7 @@ public class PushNotifsManager {
             ));
 
             push.sendInBackground();
-        }
-
-        catch(Exception e) {
+        } catch (Exception e) {
             Log.d("Push Failed", e.getMessage());
         }
     }

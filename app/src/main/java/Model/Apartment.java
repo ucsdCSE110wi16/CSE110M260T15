@@ -9,14 +9,9 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -119,12 +114,12 @@ public class Apartment extends ParseObject {
         return true;
     }
 
-    public void removePersonFromApartment( Person person, final SaveCallback callback) {
+    public void removePersonFromApartment(Person person, final SaveCallback callback) {
         if (person == null) {
             return;
         }
 
-        if(!members.contains(person)) {
+        if (!members.contains(person)) {
             return;
         }
 
@@ -205,6 +200,7 @@ public class Apartment extends ParseObject {
      */
     /**
      * Accessor for the inventory of this apartment.
+     *
      * @return
      */
     public Inventory getInventory() {
@@ -214,26 +210,27 @@ public class Apartment extends ParseObject {
 
     /**
      * Getter for the people who live here.
+     *
      * @return The list of people who live in this apartment.
      */
     public ArrayList<Person> getMembers() {
         return members;
     }
 
-    public void setStreet_1( String street_1) {
-        put("street_1", street_1);
-    }
-
     public String getStreet_1() {
         return getString("street_1");
     }
 
-    public void setStreet_2(String street_2) {
-        put("street_2", street_2);
+    public void setStreet_1(String street_1) {
+        put("street_1", street_1);
     }
 
     public String getStreet_2() {
         return getString("street_2");
+    }
+
+    public void setStreet_2(String street_2) {
+        put("street_2", street_2);
     }
 
 }

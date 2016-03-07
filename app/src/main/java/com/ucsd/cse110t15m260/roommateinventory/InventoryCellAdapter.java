@@ -11,18 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.app.Activity;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import Model.InventoryItem;
-
-import static com.ucsd.cse110t15m260.roommateinventory.R.drawable.cow;
 
 //For each "cell" in the inventory
 public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
@@ -30,7 +25,7 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
     Button incButton, decButton;
     Context activity;
 
-    InventoryCellAdapter (Context context, ArrayList<InventoryItem> inventoryitems) {
+    InventoryCellAdapter(Context context, ArrayList<InventoryItem> inventoryitems) {
         super(context, R.layout.custom_row, inventoryitems);
         activity = context;
     }
@@ -50,7 +45,7 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
         Bitmap image = getItem(position).getImage();
 
         //If there's an image, set it, otherwise set it to cow
-        if(image != null)
+        if (image != null)
             imageView.setImageBitmap(image);
         else
             imageView.setImageResource(R.drawable.cow);
@@ -82,7 +77,7 @@ public class InventoryCellAdapter<T> extends ArrayAdapter<InventoryItem> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddItemActivity.class);
-                intent.putExtra("index",position);
+                intent.putExtra("index", position);
                 activity.startActivity(intent);
             }
         });

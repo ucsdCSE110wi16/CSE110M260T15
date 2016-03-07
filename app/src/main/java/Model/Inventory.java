@@ -17,6 +17,12 @@ import java.util.List;
 @ParseClassName(Inventory.className)
 public class Inventory extends ParseObject {
     public final static String className = "Inventory";
+    /**
+     * The run-time array that contains the items stored in this list.
+     * Note that when {@code this} object is fetched, the variable is not populated by default,
+     * it must be fetched separately.
+     */
+    private ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 
     public Inventory() {
         super();
@@ -30,23 +36,17 @@ public class Inventory extends ParseObject {
         return inventory;
     }
 
-    /**
-     * The run-time array that contains the items stored in this list.
-     * Note that when {@code this} object is fetched, the variable is not populated by default,
-     * it must be fetched separately.
-     */
-    private ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
-
     public ArrayList<InventoryItem> getItems() {
         return items;
     }
 
-    public void setItems(ArrayList<InventoryItem> items ) {
+    public void setItems(ArrayList<InventoryItem> items) {
         this.items = items;
     }
 
     /**
      * Getter for the name of this inventory list.
+     *
      * @return The name as a String.
      */
     public String getName() {
@@ -55,6 +55,7 @@ public class Inventory extends ParseObject {
 
     /**
      * Updates the name for this object.
+     *
      * @param newName The name to set.
      */
     public void setName(String newName) {
@@ -63,6 +64,7 @@ public class Inventory extends ParseObject {
 
     /**
      * Accessor the returns the relation that holds the items stored in this object.
+     *
      * @return The relation, {@code ParseRelation<InventoryItem>}
      */
     public ParseRelation<InventoryItem> getInventoryItemsRelation() {
@@ -73,6 +75,7 @@ public class Inventory extends ParseObject {
     /**
      * Fetches the items in this inventory and stores them in the run time array.
      * Upon completion, the callback is called. The items and error (if existent) are delivered via the callback.
+     *
      * @param callback {@code FindCallback<InventoryItem>}
      */
     public void fetchInventoryItems(final FindCallback<InventoryItem> callback) {
@@ -85,7 +88,7 @@ public class Inventory extends ParseObject {
                 if (e == null && objects != null) {
                     items = new ArrayList<InventoryItem>(objects);
                 }
-                if(callback != null) {
+                if (callback != null) {
                     callback.done(objects, e);
                 }
             }

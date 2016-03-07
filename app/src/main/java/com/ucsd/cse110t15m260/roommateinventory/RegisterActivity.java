@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Managers.AccountManager;
-import Model.Person;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -219,11 +217,9 @@ public class RegisterActivity extends AbstractActivity implements LoaderCallback
 
                         if (e.getCode() == ParseException.USERNAME_TAKEN || e.getCode() == ParseException.EMAIL_TAKEN) {
                             mEmailView.setError("Email already taken");
-                        }
-                        else if (e.getCode() == ParseException.INVALID_EMAIL_ADDRESS) {
+                        } else if (e.getCode() == ParseException.INVALID_EMAIL_ADDRESS) {
                             mEmailView.setError("Invalid email address");
-                        }
-                        else {
+                        } else {
                             mEmailView.setError("Something went wrong. Please try again later!");
                         }
                     }

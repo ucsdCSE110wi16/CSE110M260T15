@@ -2,19 +2,10 @@ package com.ucsd.cse110t15m260.roommateinventory;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Camera;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,17 +13,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.ParseFile;
-import com.parse.ParseObject;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.SaveCallback;
 
-import java.io.Serializable;
-import java.nio.ByteBuffer;
-import java.text.ParseException;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import Model.Apartment;
 import Model.Inventory;
@@ -40,32 +31,24 @@ import Model.InventoryItem;
 import Model.Managers.ApartmentManager;
 import Model.Managers.InventoryManager;
 import Model.Person;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static android.view.View.*;
+import static android.view.View.GONE;
+import static android.view.View.OnClickListener;
+import static android.view.View.VISIBLE;
 
 public class AddItemActivity extends AbstractActivity {
 
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final int REQ_IMAGE_CAP = 1;
     // UI references
     private EditText mNameView;
     private EditText mCategoryView;
     private EditText mQuantityView;
     private EditText mDescriptionView;
-
     //Camera
     private ImageButton inv_img_button = null;
     private Bitmap bitmap = null;
-
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int MEDIA_TYPE_VIDEO = 2;
-    public static final int REQ_IMAGE_CAP = 1;
-
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -89,7 +72,7 @@ public class AddItemActivity extends AbstractActivity {
         //Inventory picture
         inv_img_button = (ImageButton) findViewById(R.id.image_button);
 
-        int index =  getIntent().getIntExtra("index", -1);
+        int index = getIntent().getIntExtra("index", -1);
 
         Log.d("AddItemActivity", "The intent passed " + index);
         TextView createdByTextView = (TextView) findViewById(R.id.text_created_by);
@@ -106,14 +89,14 @@ public class AddItemActivity extends AbstractActivity {
         deleteItemButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(theItem != null)
-                InventoryManager.inventoryManager.deleteItem(theItem);
+                if (theItem != null)
+                    InventoryManager.inventoryManager.deleteItem(theItem);
                 passItemBackToCallingActivity();
                 finish();
             }
         });
 
-        if(index == -1) {
+        if (index == -1) {
             /* Creation Mode: New item needs to be created */
             theItem = InventoryItem.createEmptyInventoryItem(ApartmentManager.apartmentManager.getCurrentApartment().getInventory());
 
@@ -174,7 +157,7 @@ public class AddItemActivity extends AbstractActivity {
             itemDescription.setText(theItem.getDescription());
 
             /* Set image of item */
-            if(theItem.getImage() != null) {
+            if (theItem.getImage() != null) {
                 updateImageButtonWithImage(theItem.getImage());
             }
 
@@ -184,7 +167,7 @@ public class AddItemActivity extends AbstractActivity {
             usernameTextView.setVisibility(VISIBLE);
             deleteItemButton.setVisibility(VISIBLE);
 
-            if(theItem.getCreator() != null) {
+            if (theItem.getCreator() != null) {
                 usernameTextView.setText(theItem.getCreator().getUsername());
             }
 
@@ -192,12 +175,12 @@ public class AddItemActivity extends AbstractActivity {
         }
 
         //Open camera app on img button click
-        inv_img_button.setOnClickListener(new OnClickListener(){
+        inv_img_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (camIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(camIntent,REQ_IMAGE_CAP);
+                    startActivityForResult(camIntent, REQ_IMAGE_CAP);
                 }
             }
         });
@@ -239,7 +222,7 @@ public class AddItemActivity extends AbstractActivity {
             focusView = mCategoryView;
             cancel = true;
         }
-        if ( TextUtils.isEmpty(quantityString)) {
+        if (TextUtils.isEmpty(quantityString)) {
             mQuantityView.setError("This field is required");
             focusView = mQuantityView;
             cancel = true;
@@ -255,8 +238,7 @@ public class AddItemActivity extends AbstractActivity {
             Log.d("AddItemActivity", "Creating a new inventory item");
             Person person = Person.getCurrentPerson();
             Inventory aptInventory = ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
-            if(bitmap == null)
-            {
+            if (bitmap == null) {
                 theItem = InventoryItem.createInventoryItem(itemName, category, quantity, description, person, aptInventory, new SaveCallback() {
                     @Override
                     public void done(com.parse.ParseException e) {
@@ -269,9 +251,7 @@ public class AddItemActivity extends AbstractActivity {
                         }
                     }
                 });
-            }
-            else
-            {
+            } else {
                 Log.d("AddItemActivity", "CREATING WITH IMAGE");
                 theItem = InventoryItem.createInventoryItemWithImage(itemName, category, quantity, description, person, aptInventory, bitmap, new SaveCallback() {
                     @Override
@@ -306,20 +286,24 @@ public class AddItemActivity extends AbstractActivity {
         });
     }
 
-    /** Create a file Uri for saving an image or video */
-    private Uri getOutputMediaFileUri(int type){
+    /**
+     * Create a file Uri for saving an image or video
+     */
+    private Uri getOutputMediaFileUri(int type) {
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
-    /** Create a File for saving an image or video */
-    private File getOutputMediaFile(int type){
+    /**
+     * Create a File for saving an image or video
+     */
+    private File getOutputMediaFile(int type) {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
         File mediaStorageDir = new File(String.valueOf(getBaseContext().getCacheDir()));
 
         // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
                 Log.d("MyCameraApp", "failed to create directory");
                 return null;
             }
@@ -328,12 +312,12 @@ public class AddItemActivity extends AbstractActivity {
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE){
+        if (type == MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_"+ timeStamp + ".jpg");
-        } else if(type == MEDIA_TYPE_VIDEO) {
+                    "IMG_" + timeStamp + ".jpg");
+        } else if (type == MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
+                    "VID_" + timeStamp + ".mp4");
         } else {
             return null;
         }
@@ -346,8 +330,7 @@ public class AddItemActivity extends AbstractActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQ_IMAGE_CAP && resultCode == RESULT_OK)
-        {
+        if (requestCode == REQ_IMAGE_CAP && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             //Get the original image
             bitmap = (Bitmap) extras.get("data");
@@ -359,6 +342,7 @@ public class AddItemActivity extends AbstractActivity {
 
     /**
      * Sets the image of the image button.
+     *
      * @param image
      */
     private void updateImageButtonWithImage(Bitmap image) {
@@ -368,8 +352,9 @@ public class AddItemActivity extends AbstractActivity {
 
     /**
      * Scales the image to the given resolution and height
-     * @param resWidth The width to scale to
-     * @param resHeight The height to scale to.
+     *
+     * @param resWidth      The width to scale to
+     * @param resHeight     The height to scale to.
      * @param unscaledImage The image to scale
      * @return The scaled image.
      */

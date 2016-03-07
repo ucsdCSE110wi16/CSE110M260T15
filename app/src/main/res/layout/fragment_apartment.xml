@@ -1,6 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -11,48 +11,48 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/apt_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/apt_id"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:text="@string/apt_fragment" />
 
         <TextView
+            android:id="@+id/apt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/apt_name"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:layout_gravity="top|right"/>
+            android:layout_gravity="top|right"
+            android:padding="@dimen/activity_horizontal_margin" />
 
     </LinearLayout>
 
 
     <ListView
+        android:id="@+id/aptListView"
         android:layout_width="wrap_content"
         android:layout_height="400dp"
-        android:id="@+id/aptListView"
         android:layout_gravity="left|center" />
 
     <Button
-        android:text="Leave Apartment"
+        android:id="@+id/leave_apt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/leave_apt"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom"
+        android:text="Leave Apartment" />
 
     <Button
-        android:text="Create Apartment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/create_apt"
-        android:layout_gravity="bottom|left"/>
-
-    <Button
-        android:text="Join Apartment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:text="Create Apartment" />
+
+    <Button
         android:id="@+id/join_apt"
-        android:layout_gravity="bottom|right"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="Join Apartment" />
 
 
 </FrameLayout>

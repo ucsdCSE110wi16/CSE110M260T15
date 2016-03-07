@@ -2,25 +2,16 @@ package Model;
 
 import android.util.Log;
 
-import com.parse.LogInCallback;
-import com.parse.ParseClassName;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.LogOutCallback;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
-import Model.Apartment;
-import Model.Managers.ApartmentManager;
-import Model.Managers.InventoryManager;
+
 import Model.Managers.PushNotifsManager;
 
 /**
  * Created by saiteja64 on 1/23/16.
  */
 //@ParseClassName(Person.className)
-public class Person extends ParseUser
-{
+public class Person extends ParseUser {
     public final static String className = "_User";
 
     public Person() {
@@ -28,10 +19,10 @@ public class Person extends ParseUser
     }
 
     public static Person getCurrentPerson() {
-        return (Person)ParseUser.getCurrentUser();
+        return (Person) ParseUser.getCurrentUser();
     }
 
-    public static Person createnewPerson( String name, String email, String password) {
+    public static Person createnewPerson(String name, String email, String password) {
         Person newPerson = new Person();
 
         newPerson.setUsername(email);
@@ -70,7 +61,7 @@ public class Person extends ParseUser
             return;
 
         remove("apartment");
-        if(callback == null)
+        if (callback == null)
             saveInBackground();
         else
             saveInBackground(callback);

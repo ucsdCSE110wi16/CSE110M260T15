@@ -3,8 +3,8 @@ package com.ucsd.cse110t15m260.roommateinventory;
 import android.app.Application;
 
 import com.parse.Parse;
-import com.parse.ParseObject;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 
 import Model.Apartment;
 import Model.Inventory;

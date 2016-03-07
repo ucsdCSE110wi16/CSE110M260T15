@@ -28,12 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Apartment;
-import Model.Managers.AccountManager;
-import Model.Managers.ApartmentManager;
 import Model.InventoryItem;
-import Model.Managers.PushNotifsManager;
-
+import Model.Managers.ApartmentManager;
 import Model.Managers.InventoryManager;
+import Model.Managers.PushNotifsManager;
 import Model.Person;
 
 
@@ -45,22 +43,19 @@ import Model.Person;
  */
 public class ApartmentFragment extends Fragment {
 
+    private static final int REQUEST_ITEM_CODE = 5;
     List<String> mPeople;
     ArrayAdapter<String> mAdapter;
-
+    /**
+     * Used to signify the position of the selected person in the list.
+     */
+    int personPosition = -1;
     private OnFragmentInteractionListener mListener;
-    private static final int REQUEST_ITEM_CODE = 5;
-
     //Buttons for apartment control
     private Button mLeaveApt, mCreateApt, mJoinApt;
     //Textviews to display apartment info.
     private TextView mAptName, mAptID;
     private ListView mAptMates;
-
-    /**
-     * Used to signify the position of the selected person in the list.
-     */
-    int personPosition = -1;
 
     public ApartmentFragment() {
         // Required empty public constructor

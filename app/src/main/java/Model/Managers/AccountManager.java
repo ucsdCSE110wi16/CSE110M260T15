@@ -7,7 +7,6 @@ import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
@@ -24,12 +23,13 @@ import Model.Person;
  */
 public class AccountManager {
 
-    private AccountManager() {}
-
     /**
      * Singleton Instance of this manager.
      */
     public static AccountManager accountManager = new AccountManager();
+
+    private AccountManager() {
+    }
 
     public Person getCurrentUser() {
         return Person.getCurrentPerson();
@@ -62,7 +62,7 @@ public class AccountManager {
                 Person person = Person.getCurrentPerson();
                 PushNotifsManager.getInstance().subscribeToUser(person);
                 if (person.getApartment() == null) {
-                    callback.done(user,loginError);
+                    callback.done(user, loginError);
                     return;
                 }
                 ApartmentManager.apartmentManager.fetchApartment(new SaveCallback() {
@@ -85,7 +85,7 @@ public class AccountManager {
      * Convenience method to logout a person
      */
     public void logoutPerson(LogOutCallback callback) {
-       Person person = AccountManager.accountManager.getCurrentUser();
+        Person person = AccountManager.accountManager.getCurrentUser();
 
         if (person != null) {
             person.logOutInBackground(callback);
@@ -99,7 +99,9 @@ public class AccountManager {
     public void fetchAllData() {
         final Person person = Person.getCurrentPerson();
 
-        if(person == null) { return; }
+        if (person == null) {
+            return;
+        }
 
         PushNotifsManager.getInstance().subscribeToUser(person);
 
@@ -119,7 +121,7 @@ public class AccountManager {
                 person.getApartment().fetchInBackground(new GetCallback<Apartment>() {
                     @Override
                     public void done(Apartment object, ParseException aptError) {
-                        if(aptError != null ) {
+                        if (aptError != null) {
                             Log.e("Fetch Apartment", aptError.getLocalizedMessage());
                             return;
                         }
@@ -131,15 +133,14 @@ public class AccountManager {
                             @Override
                             public void done(Inventory object, ParseException invError) {
 
-                                if(invError != null) {
+                                if (invError != null) {
                                     Log.e("Fetch Inventory", invError.getLocalizedMessage());
                                 }
                                 //CALLBACK
                                 person.getApartment().getInventory().fetchInventoryItems(new FindCallback<InventoryItem>() {
                                     @Override
                                     public void done(List<InventoryItem> objects, ParseException e) {
-                                        for(InventoryItem item : InventoryManager.inventoryManager.getInventory().getItems())
-                                        {
+                                        for (InventoryItem item : InventoryManager.inventoryManager.getInventory().getItems()) {
                                             item.fetchImageFile(null);
                                         }
                                     }

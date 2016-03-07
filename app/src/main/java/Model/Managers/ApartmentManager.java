@@ -7,14 +7,11 @@ package Model.Managers;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import java.util.List;
 
 import Model.Apartment;
-import Model.Inventory;
 import Model.Person;
 
 /**
@@ -25,25 +22,26 @@ public class ApartmentManager {
 
     public static final ApartmentManager apartmentManager = new ApartmentManager();
 
-    private ApartmentManager(){}
+    private ApartmentManager() {
+    }
 
     /**
      * The apartment that the user lives in. Note that it can be null if there is no logged in user, or if he/she has not been added to an apartment.
      * WARNING: This is the ONLY place that the current apartment should be stored. No other class should have an instance var that holds a copy.
      */
 //    private Apartment currentApartment;
-
     public final Apartment getCurrentApartment() {
         return Person.getCurrentPerson().getApartment();
     }
 
     /**
      * Adds the given person to the apartment
+     *
      * @param newMate The person who is moving in.
      * @return True if the addition succeeds.
      */
-    public boolean addPersonToCurrentApartment(Person newMate)  {
-        if (getCurrentApartment() == null ) {
+    public boolean addPersonToCurrentApartment(Person newMate) {
+        if (getCurrentApartment() == null) {
             return false;
         }
 
@@ -52,10 +50,11 @@ public class ApartmentManager {
 
     /**
      * Removes the given person from the apartment.
+     *
      * @param formerMate The person who is moving out.
      * @return True if the removal succeeds.
      */
-    public void removePersonFromCurrentApartment( Person formerMate, SaveCallback callback) {
+    public void removePersonFromCurrentApartment(Person formerMate, SaveCallback callback) {
         if (getCurrentApartment() == null) {
             return;
         }
@@ -63,7 +62,7 @@ public class ApartmentManager {
         getCurrentApartment().removePersonFromApartment(formerMate, callback);
     }
 
-    public void fetchMembersOfApartment( final FindCallback<Person> callback) {
+    public void fetchMembersOfApartment(final FindCallback<Person> callback) {
         Apartment apt = getCurrentApartment();
         apt.fetchMembersOfApartment(new FindCallback<Person>() {
             @Override
@@ -79,10 +78,11 @@ public class ApartmentManager {
     /**
      * Deletes the current Apartment object completely. Note that deletion is only permitted if
      * there is one or none people in the apartment.
+     *
      * @return Indication of operation permissionc, boolean
      */
     public boolean deleteCurrentApartment() {
-        if( getCurrentApartment() == null ) {
+        if (getCurrentApartment() == null) {
             return false;
         }
 
@@ -100,7 +100,7 @@ public class ApartmentManager {
      */
     public void fetchApartment(final SaveCallback saveCallback) {
         Person user = Person.getCurrentPerson();
-        if( user == null ) {
+        if (user == null) {
             return;
         }
 

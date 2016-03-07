@@ -4,12 +4,9 @@ package Model.Managers;
  * Created by satre on 1/31/16.
  */
 
-import android.util.Log;
-
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.SaveCallback;
@@ -34,7 +31,8 @@ public class InventoryManager {
     /**
      * Default constructor, made private to enforce singleton.
      */
-    private InventoryManager(){}
+    private InventoryManager() {
+    }
 
     public Inventory getInventory() {
         return ApartmentManager.apartmentManager.getCurrentApartment().getInventory();
@@ -44,6 +42,7 @@ public class InventoryManager {
     /**
      * This method fetches the inventory and all of its items.
      * The result is stored in the run time variable and passed in the callback.
+     *
      * @param callback Function to call upon completion.
      */
     public void fetchInventoryItems(final FindCallback<InventoryItem> callback) {
@@ -58,7 +57,7 @@ public class InventoryManager {
         ParseRelation<InventoryItem> itemRelation = inventory.getInventoryItemsRelation();
 
         //fetch the objects
-        ParseQuery<InventoryItem> itemQuery =  itemRelation.getQuery();
+        ParseQuery<InventoryItem> itemQuery = itemRelation.getQuery();
         itemQuery.findInBackground(new FindCallback<InventoryItem>() {
             @Override
             public void done(List<InventoryItem> objects, ParseException e) {
@@ -72,9 +71,9 @@ public class InventoryManager {
         });
     }
 
-    public void fetchInventory( final GetCallback<Inventory> callback) {
+    public void fetchInventory(final GetCallback<Inventory> callback) {
         Apartment currentApartment = ApartmentManager.apartmentManager.getCurrentApartment();
-        if( currentApartment == null) {
+        if (currentApartment == null) {
             return;
         }
 
@@ -91,11 +90,12 @@ public class InventoryManager {
 
     /**
      * Puts the given item in the given inventory.
-     * @param item The object to store in the inventory.
+     *
+     * @param item      The object to store in the inventory.
      * @param inventory The container within which to store
      * @param callback
      */
-    public void addItemToInventory( InventoryItem item, Inventory inventory, final SaveCallback callback) {
+    public void addItemToInventory(InventoryItem item, Inventory inventory, final SaveCallback callback) {
         ParseRelation<InventoryItem> itemsRelation = inventory.getInventoryItemsRelation();
         inventory.getItems().add(item);
         itemsRelation.add(item);
@@ -109,6 +109,7 @@ public class InventoryManager {
 
     /**
      * Deletes the given item from Parse.
+     *
      * @param item
      */
     public void deleteItem(InventoryItem item) {

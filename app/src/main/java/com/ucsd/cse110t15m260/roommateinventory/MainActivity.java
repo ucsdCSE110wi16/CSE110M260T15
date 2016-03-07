@@ -1,12 +1,10 @@
 package com.ucsd.cse110t15m260.roommateinventory;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,7 +21,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 
-import Model.InventoryItem;
 import Model.Managers.AccountManager;
 import Model.Person;
 
@@ -115,7 +112,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         menuNav = navView.getMenu();
         aptInventory = menuNav.findItem(R.id.apt_inventory);
 
-        if(person != null) {
+        if (person != null) {
             headerTitle.setText(person.getString("name"));
             headerDescription.setText("User ID: " + person.getObjectId());
 

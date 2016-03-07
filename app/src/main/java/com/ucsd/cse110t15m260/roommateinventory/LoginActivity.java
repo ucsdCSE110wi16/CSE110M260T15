@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,20 +27,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.ParseRelation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Model.Apartment;
-import Model.Inventory;
-import Model.InventoryItem;
 import Model.Managers.AccountManager;
-import Model.Managers.ApartmentManager;
-import Model.Person;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -193,8 +185,7 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
                         finish();
                     } else if (e.getCode() == ParseException.CONNECTION_FAILED || e.getCode() == ParseException.TIMEOUT) {
                         mPasswordView.setError("Could not connect to server");
-                    }
-                    else {
+                    } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
                     }
 

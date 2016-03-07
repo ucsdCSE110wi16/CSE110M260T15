@@ -5,32 +5,21 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import Model.Person;
 import Model.Apartment;
 import Model.Inventory;
 import Model.InventoryItem;
 import Model.Managers.ApartmentManager;
-import Model.Managers.InventoryManager;
 import Model.Person;
 
 
@@ -82,7 +71,7 @@ public class InventoryFragment extends Fragment {
         ArrayList<InventoryItem> inventoryItems = currentInventory.getItems();
 
         //TODO FETCH IMAGE FILES
-        for(InventoryItem item : inventoryItems)
+        for (InventoryItem item : inventoryItems)
             item.fetchImageFile(null);
 
         inventoryFoodAdapter = new InventoryCellAdapter<InventoryItem>(view.getContext(), inventoryItems);
@@ -105,7 +94,7 @@ public class InventoryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         //TODO FETCH INVENTORY ITEM IMAGES AND THEN UPDATE SCREEN
-        ((BaseAdapter)theListView.getAdapter()).notifyDataSetChanged();
+        ((BaseAdapter) theListView.getAdapter()).notifyDataSetChanged();
     }
 
     @Override
