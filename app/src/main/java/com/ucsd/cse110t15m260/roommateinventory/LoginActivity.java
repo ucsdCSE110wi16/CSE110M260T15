@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.parse.LogInCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.ParseRelation;
@@ -184,16 +185,20 @@ public class LoginActivity extends AbstractActivity implements LoaderCallbacks<C
                 public void done(ParseUser user, ParseException e) {
                     showProgress(false);
 
-                    if (user != null && e == null) {
+                    if (e == null) {
                         // Hooray! The user is logged in.
                         Intent intent = new Intent(getBaseContext(), MainActivity.class);
                         startActivity(intent);
                         AccountManager.accountManager.fetchAllData();
                         finish();
-                    } else {
-                        mPasswordView.setError(getString(R.string.error_incorrect_password));
-                        mPasswordView.requestFocus();
+                    } else if (e.getCode() == ParseException.CONNECTION_FAILED || e.getCode() == ParseException.TIMEOUT) {
+                        mPasswordView.setError("Could not connect to server");
                     }
+                    else {
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    }
+
+                    mPasswordView.requestFocus();
                 }
             });
         }
