@@ -29,7 +29,7 @@ import static com.parse.ParseUser.getCurrentUser;
 */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class CreateUserTest {
+public class CreateUserTest extends ApartmentTestCase {
 
     @Rule
     public ActivityTestRule<RegisterActivity> mActivityRule = new ActivityTestRule<>(RegisterActivity.class);
@@ -57,7 +57,7 @@ public class CreateUserTest {
     @Before
     public void initValidString() {
         mName = "newUser";
-        mEmail = "new@user.com";
+        mEmail = genFakeUser();
         mPassword = "newUser";
         mAptName = "apt";
         mStreet1 = "street1";
@@ -70,56 +70,19 @@ public class CreateUserTest {
     @Test
     public void createNewUser() throws InterruptedException {
 
-
-        // Type text and then press the button
-        onView(withId(R.id.name)).perform(typeText(mName), closeSoftKeyboard());
-        onView(withId(R.id.email)).perform(typeText(mEmail), closeSoftKeyboard());
-        onView(withId(R.id.password)).perform(typeText(mPassword), closeSoftKeyboard());
-
-        onView(withId(R.id.name)).check(matches(withText("newUser")));
-        onView(withId(R.id.email)).check(matches(withText("new@user.com")));
-        onView(withId(R.id.password)).check(matches(withText("newUser")));
-        onView(withId(R.id.email_register_button)).perform(click());
-
-        //mActivityRule.wait((long) 5000);
-        //MainActivity mainActivity = (MainActivity) mActivityRule.getActivity().getBaseContext();
-
-        //MaimDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        //mainActivity.mDrawerLayout.openDrawer(GravityCompat.START);
-
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-
-        //onData(anything()).inAdapterView(withId(R.id.list_view)).atPosition(0).perform(click());
-        //openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        //onView(withText("My Apartment")).perform(click());
-        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.my_apt));
+        createUser(mName, mEmail, mPassword);
 
         Thread.sleep(1000);
 
-        //Enter the create apartment activity
-        onView(withId(R.id.create_apt)).perform(click());
+        createApartment(
+                mAptName,
+                mStreet1,
+                mStreet2,
+                mCity,
+                mState,
+                mZipCode
+        );
 
-        Thread.sleep(1000);
-
-        //Typing in all required fields
-        onView(withId(R.id.apartment_name)).perform(typeText(mAptName), closeSoftKeyboard());
-        onView(withId(R.id.street_1)).perform(typeText(mStreet1), closeSoftKeyboard());
-        onView(withId(R.id.street_2)).perform(typeText(mStreet2), closeSoftKeyboard());
-        onView(withId(R.id.city)).perform(typeText(mCity), closeSoftKeyboard());
-        onView(withId(R.id.state)).perform(typeText(mState), closeSoftKeyboard());
-        onView(withId(R.id.zip_code)).perform(typeText(mZipCode), closeSoftKeyboard());
-
-        onView(withId(R.id.apartment_name)).check(matches(withText(mAptName)));
-        onView(withId(R.id.street_1)).check(matches(withText(mStreet1)));
-        onView(withId(R.id.street_2)).check(matches(withText(mStreet2)));
-        onView(withId(R.id.city)).check(matches(withText(mCity)));
-        onView(withId(R.id.state)).check(matches(withText(mState)));
-        onView(withId(R.id.zip_code)).check(matches(withText(mZipCode)));
-
-        onView(withId(R.id.create_apt_btn)).perform(click());
-        
-        Thread.sleep(1000);
     }
 
     @Test
@@ -130,8 +93,6 @@ public class CreateUserTest {
 
     @After
     public void tearDown() throws Exception {
-        Person newUser = Person.getCurrentPerson();
-        newUser.leaveApartment(null);
-        newUser.deleteInBackground();
+        cleanUp();
     }
 }

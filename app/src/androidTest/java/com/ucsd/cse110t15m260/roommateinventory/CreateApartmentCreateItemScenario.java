@@ -5,7 +5,11 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,35 +17,54 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+
+import Model.Apartment;
+import Model.InventoryItem;
+import Model.Managers.InventoryManager;
 import Model.Person;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
- * Created by Leo Wong on 3/7/2016.
+ * Created by Isaac Diamond on 3/8/2016.
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class CreateApartmentScenario extends ApartmentTestCase {
-
+public class CreateApartmentCreateItemScenario extends ApartmentTestCase {
     @Rule
     public ActivityTestRule<RegisterActivity> mActivityRule = new ActivityTestRule<>(RegisterActivity.class);
-    protected String mEmail;
-    protected String mPassword;
-    protected String mName;
-    protected String mAptName;
-    protected String mStreet1;
-    protected String mStreet2;
-    protected String mCity;
-    protected String mState;
-    protected String mZipCode;
+    public String mItemName;
+    public String mItemCategory;
+    public String mQuanitity;
+    public String mDesciption;
+    public String mEmail;
+    public String mPassword;
+    public String mName;
+    public String mAptName;
+    public String mStreet1;
+    public String mStreet2;
+    public String mCity;
+    public String mState;
+    public String mZipCode;
+
+    @Before
+    public void initItem() {
+        mItemName = "Fake Item";
+        mItemCategory = "Fake Category";
+        mQuanitity = "100";
+        mDesciption = "It's not real!";
+    }
 
     @Before
     public void initValidString() {
@@ -57,8 +80,12 @@ public class CreateApartmentScenario extends ApartmentTestCase {
     }
 
     @Test
-    public void createNewUser() throws InterruptedException {
+    public void addItem() throws InterruptedException {
+        initItem();
+        initValidString();
+
         createUser(mName, mEmail, mPassword);
+
         Thread.sleep(1000);
 
         createApartment(
@@ -71,30 +98,22 @@ public class CreateApartmentScenario extends ApartmentTestCase {
         );
 
         Thread.sleep(1000);
-
-        //Check that an actual apartment was made
-        Person person = Person.getCurrentPerson();
-        String aptID = person.getApartment().getObjectId();
-        onView(withId(R.id.apartment_invitation_id)).check(matches(withText(aptID)));
-
-        Thread.sleep(1000);
-
-        //Press the actionbar back button
         onView(withContentDescription("Navigate up")).perform(click());
 
-        //Now back in the main activity main fragment
-        String mainStr = "Welcome, " + person.getString("name") + "!\n" +
-                "Your User ID is: " + person.getObjectId() + "\n" +
-                "Your Apartment is: " + person.getApartment().getObjectId();
-
-        //Check that the main fragment string matches what it's supposed to be
-        onView(withId(R.id.textview_welcome)).check(matches(withText(mainStr)));
+        addInventoryItem(
+                mItemName,
+                mQuanitity,
+                mItemCategory,
+                mDesciption
+        );
 
         Thread.sleep(1000);
-    }
 
-    @Test
-    public void deleteUser() {
+        InventoryItem i = Person.getCurrentPerson().getApartment().getInventory().getItems().get(0);
+        Assert.assertEquals(i.getName(), mItemName);
+        Assert.assertEquals(String.valueOf(i.getQuantity()), mQuanitity);
+        Assert.assertEquals(i.getCategory(), mItemCategory);
+        Assert.assertEquals(i.getDescription(), mDesciption);
 
     }
 
